@@ -1,0 +1,21 @@
+<div id="equipment">
+    <div id="processing" class="htmx-indicator">Processing...</div>
+    <table>
+        <tr>
+            <td>Название</td>
+            <td>Описание</td>
+            <td>Тип</td>
+            <td>Производитель</td>
+            <td>Модель</td>
+            <td>Номер комнаты</td>
+            <td>Статус</td>
+        </tr>
+        <tbody id="equipment-table-body">
+        {{with .Data}}
+            {{range .}}
+                {{template "components/equipment_row.gohtml" .}}
+            {{end}}
+        {{end}}
+        </tbody>
+    </table>
+</div>

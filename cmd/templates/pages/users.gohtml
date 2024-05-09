@@ -10,12 +10,14 @@
             <th>Статус</th>
             <th>Роль</th>
         </tr>
-        <tbody id="table-body">
+        <tbody id="users-table-body">
             {{with .Data}}
                 {{range .}}
-                    {{template "user_row.gohtml" .}}
+                    {{template "components/user_row.gohtml" .}}
                 {{end}}
             {{end}}
         </tbody>
     </table>
+
+
 </div>

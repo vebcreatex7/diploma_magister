@@ -1,12 +1,10 @@
-{{define "login"}}
-    <div>
+    <div id="login">
         <form target="/login" method="post">
             <label for="login">Логин</label><input type="text" id="login" name="login">
             <label for="password">Пароль</label><input type="password" id="password" name="password">
             <input type="submit" name="login" value="Войти">
         </form>
 
+        {{template "response" .}}
     </div>
 
-    {{template "response" .}}
-{{end}}

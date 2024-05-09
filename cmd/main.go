@@ -6,8 +6,8 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/vebcreatex7/diploma_magister/cmd/handlers"
 	"github.com/vebcreatex7/diploma_magister/internal/api/service"
-	"github.com/vebcreatex7/diploma_magister/internal/pkg/start"
 	"github.com/vebcreatex7/diploma_magister/internal/repo/postgres"
+	start2 "github.com/vebcreatex7/diploma_magister/pkg/start"
 	"html/template"
 	"log"
 	"reflect"
@@ -36,28 +36,29 @@ func main() {
 		log.Fatalf("initing config: %s", err)
 	}
 
-	db, _ := start.Postgres(cfg.Postgres)
+	db, _ := start2.Postgres(cfg.Postgres)
 
-	t, err := start.Template(templateFS, ".gohtml", true, template.FuncMap{"hasField": hasField})
+	t, err := start2.Template(templateFS, ".gohtml", true, template.FuncMap{"hasField": hasField})
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	r := start.Router()
+	r := start2.Router()
 
 	clientsRepo := postgres.NewClients(db)
 	clientsService := service.NewClients(clientsRepo)
-	clientsHandler := handlers.NewClients(t, clientsService)
+
+	equipmentRepo := postgres.NewEquipment(db)
+	equipmentServce := service.NewEquipment(equipmentRepo)
 
 	indexHandler := handlers.NewHome(t, clientsService)
 
-	adminHandler := handlers.NewAdmin(t, clientsService)
+	adminHandler := handlers.NewAdmin(t, clientsService, equipmentServce)
 
 	r.Mount(indexHandler.BasePrefix(), indexHandler.Routes())
-	r.Mount(clientsHandler.BasePrefix(), clientsHandler.Routes())
 	r.Mount(adminHandler.BasePrefix(), adminHandler.Routes())
 
-	s := start.Server(cfg.Server, r)
+	s := start2.Server(cfg.Server, r)
 
 	if err := s.ListenAndServe(); err != nil {
 		log.Fatalln(err)

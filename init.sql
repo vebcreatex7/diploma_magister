@@ -30,7 +30,7 @@ create table equipment (
 	type text not null,
 	manufacturer text,
 	model text,
-	room_uid uuid not null,
+	room text not null,
 	status text not null
 );
 
@@ -59,12 +59,6 @@ create table experiment (
 	description text not null,
 	start_ts timestamp not null,
 	end_ts timestamp
-);
-
-create table room (
-	uid uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-	name text not null,
-	description text not null
 );
 
 create table inventory_in_access_group(
@@ -124,10 +118,6 @@ alter table inventory_in_access_group
 alter table inventory_in_access_group
 	add constraint fk_inventory_in_access_group_inventory foreign key(inventory_uid) references inventory(uid);
 
-
-
-alter table equipment
-	add constraint fk_equipment_room foreign key(room_uid) references room(uid);
 
 
 alter table client

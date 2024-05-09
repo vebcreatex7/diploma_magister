@@ -11,13 +11,13 @@
 
 
 {{if eq .Path "/home"}}
-    {{template "home" .}}
+    {{template "pages/home.gohtml" .}}
 {{ else if eq .Path "/docs"}}
-    {{template "docs" .}}
+    {{template "pages/docs.gohtml" .}}
 {{else if eq .Path "/register"}}
-    {{template "register" .}}
+    {{template "pages/register.gohtml" .}}
 {{else if eq .Path "/login"}}
-    {{template "login" .}}
+    {{template "pages/login.gohtml" .}}
 {{end}}
 
 

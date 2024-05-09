@@ -42,3 +42,15 @@ func HTMLResponse(
 		return
 	}
 }
+
+func SetCookie(w http.ResponseWriter, name, value string) {
+	c := http.Cookie{
+		Name:     name,
+		Value:    value,
+		Path:     "/",
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+	}
+
+	http.SetCookie(w, &c)
+}

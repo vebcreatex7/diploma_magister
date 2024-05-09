@@ -4,6 +4,7 @@ import (
 	"fmt"
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/constant"
+	"github.com/vebcreatex7/diploma_magister/pkg/request"
 	"log"
 	"net/http"
 )
@@ -81,4 +82,19 @@ func (r *LoginClient) validate() error {
 		validation.Field(&r.Login, validation.Required),
 		validation.Field(&r.Password, validation.Required),
 	)
+}
+
+type DeleteClient struct {
+	UID string
+}
+
+func (r *DeleteClient) Bind(req *http.Request) error {
+	uid, err := request.ParseUIDFromPath(req, true)
+	if err != nil {
+		return fmt.Errorf("parsing uid from path: %w", err)
+	}
+
+	r.UID = uid
+
+	return nil
 }

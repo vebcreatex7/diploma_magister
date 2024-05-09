@@ -43,5 +43,15 @@ func (r clients) GetByLogin(ctx context.Context, login string) (entities.Client,
 func (r clients) GetAllNotCanceled(ctx context.Context) (res []entities.Client, err error) {
 	return res, r.db.From(schema.Client).
 		Select(entities.Client{}).
+		Where(goqu.I("status").Neq("cancel")).
 		Prepared(true).Executor().ScanStructsContext(ctx, &res)
+}
+
+func (r clients) DeleteByUID(ctx context.Context, uid string) error {
+	_, err := r.db.Update(schema.Client).
+		Set(goqu.Record{"status": "cancel"}).
+		Where(goqu.I("uid").Eq(uid)).
+		Prepared(true).Executor().ExecContext(ctx)
+
+	return err
 }

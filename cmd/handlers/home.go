@@ -1,21 +1,15 @@
 package handlers
 
 import (
-	"context"
 	"github.com/go-chi/chi/v5"
 	"github.com/vebcreatex7/diploma_magister/internal/api/request"
-	"github.com/vebcreatex7/diploma_magister/internal/api/response"
-	"github.com/vebcreatex7/diploma_magister/internal/pkg/render"
+	"github.com/vebcreatex7/diploma_magister/internal/domain/service"
+	"github.com/vebcreatex7/diploma_magister/pkg/render"
 	"html/template"
 	"net/http"
 	"net/url"
 )
 
-type clientsService interface {
-	Create(ctx context.Context, req request.CreateClient) error
-	Login(ctx context.Context, req request.LoginClient) (string, error)
-	GetAllNotCanceled(ctx context.Context) ([]response.Client, error)
-}
 type Message struct {
 	*url.URL
 	Type string
@@ -23,12 +17,12 @@ type Message struct {
 	Data any
 }
 type home struct {
-	t       *template.Template
-	service clientsService
+	t              *template.Template
+	clientsService service.Clients
 }
 
-func NewHome(t *template.Template, service clientsService) home {
-	return home{t: t, service: service}
+func NewHome(t *template.Template, clientsService service.Clients) home {
+	return home{t: t, clientsService: clientsService}
 }
 
 func (h home) BasePrefix() string {
@@ -65,7 +59,7 @@ func (h home) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := h.service.Login(r.Context(), req)
+	token, err := h.clientsService.Login(r.Context(), req)
 	if err != nil {
 		render.HTMLResponse(w, h.t, "home.gohtml", Message{
 			URL:  r.URL,
@@ -75,7 +69,7 @@ func (h home) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	setCookie(w, "jwt", token)
+	render.SetCookie(w, "jwt", token)
 
 	render.HTMLResponse(w, h.t, "home.gohtml", Message{
 		URL:  r.URL,
@@ -96,7 +90,7 @@ func (h home) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.service.Create(r.Context(), req); err != nil {
+	if err := h.clientsService.Create(r.Context(), req); err != nil {
 		render.HTMLResponse(w, h.t, "home.gohtml", Message{
 			URL:  r.URL,
 			Type: "error",

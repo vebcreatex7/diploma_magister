@@ -7,12 +7,14 @@
 
 <body>
 
-{{template "admin_nav" .}}
+{{template "components/admin_nav.gohtml" .}}
 
 {{if eq .Path "/admin/home"}}
-{{template "home" .}}
+    {{template "pages/home.gohtml" .}}
 {{else if eq .Path "/admin/users"}}
-    {{template "users.gohtml" .}}
+    {{template "pages/users.gohtml" .}}
+{{else if eq .Path "/admin/equipment"}}
+    {{template "pages/equipment.gohtml" .}}
 {{end}}
 
 </body>
