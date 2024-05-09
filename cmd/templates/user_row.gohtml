@@ -1,0 +1,16 @@
+
+    <tr id="user-row-{{.UID}}">
+        <td>{{.Surname}}</td>
+        <td>{{.Name}}</td>
+        <td>{{.Patronymic}}</td>
+        <td>{{.Login}}</td>
+        <td>{{.Email}}</td>
+        <td>{{.Status}}</td>
+        <td>{{.Role}}</td>
+        <td><a
+            hx-delete="/admin/users/{{.UID}}"
+            hx-target="#users"
+            hx-indicator="#processing"
+            href="">Delete</a>
+        </td>
+    </tr>

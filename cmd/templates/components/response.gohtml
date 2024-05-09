@@ -1,0 +1,21 @@
+{{define "response"}}
+    {{if hasField . "Type"}}
+        {{if eq .Type "success" }}
+            {{ template "success" . }}
+        {{else if eq .Type "error"}}
+            {{ template "error" . }}
+        {{end}}
+    {{end}}
+{{end}}
+
+{{define "error"}}
+    <div style="background-color: red">
+        <p>{{.Text}}</p>
+    </div>
+{{end}}
+
+{{define "success"}}
+    <div style="background-color: greenyellow">
+        <p>{{.Text}}</p>
+    </div>
+{{end}}

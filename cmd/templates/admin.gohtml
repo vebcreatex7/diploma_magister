@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {{ template "head" .}}
+    <title>Админка</title>
+</head>
+
+<body>
+
+{{template "admin_nav" .}}
+
+{{if eq .Path "/admin/home"}}
+{{template "home" .}}
+{{else if eq .Path "/admin/users"}}
+    {{template "users.gohtml" .}}
+{{end}}
+
+</body>

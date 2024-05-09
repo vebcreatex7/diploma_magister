@@ -1,0 +1,21 @@
+<div id="users">
+    <div id="processing" class="htmx-indicator">Processing...</div>
+    <table>
+        <tr>
+            <th>Фамилия</th>
+            <th>Имя</th>
+            <th>Отчество</th>
+            <th>Логин</th>
+            <th>Почтовый адрес</th>
+            <th>Статус</th>
+            <th>Роль</th>
+        </tr>
+        <tbody id="table-body">
+            {{with .Data}}
+                {{range .}}
+                    {{template "user_row.gohtml" .}}
+                {{end}}
+            {{end}}
+        </tbody>
+    </table>
+</div>

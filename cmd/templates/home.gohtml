@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {{ template "head" .}}
+    <title>Главная страница</title>
+</head>
+
+<body>
+
+{{ template "home_nav" .}}
+
+
+{{if eq .Path "/home"}}
+    {{template "home" .}}
+{{ else if eq .Path "/docs"}}
+    {{template "docs" .}}
+{{else if eq .Path "/register"}}
+    {{template "register" .}}
+{{else if eq .Path "/login"}}
+    {{template "login" .}}
+{{end}}
+
+
+
+
+</body>

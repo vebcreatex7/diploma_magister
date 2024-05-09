@@ -1,0 +1,13 @@
+package entities
+
+type Client struct {
+	UID          string `db:"uid" goqu:"skipinsert,skipupdate"`
+	Surname      string `db:"surname"`
+	Name         string `db:"name"`
+	Patronymic   string `db:"patronymic"`
+	Login        string `db:"login"`
+	PasswordHash string `db:"password_hash"`
+	Email        string `db:"email"`
+	Role         string `db:"role"`
+	Status       string `db:"status" goqu:"skipinsert,skipupdate"`
+}

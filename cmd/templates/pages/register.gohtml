@@ -1,0 +1,22 @@
+{{define "register"}}
+    <div>
+        <form target="/register" method="post">
+            <label for="surname">Фамилия</label> <input id="surname" name="surname"> <br>
+            <label for="name">Имя</label> <input id="name" name="name"> <br>
+            <label for="patronymic">Отчество</label> <input id="patronymic" name="patronymic"> <br>
+            <label for="email">Почтовый адрес</label> <input id="email" name="email"> <br>
+            <label for="login">Логин</label> <input id="login" name="login"> <br>
+            <label for="password">Пароль</label> <input id="password" type="password" name="password"> <br>
+            <label for="role"></label>Роль<select id="role" name="role">
+                <option value="engineer" name="engineer">Инженер</option>
+                <option value="laboratory">Лаборант</option>
+                <option value="scientist" selected>Ученый</option>
+            </select>
+            <input type="submit" name="register" value="Зарегистрироваться">
+        </form>
+
+
+    </div>
+
+    {{template "response" .}}
+{{end}}
