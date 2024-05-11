@@ -10,4 +10,6 @@ type Clients interface {
 	GetByLogin(ctx context.Context, login string) (entities.Client, bool, error)
 	GetAllNotCanceled(ctx context.Context) (res []entities.Client, err error)
 	DeleteByUID(ctx context.Context, uid string) error
+	GetByUID(ctx context.Context, uid string) (entities.Client, bool, error)
+	Edit(ctx context.Context, e entities.Client) (entities.Client, bool, error)
 }

@@ -6,3 +6,9 @@ const (
 	ScientistRole    = "scientist"
 	LaboratorianRole = "laboratorian"
 )
+
+const (
+	StatusReady       = "ready"
+	StatusWaitApprove = "wait_approve"
+	StatusCancel      = "cancel"
+)

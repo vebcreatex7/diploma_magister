@@ -1,6 +1,6 @@
 package response
 
-type Client struct {
+type User struct {
 	UID        string
 	Surname    string
 	Name       string

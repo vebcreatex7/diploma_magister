@@ -1,23 +1,35 @@
-.tmp_ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
+th,
+td {
+    border: 1px solid rgb(160 160 160);
+    padding: 8px 10px;
 }
 
-.tmp_li {
-    float: left;
+th[scope='col'] {
+    background-color: #505050;
+    color: #fff;
 }
 
-.tmp_a {
-    display: block;
-    color: white;
+th[scope='row'] {
+    background-color: #d6ecd4;
+}
+
+td {
     text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
 }
 
-li a:hover {
-    background-color: #111;
+tr:nth-of-type(even) {
+    background-color: #eee;
+}
+
+table {
+    border-collapse: collapse;
+    border: 2px solid rgb(140 140 140);
+    font-family: sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+caption {
+    caption-side: bottom;
+    padding: 10px;
 }

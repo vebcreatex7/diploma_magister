@@ -7,8 +7,10 @@ import (
 )
 
 type Clients interface {
-	Create(ctx context.Context, req request.CreateClient) error
-	Login(ctx context.Context, req request.LoginClient) (string, error)
-	GetAllNotCanceled(ctx context.Context) ([]response.Client, error)
-	DeleteByUID(ctx context.Context, uid string) ([]response.Client, error)
+	Create(ctx context.Context, req request.CreateUser) error
+	Login(ctx context.Context, req request.LoginUser) (string, error)
+	GetAllNotCanceled(ctx context.Context) ([]response.User, error)
+	DeleteByUID(ctx context.Context, uid string) ([]response.User, error)
+	GetByUID(ctx context.Context, uid string) (response.User, error)
+	Edit(ctx context.Context, req request.EditUser) (response.User, error)
 }

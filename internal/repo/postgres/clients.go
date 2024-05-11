@@ -44,6 +44,7 @@ func (r clients) GetAllNotCanceled(ctx context.Context) (res []entities.Client, 
 	return res, r.db.From(schema.Client).
 		Select(entities.Client{}).
 		Where(goqu.I("status").Neq("cancel")).
+		Order(goqu.C("uid").Desc()).
 		Prepared(true).Executor().ScanStructsContext(ctx, &res)
 }
 
@@ -54,4 +55,31 @@ func (r clients) DeleteByUID(ctx context.Context, uid string) error {
 		Prepared(true).Executor().ExecContext(ctx)
 
 	return err
+}
+
+func (r clients) GetByUID(ctx context.Context, uid string) (entities.Client, bool, error) {
+	var res entities.Client
+
+	q := r.db.From(schema.Client).
+		Select(entities.Client{}).
+		Where(goqu.I("uid").Eq(uid)).
+		Prepared(true).Executor()
+
+	found, err := q.ScanStructContext(ctx, &res)
+
+	return res, found, err
+}
+
+func (r clients) Edit(ctx context.Context, e entities.Client) (entities.Client, bool, error) {
+	var res entities.Client
+
+	q := r.db.Update(schema.Client).
+		Set(e).
+		Where(goqu.I("uid").Eq(e.UID)).
+		Returning(entities.Client{}).
+		Prepared(true).Executor()
+
+	edited, err := q.ScanStructContext(ctx, &res)
+
+	return res, edited, err
 }

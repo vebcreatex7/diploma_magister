@@ -120,8 +120,9 @@ alter table inventory_in_access_group
 
 
 
-alter table client
-    add  constraint unique_client_login unique(login);
+create unique index on client(login) where status != 'cancel';
+
+
 
 alter table equipment_schedule
 	add constraint fk_equipment_schedule_equipment foreign key(equipment_uid) references equipment(uid);

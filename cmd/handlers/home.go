@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/go-chi/chi/v5"
+	"github.com/sirupsen/logrus"
 	"github.com/vebcreatex7/diploma_magister/internal/api/request"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/service"
 	"github.com/vebcreatex7/diploma_magister/pkg/render"
@@ -18,11 +19,20 @@ type Message struct {
 }
 type home struct {
 	t              *template.Template
+	log            *logrus.Logger
 	clientsService service.Clients
 }
 
-func NewHome(t *template.Template, clientsService service.Clients) home {
-	return home{t: t, clientsService: clientsService}
+func NewHome(
+	t *template.Template,
+	log *logrus.Logger,
+	clientsService service.Clients,
+) home {
+	return home{
+		t:              t,
+		log:            log,
+		clientsService: clientsService,
+	}
 }
 
 func (h home) BasePrefix() string {
@@ -48,9 +58,11 @@ func (h home) Home(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h home) Login(w http.ResponseWriter, r *http.Request) {
-	var req request.LoginClient
+	var req request.LoginUser
 
 	if err := req.Bind(r); err != nil {
+		h.log.WithError(err).Errorf("binding request")
+
 		render.HTMLResponse(w, h.t, "home.gohtml", Message{
 			URL:  r.URL,
 			Type: "error",
@@ -61,6 +73,8 @@ func (h home) Login(w http.ResponseWriter, r *http.Request) {
 
 	token, err := h.clientsService.Login(r.Context(), req)
 	if err != nil {
+		h.log.WithError(err).Errorf("logining")
+
 		render.HTMLResponse(w, h.t, "home.gohtml", Message{
 			URL:  r.URL,
 			Type: "error",
@@ -79,9 +93,11 @@ func (h home) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h home) Register(w http.ResponseWriter, r *http.Request) {
-	var req request.CreateClient
+	var req request.CreateUser
 
 	if err := req.Bind(r); err != nil {
+		h.log.WithError(err).Errorf("binding request")
+
 		render.HTMLResponse(w, h.t, "home.gohtml", Message{
 			URL:  r.URL,
 			Type: "error",
@@ -91,6 +107,8 @@ func (h home) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.clientsService.Create(r.Context(), req); err != nil {
+		h.log.WithError(err).Errorf("creating user")
+
 		render.HTMLResponse(w, h.t, "home.gohtml", Message{
 			URL:  r.URL,
 			Type: "error",

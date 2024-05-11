@@ -10,7 +10,7 @@ type Clients struct {
 }
 
 func (m Clients) MakeCreateEntity(
-	req request.CreateClient,
+	req request.CreateUser,
 	passwordHash string,
 ) entities.Client {
 	return entities.Client{
@@ -26,8 +26,8 @@ func (m Clients) MakeCreateEntity(
 
 func (m Clients) MakeResponse(
 	e entities.Client,
-) response.Client {
-	return response.Client{
+) response.User {
+	return response.User{
 		UID:        e.UID,
 		Surname:    e.Surname,
 		Name:       e.Name,
@@ -40,12 +40,25 @@ func (m Clients) MakeResponse(
 }
 
 func (m Clients) MakeListResponse(
-	e []entities.Client) []response.Client {
-	res := make([]response.Client, 0, len(e))
+	e []entities.Client) []response.User {
+	res := make([]response.User, 0, len(e))
 
 	for i := range e {
 		res = append(res, m.MakeResponse(e[i]))
 	}
 
 	return res
+}
+
+func (m Clients) MakeEditEntity(r request.EditUser) entities.Client {
+	return entities.Client{
+		UID:        r.UID,
+		Surname:    r.Surname,
+		Name:       r.Name,
+		Patronymic: r.Patronymic,
+		Login:      r.Login,
+		Email:      r.Email,
+		Role:       r.Role,
+		Status:     r.Status,
+	}
 }

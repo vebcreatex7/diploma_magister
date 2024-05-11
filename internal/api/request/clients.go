@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-type CreateClient struct {
+type CreateUser struct {
 	Surname    string
 	Name       string
 	Patronymic string
@@ -19,7 +19,7 @@ type CreateClient struct {
 	Role       string
 }
 
-func (r *CreateClient) Bind(req *http.Request) error {
+func (r *CreateUser) Bind(req *http.Request) error {
 	if err := req.ParseForm(); err != nil {
 		return fmt.Errorf("parsing request: %w", err)
 	}
@@ -41,7 +41,7 @@ func (r *CreateClient) Bind(req *http.Request) error {
 	return nil
 }
 
-func (r *CreateClient) validate() error {
+func (r *CreateUser) validate() error {
 	return validation.ValidateStruct(r,
 		validation.Field(&r.Surname, validation.Required),
 		validation.Field(&r.Name, validation.Required),
@@ -57,12 +57,12 @@ func (r *CreateClient) validate() error {
 	)
 }
 
-type LoginClient struct {
+type LoginUser struct {
 	Login    string
 	Password string
 }
 
-func (r *LoginClient) Bind(req *http.Request) error {
+func (r *LoginUser) Bind(req *http.Request) error {
 	if err := req.ParseForm(); err != nil {
 		return fmt.Errorf("parsing request: %w", err)
 	}
@@ -77,18 +77,89 @@ func (r *LoginClient) Bind(req *http.Request) error {
 	return nil
 }
 
-func (r *LoginClient) validate() error {
+func (r *LoginUser) validate() error {
 	return validation.ValidateStruct(r,
 		validation.Field(&r.Login, validation.Required),
 		validation.Field(&r.Password, validation.Required),
 	)
 }
 
-type DeleteClient struct {
+type DeleteUser struct {
 	UID string
 }
 
-func (r *DeleteClient) Bind(req *http.Request) error {
+func (r *DeleteUser) Bind(req *http.Request) error {
+	uid, err := request.ParseUIDFromPath(req, true)
+	if err != nil {
+		return fmt.Errorf("parsing uid from path: %w", err)
+	}
+
+	r.UID = uid
+
+	return nil
+}
+
+type EditUser struct {
+	UID        string
+	Surname    string
+	Name       string
+	Patronymic string
+	Login      string
+	Email      string
+	Status     string
+	Role       string
+}
+
+func (r *EditUser) Bind(req *http.Request) error {
+	uid, err := request.ParseUIDFromPath(req, true)
+	if err != nil {
+		return fmt.Errorf("parsing uid from path: %w", err)
+	}
+
+	r.UID = uid
+
+	if err = req.ParseForm(); err != nil {
+		return fmt.Errorf("parsing form: %w", err)
+	}
+
+	log.Println(req.Form)
+
+	r.Surname = req.Form.Get("surname")
+	r.Name = req.Form.Get("name")
+	r.Patronymic = req.Form.Get("patronymic")
+	r.Login = req.Form.Get("login")
+	r.Email = req.Form.Get("email")
+	r.Status = req.Form.Get("status")
+	r.Role = req.Form.Get("role")
+
+	return r.validate()
+}
+
+func (r *EditUser) validate() error {
+	return validation.ValidateStruct(r,
+		validation.Field(&r.Surname, validation.Required),
+		validation.Field(&r.Name, validation.Required),
+		validation.Field(&r.Patronymic, validation.Required),
+		validation.Field(&r.Login, validation.Required),
+		validation.Field(&r.Email, validation.Required),
+		validation.Field(&r.Status, validation.Required, validation.In(
+			constant.StatusReady,
+			constant.StatusWaitApprove,
+			constant.StatusCancel,
+		)),
+		validation.Field(&r.Role, validation.Required, validation.In(
+			constant.EngineerRole,
+			constant.ScientistRole,
+			constant.LaboratorianRole,
+		)),
+	)
+}
+
+type GetUser struct {
+	UID string
+}
+
+func (r *GetUser) Bind(req *http.Request) error {
 	uid, err := request.ParseUIDFromPath(req, true)
 	if err != nil {
 		return fmt.Errorf("parsing uid from path: %w", err)

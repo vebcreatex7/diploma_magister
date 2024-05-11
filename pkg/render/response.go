@@ -24,7 +24,7 @@ func HTMLResponse(
 ) {
 	var buf bytes.Buffer
 
-	if err := t.ExecuteTemplate(&buf, name, data); err != nil {
+	if err := t.ExecuteTemplate(w, name, data); err != nil {
 		ErrResponse(w, err)
 		return
 	}

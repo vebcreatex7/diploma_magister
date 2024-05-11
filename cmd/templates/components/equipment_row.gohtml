@@ -8,7 +8,7 @@
     <td>{{.Status}}</td>
     <td>
         <a
-            hx-get="/admin/equipment/{{.UID}}"
+            hx-get="/admin/equipment-edit/{{.UID}}"
             hx-target="#equipment-row-{{.UID}}"
             hx-swap="outerHTML"
             hx-indicator="#processing"
@@ -16,7 +16,7 @@
     </td>
     <td><a
             hx-delete="/admin/equipment/{{.UID}}"
-            hx-target="#equipment"
+            hx-target="#equipment-row-{{.UID}}"
             hx-confirm="Are you sure you want to delete {{.Name}}?"
             hx-indicator="#processing"
             href="">Delete</a>

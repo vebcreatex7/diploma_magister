@@ -1,0 +1,78 @@
+
+<tr id="user-row-{{.UID}}">
+    <td>
+        <input
+            type="text"
+            data-include-edit="{{.UID}}"
+            name="surname"
+            value="{{.Surname}}"
+        >
+    </td>
+    <td>
+        <input
+                type="text"
+                data-include-edit="{{.UID}}"
+                name="name"
+                value="{{.Name}}"
+        >
+    </td>
+    <td>
+        <input
+                type="text"
+                data-include-edit="{{.UID}}"
+                name="patronymic"
+                value="{{.Patronymic}}"
+        >
+    </td>
+    <td>
+        <input
+                type="text"
+                data-include-edit="{{.UID}}"
+                name="login"
+                value="{{.Login}}"
+        >
+    </td>
+    <td>
+        <input
+                type="text"
+                data-include-edit="{{.UID}}"
+                name="email"
+                value="{{.Email}}"
+        >
+    </td>
+    <td>
+        <select data-include-edit="{{.UID}}" name="status">
+            <option value="ready" {{if eq .Status "ready"}} selected {{end}}>Активен</option>
+            <option value="wait_approve" {{if eq .Status "wait_approve"}} selected {{end}}>Ожидает подтверждения</option>
+        </select>
+    </td>
+
+    <td>
+        <select data-include-edit="{{.UID}}" name="role">
+            <option value="engineer" {{if eq .Role "engineer"}} selected {{end}}>Инженер</option>
+            <option value="laboratory" {{if eq .Role "laboratory"}} selected {{end}}>Лаборант</option>
+            <option value="scientist" {{if eq .Role "scientist"}} selected {{end}}>Ученый</option>
+        </select>
+    </td>
+    <td>
+        <a
+                hx-put="/admin/users/{{.UID}}"
+                hx-target="#user-row-{{.UID}}"
+                hx-swap="outerHTML"
+                hx-include="input[data-include-edit='{{.UID}}'],select"
+                hx-indicator="#processing"
+                href="">
+            Изменить
+        </a>
+    </td>
+    <td>
+        <a
+                hx-get="/admin/users/{{.UID}}"
+                hx-target="#user-row-{{.UID}}"
+                hx-swap="outerHTML"
+                hx-indicator="#processing"
+                href="">
+            Отменить
+        </a>
+    </td>
+</tr>

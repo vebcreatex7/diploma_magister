@@ -1,6 +1,7 @@
 package mapper
 
 import (
+	"github.com/vebcreatex7/diploma_magister/internal/api/request"
 	"github.com/vebcreatex7/diploma_magister/internal/api/response"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/entities"
 )
@@ -29,4 +30,29 @@ func (m Equipment) MakeListResponse(e []entities.Equipment) []response.Equipment
 	}
 
 	return res
+}
+
+func (m Equipment) MakeEditEntity(r request.EditEquipment) entities.Equipment {
+	return entities.Equipment{
+		UID:          r.UID,
+		Name:         r.Name,
+		Description:  r.Description,
+		Type:         r.Type,
+		Manufacturer: r.Manufacturer,
+		Model:        r.Model,
+		Room:         r.Room,
+		Status:       r.Status,
+	}
+}
+
+func (m Equipment) MakeCreateEntity(r request.CreateEquipment) entities.Equipment {
+	return entities.Equipment{
+		Name:         r.Name,
+		Description:  r.Description,
+		Type:         r.Type,
+		Manufacturer: r.Manufacturer,
+		Model:        r.Model,
+		Room:         r.Room,
+		Status:       r.Status,
+	}
 }

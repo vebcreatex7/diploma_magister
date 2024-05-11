@@ -1,0 +1,43 @@
+<tr id="equipment-row-add">
+    <td>
+        <input type="text" name="name">
+    </td>
+    <td>
+        <input type="text" name="description">
+    </td>
+    <td>
+        <input type="text" name="type">
+    </td>
+    <td>
+        <input type="text" name="manufacturer">
+    </td>
+    <td>
+        <input type="text" name="model">
+    </td>
+    <td>
+        <input type="text" name="room">
+    </td>
+    <td>
+        <select name="status">
+            <option value="ready" selected>Готово к использованию</option>
+            <option value="wait_approve">Ожидает подтверждения</option>
+        </select>
+    </td>
+    <td>
+        <a
+            hx-post="/admin/equipment"
+            hx-target="#equipment-row-add"
+            hx-swap="outerHTML"
+            hx-indicator="#processing"
+            hx-include="input,select"
+            href="">Добавить</a>
+    </td>
+    <td>
+        <a
+            hx-get="/admin/equipment-empty"
+            hx-target="#equipment-row-add"
+            hx-swap="outerHTML"
+            hx-indicator="#processing"
+            href="">Отмена</a>
+    </td>
+</tr>

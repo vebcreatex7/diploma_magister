@@ -4,12 +4,13 @@ import (
 	"embed"
 	_ "github.com/doug-martin/goqu/v9/dialect/postgres"
 	_ "github.com/jackc/pgx/v5/stdlib"
+	"github.com/sirupsen/logrus"
 	"github.com/vebcreatex7/diploma_magister/cmd/handlers"
 	"github.com/vebcreatex7/diploma_magister/internal/api/service"
 	"github.com/vebcreatex7/diploma_magister/internal/repo/postgres"
+	"github.com/vebcreatex7/diploma_magister/pkg/render"
 	start2 "github.com/vebcreatex7/diploma_magister/pkg/start"
 	"html/template"
-	"log"
 	"reflect"
 )
 
@@ -31,6 +32,9 @@ func hasField(v interface{}, name string) bool {
 	return rv.FieldByName(name).IsValid()
 }
 func main() {
+	log := logrus.New()
+	log.SetLevel(logrus.DebugLevel)
+
 	cfg, err := initConfig("cmd/config/conf.yaml")
 	if err != nil {
 		log.Fatalf("initing config: %s", err)
@@ -38,10 +42,12 @@ func main() {
 
 	db, _ := start2.Postgres(cfg.Postgres)
 
-	t, err := start2.Template(templateFS, ".gohtml", true, template.FuncMap{"hasField": hasField})
+	templ, err := start2.Template(templateFS, ".gohtml", true, template.FuncMap{"hasField": hasField})
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	t := render.NewTemplate(templ, log)
 
 	r := start2.Router()
 
@@ -51,9 +57,9 @@ func main() {
 	equipmentRepo := postgres.NewEquipment(db)
 	equipmentServce := service.NewEquipment(equipmentRepo)
 
-	indexHandler := handlers.NewHome(t, clientsService)
+	indexHandler := handlers.NewHome(templ, log, clientsService)
 
-	adminHandler := handlers.NewAdmin(t, clientsService, equipmentServce)
+	adminHandler := handlers.NewAdmin(t, log, clientsService, equipmentServce)
 
 	r.Mount(indexHandler.BasePrefix(), indexHandler.Routes())
 	r.Mount(adminHandler.BasePrefix(), adminHandler.Routes())

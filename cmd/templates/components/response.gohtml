@@ -1,4 +1,4 @@
-{{define "response"}}
+<div id="response">
     {{if hasField . "Type"}}
         {{if eq .Type "success" }}
             {{ template "success" . }}
@@ -6,7 +6,7 @@
             {{ template "error" . }}
         {{end}}
     {{end}}
-{{end}}
+</div>
 
 {{define "error"}}
     <div style="background-color: red">
