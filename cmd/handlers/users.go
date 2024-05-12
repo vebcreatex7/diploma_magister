@@ -73,7 +73,7 @@ func (h admin) GetUserEditByUID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p.SetTemplate("components/user_row_edit.gohtml").
+	p.SetTemplate("components/user/row_edit.gohtml").
 		SetData(resp).
 		SetCode(200)
 
@@ -101,7 +101,7 @@ func (h admin) GetUserByUID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p.SetTemplate("components/user_row.gohtml").
+	p.SetTemplate("components/user/row.gohtml").
 		SetData(resp).
 		SetCode(200)
 
@@ -129,7 +129,7 @@ func (h admin) EditUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p.SetTemplate("components/user_row.gohtml").
+	p.SetTemplate("components/user/row.gohtml").
 		SetData(resp).
 		SetCode(200)
 

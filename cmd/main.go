@@ -55,11 +55,14 @@ func main() {
 	clientsService := service.NewClients(clientsRepo)
 
 	equipmentRepo := postgres.NewEquipment(db)
-	equipmentServce := service.NewEquipment(equipmentRepo)
+	equipmentService := service.NewEquipment(equipmentRepo)
+
+	inventoryRepo := postgres.NewInventory(db)
+	inventoryService := service.NewInventory(inventoryRepo)
 
 	indexHandler := handlers.NewHome(templ, log, clientsService)
 
-	adminHandler := handlers.NewAdmin(t, log, clientsService, equipmentServce)
+	adminHandler := handlers.NewAdmin(t, log, clientsService, equipmentService, inventoryService)
 
 	r.Mount(indexHandler.BasePrefix(), indexHandler.Routes())
 	r.Mount(adminHandler.BasePrefix(), adminHandler.Routes())

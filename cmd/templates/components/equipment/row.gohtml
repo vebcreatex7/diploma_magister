@@ -1,0 +1,24 @@
+<tr id="equipment-row-{{.UID}}">
+    <td>{{.Name}}</td>
+    <td>{{.Description}}</td>
+    <td>{{.Type}}</td>
+    <td>{{.Manufacturer}}</td>
+    <td>{{.Model}}</td>
+    <td>{{.Room}}</td>
+    <td>{{.Status}}</td>
+    <td>
+        <a
+            hx-get="/admin/equipment-edit/{{.UID}}"
+            hx-target="#equipment-row-{{.UID}}"
+            hx-swap="outerHTML"
+            hx-indicator="#processing"
+            href="">Изменить</a>
+    </td>
+    <td><a
+            hx-delete="/admin/equipment/{{.UID}}"
+            hx-target="#equipment-row-{{.UID}}"
+            hx-confirm="Are you sure you want to delete {{.Name}}?"
+            hx-indicator="#processing"
+            href="">Удалить</a>
+    </td>
+</tr>

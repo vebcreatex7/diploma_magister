@@ -1,30 +1,31 @@
 package mapper
 
 import (
+	"github.com/shopspring/decimal"
 	"github.com/vebcreatex7/diploma_magister/internal/api/request"
 	"github.com/vebcreatex7/diploma_magister/internal/api/response"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/constant"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/entities"
 )
 
-type Equipment struct {
+type Inventory struct {
 }
 
-func (m Equipment) MakeResponse(e entities.Equipment) response.Equipment {
-	return response.Equipment{
+func (m Inventory) MakeResponse(e entities.Inventory) response.Inventory {
+	return response.Inventory{
 		UID:          e.UID,
 		Name:         e.Name,
 		Description:  e.Description,
 		Type:         e.Type,
 		Manufacturer: e.Manufacturer,
-		Model:        e.Model,
+		Quantity:     e.Quantity.String(),
+		Unit:         e.Unit,
 		Status:       e.Status,
-		Room:         e.Room,
 	}
 }
 
-func (m Equipment) MakeListResponse(e []entities.Equipment) []response.Equipment {
-	res := make([]response.Equipment, 0, len(e))
+func (m Inventory) MakeListResponse(e []entities.Inventory) []response.Inventory {
+	res := make([]response.Inventory, 0, len(e))
 
 	for i := range e {
 		res = append(res, m.MakeResponse(e[i]))
@@ -33,27 +34,27 @@ func (m Equipment) MakeListResponse(e []entities.Equipment) []response.Equipment
 	return res
 }
 
-func (m Equipment) MakeEditEntity(r request.EditEquipment) entities.Equipment {
-	return entities.Equipment{
+func (m Inventory) MakeEditEntity(r request.EditInventory) entities.Inventory {
+	return entities.Inventory{
 		UID:          r.UID,
 		Name:         r.Name,
 		Description:  r.Description,
 		Type:         r.Type,
 		Manufacturer: r.Manufacturer,
-		Model:        r.Model,
-		Room:         r.Room,
+		Quantity:     decimal.RequireFromString(r.Quantity),
+		Unit:         r.Unit,
 		Status:       r.Status,
 	}
 }
 
-func (m Equipment) MakeCreateEntity(r request.CreateEquipment) entities.Equipment {
-	return entities.Equipment{
+func (m Inventory) MakeCreateEntity(r request.CreateInventory) entities.Inventory {
+	return entities.Inventory{
 		Name:         r.Name,
 		Description:  r.Description,
 		Type:         r.Type,
 		Manufacturer: r.Manufacturer,
-		Model:        r.Model,
-		Room:         r.Room,
+		Quantity:     decimal.RequireFromString(r.Quantity),
+		Unit:         r.Unit,
 		Status:       constant.StatusWaitApprove,
 	}
 }

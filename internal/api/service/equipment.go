@@ -11,16 +11,16 @@ import (
 )
 
 type equipment struct {
-	repo   repo.Equipment
-	mapper mapper.Equipment
+	equipmentRepo repo.Equipment
+	mapper        mapper.Equipment
 }
 
-func NewEquipment(repo repo.Equipment) equipment {
-	return equipment{repo: repo, mapper: mapper.Equipment{}}
+func NewEquipment(equipmentRepo repo.Equipment) equipment {
+	return equipment{equipmentRepo: equipmentRepo, mapper: mapper.Equipment{}}
 }
 
 func (s equipment) GetAllNotCanceled(ctx context.Context) ([]response.Equipment, error) {
-	eq, err := s.repo.GetAllNotCanceled(ctx)
+	eq, err := s.equipmentRepo.GetAllNotCanceled(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("getting equipment: %w", err)
 	}
@@ -29,11 +29,11 @@ func (s equipment) GetAllNotCanceled(ctx context.Context) ([]response.Equipment,
 }
 
 func (s equipment) DeleteByUID(ctx context.Context, uid string) ([]response.Equipment, error) {
-	if err := s.repo.DeleteByUID(ctx, uid); err != nil {
+	if err := s.equipmentRepo.DeleteByUID(ctx, uid); err != nil {
 		return nil, fmt.Errorf("deleting equipment by uid: %w", err)
 	}
 
-	eq, err := s.repo.GetAllNotCanceled(ctx)
+	eq, err := s.equipmentRepo.GetAllNotCanceled(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("getting")
 	}
@@ -42,7 +42,7 @@ func (s equipment) DeleteByUID(ctx context.Context, uid string) ([]response.Equi
 }
 
 func (s equipment) GetByUID(ctx context.Context, uid string) (response.Equipment, error) {
-	res, found, err := s.repo.GetByUID(ctx, uid)
+	res, found, err := s.equipmentRepo.GetByUID(ctx, uid)
 	if err != nil {
 		return response.Equipment{}, fmt.Errorf("getting equipment by uid: %w", err)
 	}
@@ -55,7 +55,7 @@ func (s equipment) GetByUID(ctx context.Context, uid string) (response.Equipment
 }
 
 func (s equipment) Edit(ctx context.Context, req request.EditEquipment) (response.Equipment, error) {
-	res, edited, err := s.repo.Edit(ctx, s.mapper.MakeEditEntity(req))
+	res, edited, err := s.equipmentRepo.Edit(ctx, s.mapper.MakeEditEntity(req))
 	if err != nil {
 		return response.Equipment{}, fmt.Errorf("editing equipement: %w", err)
 	}
@@ -68,7 +68,7 @@ func (s equipment) Edit(ctx context.Context, req request.EditEquipment) (respons
 }
 
 func (s equipment) Create(ctx context.Context, req request.CreateEquipment) (response.Equipment, error) {
-	res, err := s.repo.Create(ctx, s.mapper.MakeCreateEntity(req))
+	res, err := s.equipmentRepo.Create(ctx, s.mapper.MakeCreateEntity(req))
 	if err != nil {
 		return response.Equipment{}, fmt.Errorf("creating equipment: %w", err)
 	}

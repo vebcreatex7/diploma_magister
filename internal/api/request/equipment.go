@@ -77,7 +77,6 @@ type CreateEquipment struct {
 	Manufacturer string
 	Model        string
 	Room         string
-	Status       string
 }
 
 func (r *CreateEquipment) Bind(req *http.Request) error {
@@ -91,7 +90,6 @@ func (r *CreateEquipment) Bind(req *http.Request) error {
 	r.Manufacturer = req.Form.Get("manufacturer")
 	r.Model = req.Form.Get("model")
 	r.Room = req.Form.Get("room")
-	r.Status = req.Form.Get("status")
 
 	return nil
 }

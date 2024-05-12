@@ -31,7 +31,7 @@ create table equipment (
 	manufacturer text,
 	model text,
 	room text not null,
-	status text not null
+	status text not null default 'wait_approve'
 );
 
 create table equipment_schedule(
@@ -50,7 +50,8 @@ create table inventory (
 	type text not null,
 	manufacturer text,
 	quantity decimal not null,
-	unit text not null
+	unit text not null,
+	status text not null default 'wait_approve'
 );
 
 create table experiment (
@@ -155,8 +156,12 @@ alter table equipment_schedule_in_experiment
 	add constraint fk_equipment_schedule_in_experiment_equipment_schedule foreign key(equipment_schedule_uid) references equipment_schedule(uid);
 
 
+
+create unique index on equipment(name) where status != 'cancel';
+
+
+
+create unique index on inventory(name) where status != 'cancel';
+
 commit;
 
-
-alter table client
-    alter column status set default 'wait_approve';

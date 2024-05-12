@@ -15,6 +15,8 @@
     {{template "pages/users.gohtml" .}}
 {{else if eq .Path "/admin/equipment"}}
     {{template "pages/equipment.gohtml" .}}
+{{else if eq .Path "/admin/inventory"}}
+    {{template "pages/inventory.gohtml" .}}
 {{end}}
 
 </body>

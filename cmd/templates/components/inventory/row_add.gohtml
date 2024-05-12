@@ -1,0 +1,40 @@
+<tr id="inventory-row-add">
+    <td>
+        <input type="text" name="name">
+    </td>
+    <td>
+        <input type="text" name="description">
+    </td>
+    <td>
+        <input type="text" name="type">
+    </td>
+    <td>
+        <input type="text" name="manufacturer">
+    </td>
+    <td>
+        <input type="number" name="quantity">
+    </td>
+    <td>
+        <input type="text" name="unit">
+    </td>
+    <td>
+
+    </td>
+    <td>
+        <a
+                hx-post="/admin/inventory"
+                hx-target="#inventory-row-add"
+                hx-swap="outerHTML"
+                hx-indicator="#processing"
+                hx-include="input,select"
+                href="">Добавить</a>
+    </td>
+    <td>
+        <a
+                hx-get="/admin/empty"
+                hx-target="#inventory-row-add"
+                hx-swap="outerHTML"
+                hx-indicator="#processing"
+                href="">Отмена</a>
+    </td>
+</tr>

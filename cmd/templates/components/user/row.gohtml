@@ -12,13 +12,13 @@
             hx-target="#user-row-{{.UID}}"
             hx-swap="outerHTML"
             hx-indicator="#processing"
-            href="">Edit</a>
+            href="">Изменить</a>
     </td>
     <td><a
             hx-delete="/admin/users/{{.UID}}"
             hx-target="#user-row-{{.UID}}"
             hx-confirm="Are you sure you want to delete {{.Login}}?"
             hx-indicator="#processing"
-            href="">Delete</a>
+            href="">Удалить</a>
     </td>
 </tr>

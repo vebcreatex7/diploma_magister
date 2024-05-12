@@ -41,7 +41,7 @@
         >
     </td>
     <td>
-        <select data-include-edit="{{.UID}}" name="status">
+        <select data-include-edit="{{.UID}}" name="status" >
             <option value="ready" {{if eq .Status "ready"}} selected {{end}}>Активен</option>
             <option value="wait_approve" {{if eq .Status "wait_approve"}} selected {{end}}>Ожидает подтверждения</option>
         </select>
@@ -56,22 +56,22 @@
     </td>
     <td>
         <a
-                hx-put="/admin/users/{{.UID}}"
-                hx-target="#user-row-{{.UID}}"
-                hx-swap="outerHTML"
-                hx-include="input[data-include-edit='{{.UID}}'],select"
-                hx-indicator="#processing"
-                href="">
+            hx-put="/admin/users/{{.UID}}"
+            hx-target="#user-row-{{.UID}}"
+            hx-swap="outerHTML"
+            hx-include="input[data-include-edit='{{.UID}}'],select[data-include-edit='{{.UID}}']"
+            hx-indicator="#processing"
+            href="">
             Изменить
         </a>
     </td>
     <td>
         <a
-                hx-get="/admin/users/{{.UID}}"
-                hx-target="#user-row-{{.UID}}"
-                hx-swap="outerHTML"
-                hx-indicator="#processing"
-                href="">
+            hx-get="/admin/users/{{.UID}}"
+            hx-target="#user-row-{{.UID}}"
+            hx-swap="outerHTML"
+            hx-indicator="#processing"
+            href="">
             Отменить
         </a>
     </td>

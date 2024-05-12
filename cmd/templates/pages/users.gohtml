@@ -13,11 +13,10 @@
         <tbody id="users-table-body">
             {{with .Data}}
                 {{range .}}
-                    {{template "components/user_row.gohtml" .}}
+                    {{template "components/user/row.gohtml" .}}
                 {{end}}
             {{end}}
         </tbody>
     </table>
 
-    {{template "components/response.gohtml" .}}
 </div>

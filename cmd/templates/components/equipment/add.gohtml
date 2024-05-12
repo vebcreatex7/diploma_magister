@@ -1,0 +1,6 @@
+<tbody id="equipment-table-body">
+    {{template "components/equipment/row_add.gohtml" .}}
+    {{range .}}
+        {{template "components/equipment/row.gohtml" .}}
+    {{end}}
+</tbody>

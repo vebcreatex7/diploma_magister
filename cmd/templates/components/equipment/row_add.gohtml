@@ -18,10 +18,7 @@
         <input type="text" name="room">
     </td>
     <td>
-        <select name="status">
-            <option value="ready" selected>Готово к использованию</option>
-            <option value="wait_approve">Ожидает подтверждения</option>
-        </select>
+
     </td>
     <td>
         <a
@@ -34,7 +31,7 @@
     </td>
     <td>
         <a
-            hx-get="/admin/equipment-empty"
+            hx-get="/admin/empty"
             hx-target="#equipment-row-add"
             hx-swap="outerHTML"
             hx-indicator="#processing"

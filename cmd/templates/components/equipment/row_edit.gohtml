@@ -49,19 +49,17 @@
         >
     </td>
     <td>
-        <input
-            type="text"
-            data-include-edit="{{.UID}}"
-            name="status"
-            value="{{.Status}}"
-        >
+        <select data-include-edit="{{.UID}}" name="status">
+            <option value="ready" {{if eq .Status "ready"}} selected {{end}}>Активен</option>
+            <option value="wait_approve" {{if eq .Status "wait_approve"}} selected {{end}}>Ожидает подтверждения</option>
+        </select>
     </td>
     <td>
         <a
             hx-put="/admin/equipment/{{.UID}}"
             hx-target="#equipment-row-{{.UID}}"
             hx-swap="outerHTML"
-            hx-include="input[data-include-edit='{{.UID}}']"
+            hx-include="input[data-include-edit='{{.UID}}'],select[data-include-edit='{{.UID}}']"
             hx-indicator="#processing"
             href="">
             Изменить
