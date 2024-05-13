@@ -25,10 +25,15 @@ func (r inventory) GetAllNotCanceled(ctx context.Context) (res []entities.Invent
 }
 
 func (r inventory) DeleteByUID(ctx context.Context, uid string) error {
-	_, err := r.db.Update(schema.Inventory).
-		Set(goqu.Record{"status": "cancel"}).
+	//_, err := r.db.Update(schema.Inventory).
+	//	Set(goqu.Record{"status": "cancel"}).
+	//	Where(goqu.I("uid").Eq(uid)).
+	//	Prepared(true).Executor().ExecContext(ctx)
+
+	_, err := r.db.Delete(schema.Inventory).
 		Where(goqu.I("uid").Eq(uid)).
-		Prepared(true).Executor().ExecContext(ctx)
+		Prepared(true).Executor().
+		ExecContext(ctx)
 
 	return err
 }
@@ -86,4 +91,24 @@ func (r inventory) GetNamesByGroupUID(ctx context.Context, uid string) (res []st
 		).
 		Prepared(true).Executor().
 		ScanValsContext(ctx, &res)
+}
+
+func (r inventory) GetByName(ctx context.Context, name string) (entities.Inventory, bool, error) {
+	var res entities.Inventory
+
+	found, err := r.db.From(schema.Inventory).
+		Select(entities.Inventory{}).
+		Where(goqu.I("name").Eq(name)).
+		Prepared(true).Executor().ScanStructContext(ctx, &res)
+
+	return res, found, err
+}
+
+func (r inventory) DeleteInventoryInAccessGroupByUID(ctx context.Context, uid string) error {
+	_, err := r.db.
+		Delete(schema.InventoryInAccessGroup).
+		Where(goqu.I("inventory_uid").Eq(uid)).
+		Prepared(true).Executor().ExecContext(ctx)
+
+	return err
 }

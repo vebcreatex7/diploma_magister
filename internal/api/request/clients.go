@@ -7,6 +7,7 @@ import (
 	"github.com/vebcreatex7/diploma_magister/pkg/request"
 	"log"
 	"net/http"
+	"strings"
 )
 
 type CreateUser struct {
@@ -26,13 +27,13 @@ func (r *CreateUser) Bind(req *http.Request) error {
 
 	log.Println(req.Form)
 
-	r.Surname = req.Form.Get("surname")
-	r.Name = req.Form.Get("name")
-	r.Patronymic = req.Form.Get("patronymic")
-	r.Login = req.Form.Get("login")
-	r.Password = req.Form.Get("password")
-	r.Email = req.Form.Get("email")
-	r.Role = req.Form.Get("role")
+	r.Surname = strings.TrimSpace(req.Form.Get("surname"))
+	r.Name = strings.TrimSpace(req.Form.Get("name"))
+	r.Patronymic = strings.TrimSpace(req.Form.Get("patronymic"))
+	r.Login = strings.TrimSpace(req.Form.Get("login"))
+	r.Password = strings.TrimSpace(req.Form.Get("password"))
+	r.Email = strings.TrimSpace(req.Form.Get("email"))
+	r.Role = strings.TrimSpace(req.Form.Get("role"))
 
 	if err := r.validate(); err != nil {
 		return fmt.Errorf("validating request: %w", err)
@@ -67,8 +68,8 @@ func (r *LoginUser) Bind(req *http.Request) error {
 		return fmt.Errorf("parsing request: %w", err)
 	}
 
-	r.Login = req.Form.Get("login")
-	r.Password = req.Form.Get("password")
+	r.Login = strings.TrimSpace(req.Form.Get("login"))
+	r.Password = strings.TrimSpace(req.Form.Get("password"))
 
 	if err := r.validate(); err != nil {
 		return fmt.Errorf("validating request: %w", err)
@@ -124,13 +125,13 @@ func (r *EditUser) Bind(req *http.Request) error {
 
 	log.Println(req.Form)
 
-	r.Surname = req.Form.Get("surname")
-	r.Name = req.Form.Get("name")
-	r.Patronymic = req.Form.Get("patronymic")
-	r.Login = req.Form.Get("login")
-	r.Email = req.Form.Get("email")
-	r.Status = req.Form.Get("status")
-	r.Role = req.Form.Get("role")
+	r.Surname = strings.TrimSpace(req.Form.Get("surname"))
+	r.Name = strings.TrimSpace(req.Form.Get("name"))
+	r.Patronymic = strings.TrimSpace(req.Form.Get("patronymic"))
+	r.Login = strings.TrimSpace(req.Form.Get("login"))
+	r.Email = strings.TrimSpace(req.Form.Get("email"))
+	r.Role = strings.TrimSpace(req.Form.Get("role"))
+	r.Status = strings.TrimSpace(req.Form.Get("status"))
 
 	return r.validate()
 }

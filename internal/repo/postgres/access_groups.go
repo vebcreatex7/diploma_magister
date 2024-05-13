@@ -29,15 +29,13 @@ func (r accessGroups) Create(ctx context.Context, e entities.AccessGroup) (entit
 func (r accessGroups) GetAllNotCanceled(ctx context.Context) (res []entities.AccessGroup, err error) {
 	return res, r.db.From(schema.AccessGroup).
 		Select(entities.AccessGroup{}).
-		Where(goqu.I("status").Neq("cancel")).
 		Order(goqu.C("uid").Desc()).
 		Prepared(true).Executor().
 		ScanStructsContext(ctx, &res)
 }
 
 func (r accessGroups) DeleteByUID(ctx context.Context, uid string) error {
-	_, err := r.db.Update(schema.AccessGroup).
-		Set(goqu.Record{"status": "cancel"}).
+	_, err := r.db.Delete(schema.AccessGroup).
 		Where(goqu.I("uid").Eq(uid)).
 		Prepared(true).Executor().ExecContext(ctx)
 
@@ -70,7 +68,7 @@ func (r accessGroups) Edit(ctx context.Context, e entities.AccessGroup) (entitie
 	return res, edited, err
 }
 
-func (r accessGroups) CreateClientsInAccessGroup(ctx context.Context, e entities.ClientsInAccessGroup) error {
+func (r accessGroups) CreateClientsInAccessGroup(ctx context.Context, e []entities.ClientsInAccessGroup) error {
 	_, err := r.db.Insert(schema.ClientsInAccessGroup).
 		Rows(e).
 		Prepared(true).Executor().ExecContext(ctx)
@@ -78,17 +76,44 @@ func (r accessGroups) CreateClientsInAccessGroup(ctx context.Context, e entities
 	return err
 }
 
-func (r accessGroups) CreateEquipmentInAccessGroup(ctx context.Context, e entities.EquipmentInAccessGroup) error {
-	_, err := r.db.Insert(schema.EquipmentInAccessGroup).
+func (r accessGroups) CreateEquipmentInAccessGroup(ctx context.Context, e []entities.EquipmentInAccessGroup) error {
+	q := r.db.Insert(schema.EquipmentInAccessGroup).
+		Rows(e).
+		Prepared(true).Executor()
+
+	_, err := q.ExecContext(ctx)
+
+	return err
+}
+
+func (r accessGroups) CreateInventoryInAccessGroup(ctx context.Context, e []entities.InventoryInAccessGroup) error {
+
+	_, err := r.db.Insert(schema.InventoryInAccessGroup).
 		Rows(e).
 		Prepared(true).Executor().ExecContext(ctx)
 
 	return err
 }
 
-func (r accessGroups) CreateInventoryInAccessGroup(ctx context.Context, e entities.InventoryInAccessGroup) error {
-	_, err := r.db.Insert(schema.InventoryInAccessGroup).
-		Rows(e).
+func (r accessGroups) DeleteClientsInAccessGroupByUID(ctx context.Context, uid string) error {
+	_, err := r.db.Delete(schema.ClientsInAccessGroup).
+		Where(goqu.I("access_group_uid").Eq(uid)).
+		Prepared(true).Executor().ExecContext(ctx)
+
+	return err
+}
+
+func (r accessGroups) DeleteEquipmentInAccessGroupByUID(ctx context.Context, uid string) error {
+	_, err := r.db.Delete(schema.EquipmentInAccessGroup).
+		Where(goqu.I("access_group_uid").Eq(uid)).
+		Prepared(true).Executor().ExecContext(ctx)
+
+	return err
+}
+
+func (r accessGroups) DeleteInventoryInAccessGroupByUID(ctx context.Context, uid string) error {
+	_, err := r.db.Delete(schema.InventoryInAccessGroup).
+		Where(goqu.I("access_group_uid").Eq(uid)).
 		Prepared(true).Executor().ExecContext(ctx)
 
 	return err

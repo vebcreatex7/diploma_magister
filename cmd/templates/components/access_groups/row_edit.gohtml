@@ -4,64 +4,55 @@
             type="text"
             data-include-edit="{{.UID}}"
             name="name"
-            value="{{.Name}}"/>
+            value="{{.Name}}">
     </td>
     <td>
         <input
             type="text"
             data-include-edit="{{.UID}}"
             name="description"
-            value="{{.Description}}"/>
+            value="{{.Description}}">
     </td>
     <td>
         <input
             type="text"
             data-include-edit="{{.UID}}"
             name="users"
-            value="{{.Users}}"/>
-        >
+            value="{{.Users}}">
     </td>
     <td>
         <input
                 type="text"
                 data-include-edit="{{.UID}}"
                 name="equipment"
-                value="{{.Equipment}}"/>
-        >
-    </td>
-    <td>
-        <input
-                type="text"
-                data-include-edit="{{.UID}}"
-                name="equipment"
-                value="{{.Equipment}}"/>
-        >
+                value="{{.Equipment}}">
     </td>
     <td>
         <input
                 type="text"
                 data-include-edit="{{.UID}}"
                 name="inventory"
-                value="{{.Inventory}}"/>
-        >
+                value="{{.Inventory}}">
     </td>
     <td>
         <a
-            hx-put="/admin/access-groups/{{.UID}}"
-            hx-target="access-groups-row-{{.UID}}"
-            hx-swap="innerHTML"
-            hx-include="input[data-include-edit='{{.UID}}'], select[data-include-edit='{{.UID}}']"
-            hx-confirm="Подтвердите изменение группы'{{.Name}}'"
-            hx-indicator="#processing"
-        >Изменить</a>
-    </td>
-    <td>
-        <a
-                hx-get="/admin/access-groups/{{.UID}}"
+                hx-put="/admin/access-groups/{{.UID}}"
                 hx-target="#access-groups-row-{{.UID}}"
                 hx-swap="outerHTML"
                 hx-indicator="#processing"
+                hx-include="input[data-include-edit='{{.UID}}'], select[data-include-edit='{{.UID}}']"
+                hx-confirm="Подтвердите изменение группы'{{.Name}}'"
                 href="">
+            Изменить
+        </a>
+    </td>
+    <td>
+        <a
+            hx-get="/admin/access-groups/{{.UID}}"
+            hx-target="#access-groups-row-{{.UID}}"
+            hx-swap="outerHTML"
+            hx-indicator="#processing"
+            href="">
             Отменить
         </a>
     </td>

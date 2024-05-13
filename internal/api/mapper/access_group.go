@@ -3,8 +3,8 @@ package mapper
 import (
 	"github.com/vebcreatex7/diploma_magister/internal/api/request"
 	"github.com/vebcreatex7/diploma_magister/internal/api/response"
-	"github.com/vebcreatex7/diploma_magister/internal/domain/constant"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/entities"
+	"slices"
 	"strings"
 )
 
@@ -12,6 +12,10 @@ type AccessGroup struct {
 }
 
 func (m AccessGroup) MakeResponse(e entities.AccessGroupExt) response.AccessGroup {
+	slices.Sort(e.Users)
+	slices.Sort(e.Equipment)
+	slices.Sort(e.Inventory)
+
 	return response.AccessGroup{
 		UID:         e.UID,
 		Name:        e.Name,
@@ -50,7 +54,6 @@ func (m AccessGroup) MakeCreateEntity(r request.CreateAccessGroup) entities.Acce
 		AccessGroup: entities.AccessGroup{
 			Name:        r.Name,
 			Description: r.Description,
-			Status:      constant.StatusReady,
 		},
 		Users:     r.Users,
 		Equipment: r.Equipment,

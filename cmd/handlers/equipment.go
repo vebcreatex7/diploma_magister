@@ -43,8 +43,7 @@ func (h admin) DeleteEquipment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := h.equipmentService.DeleteByUID(r.Context(), req.UID)
-	if err != nil {
+	if err := h.equipmentService.DeleteByUID(r.Context(), req.UID); err != nil {
 		h.log.WithError(err).Errorf("deleting")
 		p.SetCode(422).
 			SetError(err.Error())

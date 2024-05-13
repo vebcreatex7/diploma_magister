@@ -81,17 +81,16 @@ func (s clients) GetAllNotCanceled(ctx context.Context) ([]response.User, error)
 	return s.mapper.MakeListResponse(e), nil
 }
 
-func (s clients) DeleteByUID(ctx context.Context, uid string) ([]response.User, error) {
+func (s clients) DeleteByUID(ctx context.Context, uid string) error {
+	if err := s.clientsRepo.DeleteClientsInAccessGroupByUID(ctx, uid); err != nil {
+		return fmt.Errorf("deleting clients_in_access_group by uid: %w", err)
+	}
+
 	if err := s.clientsRepo.DeleteByUID(ctx, uid); err != nil {
-		return nil, fmt.Errorf("deleting client by uid: %w", err)
+		return fmt.Errorf("deleting client by uid: %w", err)
 	}
 
-	e, err := s.clientsRepo.GetAllNotCanceled(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("getting clients: %w", err)
-	}
-
-	return s.mapper.MakeListResponse(e), nil
+	return nil
 }
 
 func (s clients) GetByUID(ctx context.Context, uid string) (response.User, error) {

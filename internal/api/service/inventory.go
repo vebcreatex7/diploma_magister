@@ -29,6 +29,10 @@ func (s inventory) GetAllNotCanceled(ctx context.Context) ([]response.Inventory,
 }
 
 func (s inventory) DeleteByUID(ctx context.Context, uid string) error {
+	if err := s.inventoryRepo.DeleteInventoryInAccessGroupByUID(ctx, uid); err != nil {
+		return fmt.Errorf("deleting inventory_in_access_group by uid: %w", err)
+	}
+
 	if err := s.inventoryRepo.DeleteByUID(ctx, uid); err != nil {
 		return fmt.Errorf("deleting inventory by uid: %w", err)
 	}

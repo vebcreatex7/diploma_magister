@@ -5,6 +5,7 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/vebcreatex7/diploma_magister/pkg/request"
 	"net/http"
+	"strings"
 )
 
 type CreateInventory struct {
@@ -23,12 +24,12 @@ func (r *CreateInventory) Bind(req *http.Request) error {
 		}
 	}
 
-	r.Name = req.Form.Get("name")
-	r.Description = req.Form.Get("description")
-	r.Type = req.Form.Get("type")
-	r.Manufacturer = req.Form.Get("manufacturer")
-	r.Quantity = req.Form.Get("quantity")
-	r.Unit = req.Form.Get("unit")
+	r.Name = strings.TrimSpace(req.Form.Get("name"))
+	r.Description = strings.TrimSpace(req.Form.Get("description"))
+	r.Type = strings.TrimSpace(req.Form.Get("type"))
+	r.Manufacturer = strings.TrimSpace(req.Form.Get("manufacturer"))
+	r.Quantity = strings.TrimSpace(req.Form.Get("quantity"))
+	r.Unit = strings.TrimSpace(req.Form.Get("unit"))
 
 	return r.validate()
 }
@@ -67,12 +68,12 @@ func (r *EditInventory) Bind(req *http.Request) error {
 		return fmt.Errorf("parsing form: %w", err)
 	}
 
-	r.Name = req.Form.Get("name")
-	r.Description = req.Form.Get("description")
-	r.Type = req.Form.Get("type")
-	r.Manufacturer = req.Form.Get("manufacturer")
-	r.Quantity = req.Form.Get("quantity")
-	r.Unit = req.Form.Get("unit")
+	r.Name = strings.TrimSpace(req.Form.Get("name"))
+	r.Description = strings.TrimSpace(req.Form.Get("description"))
+	r.Type = strings.TrimSpace(req.Form.Get("type"))
+	r.Manufacturer = strings.TrimSpace(req.Form.Get("manufacturer"))
+	r.Quantity = strings.TrimSpace(req.Form.Get("quantity"))
+	r.Unit = strings.TrimSpace(req.Form.Get("unit"))
 	r.Status = req.Form.Get("status")
 
 	return nil

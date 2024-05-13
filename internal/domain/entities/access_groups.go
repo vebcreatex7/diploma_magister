@@ -1,10 +1,11 @@
 package entities
 
+import "slices"
+
 type AccessGroup struct {
-	UID         string `db:"uid" goqu:"skipinsert,skipupdate"`
+	UID         string `db:"uid" goqu:"skipupdate"`
 	Name        string `db:"name"`
 	Description string `db:"description"`
-	Status      string `db:"status" goqu:"skipinsert,skipupdate"`
 }
 
 type AccessGroupExt struct {
@@ -12,6 +13,15 @@ type AccessGroupExt struct {
 	Users     []string
 	Equipment []string
 	Inventory []string
+}
+
+func (e *AccessGroupExt) RemoveDuplicates() {
+	slices.Sort(e.Users)
+	e.Users = slices.Compact(e.Users)
+	slices.Sort(e.Equipment)
+	e.Equipment = slices.Compact(e.Equipment)
+	slices.Sort(e.Inventory)
+	e.Inventory = slices.Compact(e.Inventory)
 }
 
 type ClientsInAccessGroup struct {

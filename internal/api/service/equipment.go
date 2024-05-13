@@ -28,17 +28,16 @@ func (s equipment) GetAllNotCanceled(ctx context.Context) ([]response.Equipment,
 	return s.mapper.MakeListResponse(eq), nil
 }
 
-func (s equipment) DeleteByUID(ctx context.Context, uid string) ([]response.Equipment, error) {
+func (s equipment) DeleteByUID(ctx context.Context, uid string) error {
+	if err := s.equipmentRepo.DeleteEquipmentInAccessGroupByUID(ctx, uid); err != nil {
+		return fmt.Errorf("deleting equipment_in_access_group by uid: %w", err)
+	}
+
 	if err := s.equipmentRepo.DeleteByUID(ctx, uid); err != nil {
-		return nil, fmt.Errorf("deleting equipment by uid: %w", err)
+		return fmt.Errorf("deleting equipment by uid: %w", err)
 	}
 
-	eq, err := s.equipmentRepo.GetAllNotCanceled(ctx)
-	if err != nil {
-		return nil, fmt.Errorf("getting")
-	}
-
-	return s.mapper.MakeListResponse(eq), nil
+	return nil
 }
 
 func (s equipment) GetByUID(ctx context.Context, uid string) (response.Equipment, error) {

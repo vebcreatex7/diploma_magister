@@ -41,8 +41,7 @@ func (h admin) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err := h.clientsService.DeleteByUID(r.Context(), req.UID)
-	if err != nil {
+	if err := h.clientsService.DeleteByUID(r.Context(), req.UID); err != nil {
 		h.log.WithError(err).Errorf("deleting")
 		w.WriteHeader(400)
 

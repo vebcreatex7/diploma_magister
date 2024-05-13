@@ -25,9 +25,22 @@ func (r *CreateAccessGroup) Bind(req *http.Request) error {
 
 	r.Name = strings.TrimSpace(req.Form.Get("name"))
 	r.Description = strings.TrimSpace(req.Form.Get("description"))
-	r.Users = strings.Split(strings.TrimSpace(req.Form.Get("users")), ",")
-	r.Equipment = strings.Split(strings.ReplaceAll(req.Form.Get("equipment"), " ", ""), ",")
-	r.Inventory = strings.Split(strings.ReplaceAll(req.Form.Get("inventory"), " ", ""), ",")
+
+	users := strings.ReplaceAll(req.Form.Get("users"), " ", "")
+	equipment := strings.ReplaceAll(req.Form.Get("equipment"), " ", "")
+	inventory := strings.ReplaceAll(req.Form.Get("inventory"), " ", "")
+
+	if len(users) != 0 {
+		r.Users = strings.Split(users, ",")
+	}
+
+	if len(equipment) != 0 {
+		r.Equipment = strings.Split(equipment, ",")
+	}
+
+	if len(inventory) != 0 {
+		r.Inventory = strings.Split(inventory, ",")
+	}
 
 	return r.validate()
 }
@@ -63,9 +76,21 @@ func (r *EditAccessGroup) Bind(req *http.Request) error {
 
 	r.Name = strings.TrimSpace(req.Form.Get("name"))
 	r.Description = strings.TrimSpace(req.Form.Get("description"))
-	r.Users = strings.Split(strings.TrimSpace(req.Form.Get("users")), ",")
-	r.Equipment = strings.Split(strings.ReplaceAll(req.Form.Get("equipment"), " ", ""), ",")
-	r.Inventory = strings.Split(strings.ReplaceAll(req.Form.Get("inventory"), " ", ""), ",")
+	users := strings.ReplaceAll(req.Form.Get("users"), " ", "")
+	equipment := strings.ReplaceAll(req.Form.Get("equipment"), " ", "")
+	inventory := strings.ReplaceAll(req.Form.Get("inventory"), " ", "")
+
+	if len(users) != 0 {
+		r.Users = strings.Split(users, ",")
+	}
+
+	if len(equipment) != 0 {
+		r.Equipment = strings.Split(equipment, ",")
+	}
+
+	if len(inventory) != 0 {
+		r.Inventory = strings.Split(inventory, ",")
+	}
 
 	return r.validate()
 }

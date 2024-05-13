@@ -5,6 +5,7 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/vebcreatex7/diploma_magister/pkg/request"
 	"net/http"
+	"strings"
 )
 
 type CreateEquipment struct {
@@ -21,12 +22,12 @@ func (r *CreateEquipment) Bind(req *http.Request) error {
 		return fmt.Errorf("parsing form: %w", err)
 	}
 
-	r.Name = req.Form.Get("name")
-	r.Description = req.Form.Get("description")
-	r.Type = req.Form.Get("type")
-	r.Manufacturer = req.Form.Get("manufacturer")
-	r.Model = req.Form.Get("model")
-	r.Room = req.Form.Get("room")
+	r.Name = strings.TrimSpace(req.Form.Get("name"))
+	r.Description = strings.TrimSpace(req.Form.Get("description"))
+	r.Type = strings.TrimSpace(req.Form.Get("type"))
+	r.Manufacturer = strings.TrimSpace(req.Form.Get("manufacturer"))
+	r.Model = strings.TrimSpace(req.Form.Get("model"))
+	r.Room = strings.TrimSpace(req.Form.Get("room"))
 
 	return r.validate()
 }
@@ -65,12 +66,12 @@ func (r *EditEquipment) Bind(req *http.Request) error {
 		return fmt.Errorf("parsing form: %w", err)
 	}
 
-	r.Name = req.Form.Get("name")
-	r.Description = req.Form.Get("description")
-	r.Type = req.Form.Get("type")
-	r.Manufacturer = req.Form.Get("manufacturer")
-	r.Model = req.Form.Get("model")
-	r.Room = req.Form.Get("room")
+	r.Name = strings.TrimSpace(req.Form.Get("name"))
+	r.Description = strings.TrimSpace(req.Form.Get("description"))
+	r.Type = strings.TrimSpace(req.Form.Get("type"))
+	r.Manufacturer = strings.TrimSpace(req.Form.Get("manufacturer"))
+	r.Model = strings.TrimSpace(req.Form.Get("model"))
+	r.Room = strings.TrimSpace(req.Form.Get("room"))
 	r.Status = req.Form.Get("status")
 
 	return nil

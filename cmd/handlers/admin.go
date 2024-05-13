@@ -68,6 +68,12 @@ func (h admin) Routes() chi.Router {
 	r.Post("/inventory", h.AddInventory)
 
 	r.Get("/access-groups", h.GetAccessGroups)
+	r.Get("/access-groups-add", h.AddAccessGroupPage)
+	r.Post("/access-groups", h.AddAccessGroup)
+	r.Get("/access-groups-edit/{uid}", h.GetAccessGroupEditByUID)
+	r.Put("/access-groups/{uid}", h.EditAccessGroup)
+	r.Get("/access-groups/{uid}", h.GetAccessGroupByUID)
+	r.Delete("/access-groups/{uid}", h.DeleteAccessGroup)
 
 	return r
 }

@@ -24,10 +24,15 @@ func (r equipment) GetAllNotCanceled(ctx context.Context) (res []entities.Equipm
 }
 
 func (r equipment) DeleteByUID(ctx context.Context, uid string) error {
-	_, err := r.db.Update(schema.Equipment).
-		Set(goqu.Record{"status": "cancel"}).
+	//_, err := r.db.Update(schema.Equipment).
+	//	Set(goqu.Record{"status": "cancel"}).
+	//	Where(goqu.I("uid").Eq(uid)).
+	//	Prepared(true).Executor().ExecContext(ctx)
+
+	_, err := r.db.Delete(schema.Equipment).
 		Where(goqu.I("uid").Eq(uid)).
-		Prepared(true).Executor().ExecContext(ctx)
+		Prepared(true).Executor().
+		ExecContext(ctx)
 
 	return err
 }
@@ -85,4 +90,24 @@ func (r equipment) GetNamesByGroupUID(ctx context.Context, uid string) (res []st
 		).
 		Prepared(true).Executor().
 		ScanValsContext(ctx, &res)
+}
+
+func (r equipment) GetByName(ctx context.Context, name string) (entities.Equipment, bool, error) {
+	var res entities.Equipment
+
+	found, err := r.db.From(schema.Equipment).
+		Select(entities.Equipment{}).
+		Where(goqu.I("name").Eq(name)).
+		Prepared(true).Executor().ScanStructContext(ctx, &res)
+
+	return res, found, err
+}
+
+func (r equipment) DeleteEquipmentInAccessGroupByUID(ctx context.Context, uid string) error {
+	_, err := r.db.
+		Delete(schema.EquipmentInAccessGroup).
+		Where(goqu.I("equipment_uid").Eq(uid)).
+		Prepared(true).Executor().ExecContext(ctx)
+
+	return err
 }

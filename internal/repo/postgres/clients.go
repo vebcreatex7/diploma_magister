@@ -49,10 +49,15 @@ func (r clients) GetAllNotCanceled(ctx context.Context) (res []entities.Client, 
 }
 
 func (r clients) DeleteByUID(ctx context.Context, uid string) error {
-	_, err := r.db.Update(schema.Client).
-		Set(goqu.Record{"status": "cancel"}).
+	//_, err := r.db.Update(schema.Client).
+	//	Set(goqu.Record{"status": "cancel"}).
+	//	Where(goqu.I("uid").Eq(uid)).
+	//	Prepared(true).Executor().ExecContext(ctx)
+
+	_, err := r.db.Delete(schema.Client).
 		Where(goqu.I("uid").Eq(uid)).
-		Prepared(true).Executor().ExecContext(ctx)
+		Prepared(true).Executor().
+		ExecContext(ctx)
 
 	return err
 }
@@ -96,4 +101,12 @@ func (r clients) GetLoginsByGroupUID(ctx context.Context, uid string) (res []str
 		).
 		Prepared(true).Executor().
 		ScanValsContext(ctx, &res)
+}
+
+func (r clients) DeleteClientsInAccessGroupByUID(ctx context.Context, uid string) error {
+	_, err := r.db.Delete(schema.ClientsInAccessGroup).
+		Where(goqu.I("client_uid").Eq(uid)).
+		Prepared(true).Executor().ExecContext(ctx)
+
+	return err
 }

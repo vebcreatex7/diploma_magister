@@ -43,8 +43,7 @@ func (h admin) DeleteInventory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := h.inventoryService.DeleteByUID(r.Context(), req.UID)
-	if err != nil {
+	if err := h.inventoryService.DeleteByUID(r.Context(), req.UID); err != nil {
 		h.log.WithError(err).Errorf("deleting")
 		p.SetCode(422).
 			SetError(err.Error())
