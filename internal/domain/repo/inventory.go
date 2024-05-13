@@ -11,4 +11,5 @@ type Inventory interface {
 	GetByUID(ctx context.Context, uid string) (entities.Inventory, bool, error)
 	Edit(ctx context.Context, e entities.Inventory) (entities.Inventory, bool, error)
 	Create(ctx context.Context, e entities.Inventory) (entities.Inventory, error)
+	GetNamesByGroupUID(ctx context.Context, uid string) (res []string, err error)
 }

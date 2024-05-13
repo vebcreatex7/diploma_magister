@@ -11,4 +11,5 @@ type Equipment interface {
 	GetByUID(ctx context.Context, uid string) (entities.Equipment, bool, error)
 	Edit(ctx context.Context, e entities.Equipment) (entities.Equipment, bool, error)
 	Create(ctx context.Context, e entities.Equipment) (entities.Equipment, error)
+	GetNamesByGroupUID(ctx context.Context, uid string) (res []string, err error)
 }

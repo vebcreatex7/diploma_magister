@@ -9,6 +9,8 @@
 
 {{template "components/admin_nav.gohtml" .}}
 
+
+
 {{if eq .Path "/admin/home"}}
     {{template "pages/home.gohtml" .}}
 {{else if eq .Path "/admin/users"}}
@@ -17,6 +19,8 @@
     {{template "pages/equipment.gohtml" .}}
 {{else if eq .Path "/admin/inventory"}}
     {{template "pages/inventory.gohtml" .}}
+    {{else if eq .Path "/admin/access-groups"}}
+    {{template "pages/access_groups.gohtml" .}}
 {{end}}
 
 </body>

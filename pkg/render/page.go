@@ -1,30 +1,45 @@
 package render
 
-import (
-	"github.com/vebcreatex7/diploma_magister/pkg/ptr"
-)
+import "encoding/json"
+
+type toast struct {
+	Level   string `json:"level"`
+	Message string `json:"message"`
+}
+
+func (r toast) toJSON() string {
+	var tmp = make(map[string]toast)
+
+	tmp["makeToast"] = r
+
+	res, _ := json.Marshal(tmp)
+
+	return string(res)
+}
 
 type page struct {
-	Tmpl    string
-	Code    int
+	tmpl    string
+	code    int
 	Path    string
-	Type    *string
-	Message *string
+	tp      string
+	message string
 	Data    any
+	headers map[string]string
+	toast   *toast
 }
 
 func NewPage() *page {
-	return &page{}
+	return &page{headers: make(map[string]string)}
 }
 
 func (r *page) SetTemplate(t string) *page {
-	r.Tmpl = t
+	r.tmpl = t
 
 	return r
 }
 
 func (r *page) SetCode(c int) *page {
-	r.Code = c
+	r.code = c
 
 	return r
 }
@@ -36,13 +51,13 @@ func (r *page) SetPath(p string) *page {
 }
 
 func (r *page) SetType(t string) *page {
-	r.Type = ptr.Ref(t)
+	r.tp = t
 
 	return r
 }
 
 func (r *page) SetMessage(m string) *page {
-	r.Message = ptr.Ref(m)
+	r.message = m
 
 	return r
 }
@@ -54,22 +69,43 @@ func (r *page) SetData(d any) *page {
 }
 
 func (r *page) SetError(m string) *page {
-	r.Type = ptr.Ref("error")
-	r.Message = ptr.Ref(m)
+	r.tp = "error"
+	r.message = m
+
+	r.toast = &toast{
+		Level:   "error",
+		Message: m,
+	}
 
 	return r
 }
 
 func (r *page) SetWarning(m string) *page {
-	r.Type = ptr.Ref("warning")
-	r.Message = ptr.Ref(m)
+	r.tp = "warning"
+	r.message = m
+
+	r.toast = &toast{
+		Level:   "warning",
+		Message: m,
+	}
 
 	return r
 }
 
 func (r *page) SetSuccess(m string) *page {
-	r.Type = ptr.Ref("success")
-	r.Message = ptr.Ref(m)
+	r.tp = "success"
+	r.message = m
+
+	r.toast = &toast{
+		Level:   "success",
+		Message: m,
+	}
+
+	return r
+}
+
+func (r *page) SetHeader(k, v string) *page {
+	r.headers[k] = v
 
 	return r
 }

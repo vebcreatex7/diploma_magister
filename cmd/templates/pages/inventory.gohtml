@@ -3,23 +3,25 @@
     <button
             hx-get="/admin/inventory-add"
             hx-target="#inventory-table-body"
-            hx-swap="outerHTML"
+            hx-swap="afterbegin"
             hx-indicator="#processing"
             class="inline-flex items-center h-8 px-4 m-2 text-sm text-blue-100 transition-colors duration-150 bg-blue-700 rounded-lg focus:shadow-outline hover:bg-blue-800"
             href=""
     >
-        Add
+        Добавить
     </button>
     <table>
-        <tr>
-            <th>Имя</th>
-            <th>Описание</th>
-            <th>Тип</th>
-            <th>Производитель</th>
-            <th>Количество</th>
-            <th>Ед. измерения</th>
-            <th>Статус</th>
-        </tr>
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Тип</th>
+                <th>Производитель</th>
+                <th>Количество</th>
+                <th>Ед. измерения</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
         <tbody id="inventory-table-body">
             {{with .Data}}
                 {{range .}}
@@ -28,4 +30,7 @@
             {{end}}
         </tbody>
     </table>
+
+    <section id="toast-container"></section>
+
 </div>

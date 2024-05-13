@@ -83,3 +83,17 @@ func (r clients) Edit(ctx context.Context, e entities.Client) (entities.Client, 
 
 	return res, edited, err
 }
+
+func (r clients) GetLoginsByGroupUID(ctx context.Context, uid string) (res []string, err error) {
+	return res, r.db.From(schema.Client).
+		Select("login").
+		Join(goqu.T(schema.ClientsInAccessGroup),
+			goqu.On(goqu.I(schema.Client+".uid").Eq(goqu.I(schema.ClientsInAccessGroup+".client_uid"))),
+		).
+		Where(
+			goqu.I(schema.ClientsInAccessGroup+".access_group_uid").Eq(uid),
+			goqu.I(schema.Client+".status").Neq("cancel"),
+		).
+		Prepared(true).Executor().
+		ScanValsContext(ctx, &res)
+}

@@ -60,9 +60,24 @@ func main() {
 	inventoryRepo := postgres.NewInventory(db)
 	inventoryService := service.NewInventory(inventoryRepo)
 
+	accessGroupRepo := postgres.NewAccessGroups(db)
+	accessGroupService := service.NewAccessGroup(
+		accessGroupRepo,
+		clientsRepo,
+		equipmentRepo,
+		inventoryRepo,
+	)
+
 	indexHandler := handlers.NewHome(templ, log, clientsService)
 
-	adminHandler := handlers.NewAdmin(t, log, clientsService, equipmentService, inventoryService)
+	adminHandler := handlers.NewAdmin(
+		t,
+		log,
+		clientsService,
+		equipmentService,
+		inventoryService,
+		accessGroupService,
+	)
 
 	r.Mount(indexHandler.BasePrefix(), indexHandler.Routes())
 	r.Mount(adminHandler.BasePrefix(), adminHandler.Routes())

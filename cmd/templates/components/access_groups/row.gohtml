@@ -1,0 +1,25 @@
+<tr id="access-groups-row-{{.UID}}">
+    <td>{{.Name}}</td>
+    <td>{{.Description}}</td>
+    <td>{{.Users}}</td>
+    <td>{{.Equipment}}</td>
+    <td>{{.Inventory}}</td>
+    <td>
+        <a
+            hx-get="/admin/access-groups-edit/{{.UID}}"
+            hx-target="#access-groups-row-{{.UID}}"
+            hx-swap="outerHTML"
+            hx-indicator="#processing"
+            href=""
+        >Изменить</a>
+    </td>
+    <td>
+        <a
+            hx-delete="/admin/access-groups/{{.UID}}"
+            hx-target="#access-groups-row-{{.UID}}"
+            hx-swap="outerHTML"
+            hx-confirm="Подтвердите удаление группы '{{.Name}}'"
+            hx-indicator="#processing"
+            href="">Удалить</a>
+    </td>
+</tr>

@@ -20,7 +20,8 @@ func (r inventory) GetAllNotCanceled(ctx context.Context) (res []entities.Invent
 		Select(entities.Inventory{}).
 		Where(goqu.I("status").Neq("cancel")).
 		Order(goqu.C("uid").Desc()).
-		Prepared(true).Executor().ScanStructsContext(ctx, &res)
+		Prepared(true).Executor().
+		ScanStructsContext(ctx, &res)
 }
 
 func (r inventory) DeleteByUID(ctx context.Context, uid string) error {
@@ -71,4 +72,18 @@ func (r inventory) Create(ctx context.Context, e entities.Inventory) (entities.I
 		ScanStructContext(ctx, &res)
 
 	return res, err
+}
+
+func (r inventory) GetNamesByGroupUID(ctx context.Context, uid string) (res []string, err error) {
+	return res, r.db.From(schema.Inventory).
+		Select("name").
+		Join(goqu.T(schema.InventoryInAccessGroup),
+			goqu.On(goqu.I(schema.Inventory+".uid").Eq(goqu.I(schema.InventoryInAccessGroup+".inventory_uid"))),
+		).
+		Where(
+			goqu.I(schema.InventoryInAccessGroup+".access_group_uid").Eq(uid),
+			goqu.I(schema.Inventory+".status").Neq("cancel"),
+		).
+		Prepared(true).Executor().
+		ScanValsContext(ctx, &res)
 }

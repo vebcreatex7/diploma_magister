@@ -72,3 +72,17 @@ func (r equipment) Create(ctx context.Context, e entities.Equipment) (entities.E
 
 	return res, err
 }
+
+func (r equipment) GetNamesByGroupUID(ctx context.Context, uid string) (res []string, err error) {
+	return res, r.db.From(schema.Equipment).
+		Select("name").
+		Join(goqu.T(schema.EquipmentInAccessGroup),
+			goqu.On(goqu.I(schema.Equipment+".uid").Eq(goqu.I(schema.EquipmentInAccessGroup+".equipment_uid"))),
+		).
+		Where(
+			goqu.I(schema.EquipmentInAccessGroup+".access_group_uid").Eq(uid),
+			goqu.I(schema.Equipment+".status").Neq("cancel"),
+		).
+		Prepared(true).Executor().
+		ScanValsContext(ctx, &res)
+}

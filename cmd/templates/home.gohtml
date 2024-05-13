@@ -10,6 +10,8 @@
 {{ template "home_nav" .}}
 
 
+<div id="admin-content"></div>
+
 {{if eq .Path "/home"}}
     {{template "pages/home.gohtml" .}}
 {{ else if eq .Path "/docs"}}

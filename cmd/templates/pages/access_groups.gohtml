@@ -1,0 +1,32 @@
+<div id="access-groups">
+    <div id="processing" class="htmx-indicator">Processing...</div>
+    <button
+        hx-get="/admin/access-groups-add"
+        hx-target="#access-groups-table-body"
+        hx-swap="afterbegin"
+        hx-indicator="#processing"
+        href=""
+    >
+        Добавить
+    </button>
+    <table>
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Пользователи</th>
+                <th>Оборудование</th>
+                <th>Инвентарь</th>
+            </tr>
+        </thead>
+        <tbody id="access-groups-table-body">
+            {{with .Data}}
+                {{range .}}
+                    {{template "components/access_groups/row.gohtml" .}}
+                {{end}}
+            {{end}}
+        </tbody>
+    </table>
+
+    <section id="toast-container"></section>
+</div>

@@ -9,11 +9,12 @@ import (
 )
 
 type admin struct {
-	t                *render.Template
-	log              *logrus.Logger
-	clientsService   service.Clients
-	equipmentService service.Equipment
-	inventoryService service.Inventory
+	t                   *render.Template
+	log                 *logrus.Logger
+	clientsService      service.Clients
+	equipmentService    service.Equipment
+	inventoryService    service.Inventory
+	accessGroupsService service.AccessGroup
 }
 
 func NewAdmin(
@@ -22,13 +23,15 @@ func NewAdmin(
 	clientsService service.Clients,
 	equipmentService service.Equipment,
 	inventoryService service.Inventory,
+	accessGroupsService service.AccessGroup,
 ) admin {
 	return admin{
-		t:                t,
-		log:              log,
-		clientsService:   clientsService,
-		equipmentService: equipmentService,
-		inventoryService: inventoryService,
+		t:                   t,
+		log:                 log,
+		clientsService:      clientsService,
+		equipmentService:    equipmentService,
+		inventoryService:    inventoryService,
+		accessGroupsService: accessGroupsService,
 	}
 }
 
@@ -63,6 +66,8 @@ func (h admin) Routes() chi.Router {
 	r.Put("/inventory/{uid}", h.EditInventory)
 	r.Get("/inventory-add", h.AddInventoryPage)
 	r.Post("/inventory", h.AddInventory)
+
+	r.Get("/access-groups", h.GetAccessGroups)
 
 	return r
 }

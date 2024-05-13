@@ -23,28 +23,73 @@ func NewTemplate(
 }
 
 func (t *Template) Render(w http.ResponseWriter, p *page) {
-	if err := t.t.ExecuteTemplate(w, p.Tmpl, *p); err != nil {
-		t.log.WithError(err).Errorf("executing template")
-		w.WriteHeader(500)
+	if p.toast != nil {
+		w.Header().Set("HX-Trigger", p.toast.toJSON())
 
-		return
+		if p.toast.Level != "success" {
+			w.Header().Set("HX-Reswap", "none")
+			if p.code == 200 {
+				t.log.Warnf("Unsuccess with code 200")
+			}
+
+			w.WriteHeader(p.code)
+			return
+		}
 	}
 
-	w.Header().Set("content-type", "text/html")
-	w.WriteHeader(p.Code)
+	for k, v := range p.headers {
+		w.Header().Set(k, v)
+	}
+
+	if p.code == 200 {
+		var buf bytes.Buffer
+
+		if err := t.t.ExecuteTemplate(&buf, p.tmpl, p); err != nil {
+			t.log.WithError(err).Errorf("executing template")
+			w.WriteHeader(500)
+
+			return
+		}
+
+		w.Header().Set("content-type", "text/html")
+		w.Write(buf.Bytes())
+	}
+
+	w.WriteHeader(p.code)
 }
 
 func (t *Template) RenderData(w http.ResponseWriter, p *page) {
-	var buf bytes.Buffer
+	if p.toast != nil {
+		w.Header().Set("HX-Trigger", p.toast.toJSON())
 
-	if err := t.t.ExecuteTemplate(&buf, p.Tmpl, p.Data); err != nil {
-		t.log.WithError(err).Errorf("executing template")
-		w.WriteHeader(500)
+		if p.toast.Level != "success" {
+			w.Header().Set("HX-Reswap", "none")
+			if p.code == 200 {
+				t.log.Warnf("Unsuccess with code 200")
+			}
 
-		return
+			w.WriteHeader(p.code)
+			return
+		}
 	}
 
-	w.Header().Set("content-type", "text/html")
-	w.WriteHeader(p.Code)
-	w.Write(buf.Bytes())
+	for k, v := range p.headers {
+		w.Header().Set(k, v)
+	}
+
+	if p.code == 200 {
+		var buf bytes.Buffer
+
+		if err := t.t.ExecuteTemplate(&buf, p.tmpl, p.Data); err != nil {
+			t.log.WithError(err).Errorf("executing template")
+			w.WriteHeader(500)
+
+			return
+		}
+
+		w.Header().Set("content-type", "text/html")
+		w.Write(buf.Bytes())
+	}
+
+	w.WriteHeader(p.code)
 }

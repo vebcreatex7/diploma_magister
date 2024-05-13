@@ -1,5 +1,5 @@
-<div id="response">
-    {{if hasField . "Type"}}
+<div id="response" >
+    {{if  "tp"}}
         {{if eq .Type "success" }}
             {{ template "success" . }}
         {{else if eq .Type "error"}}
@@ -10,12 +10,16 @@
 
 {{define "error"}}
     <div style="background-color: red">
-        <p>{{.Text}}</p>
+        <script>
+            function myFunction() {
+                alert("{{.Message}}");
+            }
+        </script>
     </div>
 {{end}}
 
 {{define "success"}}
     <div style="background-color: greenyellow">
-        <p>{{.Text}}</p>
+        <p>{{.Message}}</p>
     </div>
 {{end}}

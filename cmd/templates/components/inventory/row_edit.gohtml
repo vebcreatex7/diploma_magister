@@ -53,6 +53,7 @@
                 hx-target="#inventory-row-{{.UID}}"
                 hx-swap="outerHTML"
                 hx-include="input[data-include-edit='{{.UID}}'], select[data-include-edit='{{.UID}}']"
+                hx-confirm="Подтвердите изменение инвентаря'{{.Name}}'"
                 hx-indicator="#processing"
                 href="">
             Изменить

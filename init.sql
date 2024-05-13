@@ -19,7 +19,8 @@ create table client (
 create table access_group (
 	uid uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
 	name text not null,
-	description text not null
+	description text not null,
+	status text not null
 );
 
 
@@ -163,5 +164,7 @@ create unique index on equipment(name) where status != 'cancel';
 
 create unique index on inventory(name) where status != 'cancel';
 
-commit;
+create unique index on access_group(name) where status != 'cancel';
 
+
+commit;

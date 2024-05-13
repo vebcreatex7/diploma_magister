@@ -1,0 +1,36 @@
+<tr id="access-groups-row-add">
+    <td>
+        <input type="text" name="name">
+    </td>
+    <td>
+        <input type="text" name="description">
+    </td>
+    <td>
+        <input type="text" name="users">
+    </td>
+    <td>
+        <input type="text" name="equipment">
+    </td>
+    <td>
+        <input type="text" name="inventory">
+    </td>
+    <td>
+        <a
+           hx-post="/admin/access-groups"
+           hx-target="#access-groups-row-add"
+           hx-swap="outerHTML"
+           hx-indicator="processing"
+           hx-include="input,select"
+           href=""
+        >Добавить</a>
+    </td>
+    <td>
+        <a
+            hx-get="/admin/empty"
+            hx-target="#access-groups-row-add"
+            hx-swap="outerHTML"
+            hx-indicator="#processing"
+            href=""
+        >Отмена</a>
+    </td>
+</tr>

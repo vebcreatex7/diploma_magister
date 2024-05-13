@@ -12,4 +12,5 @@ type Clients interface {
 	DeleteByUID(ctx context.Context, uid string) error
 	GetByUID(ctx context.Context, uid string) (entities.Client, bool, error)
 	Edit(ctx context.Context, e entities.Client) (entities.Client, bool, error)
+	GetLoginsByGroupUID(ctx context.Context, uid string) (res []string, err error)
 }
