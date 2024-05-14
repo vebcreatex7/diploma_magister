@@ -42,12 +42,6 @@
             value="{{.Quantity}}"/>
     </td>
     <td>
-        <select data-include-edit="{{.UID}}" name="status">
-            <option value="ready" {{if eq .Status "ready"}} selected {{end}}>Активен</option>
-            <option value="wait_approve" {{if eq .Status "wait_approve"}} selected {{end}}>Ожидает подтверждения</option>
-        </select>
-    </td>
-    <td>
         <a
                 hx-put="/admin/inventory/{{.UID}}"
                 hx-target="#inventory-row-{{.UID}}"

@@ -9,5 +9,5 @@ type Client struct {
 	PasswordHash string `db:"password_hash" goqu:"skipupdate"`
 	Email        string `db:"email"`
 	Role         string `db:"role"`
-	Status       string `db:"status" goqu:"skipinsert"`
+	Approved     bool   `db:"approved"`
 }

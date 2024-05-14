@@ -15,21 +15,15 @@ func NewInventory(db *goqu.Database) inventory {
 	return inventory{db: db}
 }
 
-func (r inventory) GetAllNotCanceled(ctx context.Context) (res []entities.Inventory, err error) {
+func (r inventory) GetAll(ctx context.Context) (res []entities.Inventory, err error) {
 	return res, r.db.From(schema.Inventory).
 		Select(entities.Inventory{}).
-		Where(goqu.I("status").Neq("cancel")).
-		Order(goqu.C("uid").Desc()).
+		Order(goqu.C("name").Asc()).
 		Prepared(true).Executor().
 		ScanStructsContext(ctx, &res)
 }
 
 func (r inventory) DeleteByUID(ctx context.Context, uid string) error {
-	//_, err := r.db.Update(schema.Inventory).
-	//	Set(goqu.Record{"status": "cancel"}).
-	//	Where(goqu.I("uid").Eq(uid)).
-	//	Prepared(true).Executor().ExecContext(ctx)
-
 	_, err := r.db.Delete(schema.Inventory).
 		Where(goqu.I("uid").Eq(uid)).
 		Prepared(true).Executor().

@@ -8,5 +8,4 @@ type Equipment struct {
 	Manufacturer string `db:"manufacturer"`
 	Model        string `db:"model"`
 	Room         string `db:"room"`
-	Status       string `db:"status"`
 }

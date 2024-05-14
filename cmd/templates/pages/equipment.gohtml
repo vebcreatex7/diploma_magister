@@ -3,7 +3,7 @@
         <button
             hx-get="/admin/equipment-add"
             hx-target="#equipment-table-body"
-            hx-swap="outerHTML"
+            hx-swap="afterbegin"
             hx-indicator="#processing"
             class="inline-flex items-center h-8 px-4 m-2 text-sm text-blue-100 transition-colors duration-150 bg-blue-700 rounded-lg focus:shadow-outline hover:bg-blue-800"
             href=""
@@ -19,7 +19,6 @@
                 <th>Производитель</th>
                 <th>Модель</th>
                 <th>Номер комнаты</th>
-                <th>Статус</th>
             </tr>
         </thead>
         <tbody id="equipment-table-body">

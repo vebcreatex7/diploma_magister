@@ -43,6 +43,9 @@ class Toast {
         toast.appendChild(toastContent);
 
         const toastContainer = document.querySelector(containerQuerySelector);
+        setTimeout(function (){
+            toastContainer.removeChild(toast)
+        }, 5000)
         toastContainer.appendChild(toast);
     }
 }

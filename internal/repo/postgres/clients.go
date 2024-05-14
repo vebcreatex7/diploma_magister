@@ -40,20 +40,18 @@ func (r clients) GetByLogin(ctx context.Context, login string) (entities.Client,
 	return res, found, err
 }
 
-func (r clients) GetAllNotCanceled(ctx context.Context) (res []entities.Client, err error) {
+func (r clients) GetAll(ctx context.Context) (res []entities.Client, err error) {
 	return res, r.db.From(schema.Client).
 		Select(entities.Client{}).
-		Where(goqu.I("status").Neq("cancel")).
-		Order(goqu.C("uid").Desc()).
-		Prepared(true).Executor().ScanStructsContext(ctx, &res)
+		Order(
+			goqu.C("approved").Asc(),
+			goqu.C("login").Asc(),
+		).
+		Prepared(true).Executor().
+		ScanStructsContext(ctx, &res)
 }
 
 func (r clients) DeleteByUID(ctx context.Context, uid string) error {
-	//_, err := r.db.Update(schema.Client).
-	//	Set(goqu.Record{"status": "cancel"}).
-	//	Where(goqu.I("uid").Eq(uid)).
-	//	Prepared(true).Executor().ExecContext(ctx)
-
 	_, err := r.db.Delete(schema.Client).
 		Where(goqu.I("uid").Eq(uid)).
 		Prepared(true).Executor().
@@ -107,6 +105,15 @@ func (r clients) DeleteClientsInAccessGroupByUID(ctx context.Context, uid string
 	_, err := r.db.Delete(schema.ClientsInAccessGroup).
 		Where(goqu.I("client_uid").Eq(uid)).
 		Prepared(true).Executor().ExecContext(ctx)
+
+	return err
+}
+
+func (r clients) Approve(ctx context.Context, uid string) error {
+	_, err := r.db.Update(schema.Client).
+		Set(goqu.Record{"approved": true}).
+		Prepared(true).Executor().
+		ExecContext(ctx)
 
 	return err
 }

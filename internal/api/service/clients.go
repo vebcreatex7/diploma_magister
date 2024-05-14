@@ -52,16 +52,8 @@ func (s clients) Login(ctx context.Context, req request.LoginUser) (string, erro
 		return "", fmt.Errorf("comparing password: %w", err)
 	}
 
-	switch c.Status {
-	case constant.StatusWaitApprove:
-		return "", fmt.Errorf("user is waiting approve")
-
-	case constant.StatusCancel:
-		return "", fmt.Errorf("user is deleted")
-	}
-
-	if c.Status == constant.StatusWaitApprove {
-		return "", fmt.Errorf("user wait's approve")
+	if !c.Approved {
+		return "", fmt.Errorf("user is waiting for approve")
 	}
 
 	jwt, err := pkg.GenerateJWT(c)
@@ -72,8 +64,8 @@ func (s clients) Login(ctx context.Context, req request.LoginUser) (string, erro
 	return jwt, nil
 }
 
-func (s clients) GetAllNotCanceled(ctx context.Context) ([]response.User, error) {
-	e, err := s.clientsRepo.GetAllNotCanceled(ctx)
+func (s clients) GetAll(ctx context.Context) ([]response.User, error) {
+	e, err := s.clientsRepo.GetAll(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("getting users: %w", err)
 	}
@@ -117,4 +109,17 @@ func (s clients) Edit(ctx context.Context, req request.EditUser) (response.User,
 	}
 
 	return s.mapper.MakeResponse(res), nil
+}
+
+func (s clients) Approve(ctx context.Context, uid string) ([]response.User, error) {
+	if err := s.clientsRepo.Approve(ctx, uid); err != nil {
+		return nil, fmt.Errorf("approving user by uid: %w", err)
+	}
+
+	res, err := s.clientsRepo.GetAll(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("getting users: %w", err)
+	}
+
+	return s.mapper.MakeListResponse(res), nil
 }

@@ -19,8 +19,8 @@ func NewEquipment(equipmentRepo repo.Equipment) equipment {
 	return equipment{equipmentRepo: equipmentRepo, mapper: mapper.Equipment{}}
 }
 
-func (s equipment) GetAllNotCanceled(ctx context.Context) ([]response.Equipment, error) {
-	eq, err := s.equipmentRepo.GetAllNotCanceled(ctx)
+func (s equipment) GetAll(ctx context.Context) ([]response.Equipment, error) {
+	eq, err := s.equipmentRepo.GetAll(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("getting equipment: %w", err)
 	}

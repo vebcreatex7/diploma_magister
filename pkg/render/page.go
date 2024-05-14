@@ -7,7 +7,7 @@ type toast struct {
 	Message string `json:"message"`
 }
 
-func (r toast) toJSON() string {
+func (r toast) ToJSON() string {
 	var tmp = make(map[string]toast)
 
 	tmp["makeToast"] = r
@@ -77,6 +77,8 @@ func (r *page) SetError(m string) *page {
 		Message: m,
 	}
 
+	r.code = 422
+
 	return r
 }
 
@@ -101,6 +103,8 @@ func (r *page) SetSuccess(m string) *page {
 		Message: m,
 	}
 
+	r.code = 200
+
 	return r
 }
 
@@ -108,4 +112,8 @@ func (r *page) SetHeader(k, v string) *page {
 	r.headers[k] = v
 
 	return r
+}
+
+func (r *page) Toast() *toast {
+	return r.toast
 }

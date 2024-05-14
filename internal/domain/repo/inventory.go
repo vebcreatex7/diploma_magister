@@ -6,7 +6,7 @@ import (
 )
 
 type Inventory interface {
-	GetAllNotCanceled(ctx context.Context) (res []entities.Inventory, err error)
+	GetAll(ctx context.Context) (res []entities.Inventory, err error)
 	DeleteByUID(ctx context.Context, uid string) error
 	GetByUID(ctx context.Context, uid string) (entities.Inventory, bool, error)
 	Edit(ctx context.Context, e entities.Inventory) (entities.Inventory, bool, error)

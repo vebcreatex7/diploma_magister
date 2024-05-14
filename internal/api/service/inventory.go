@@ -19,8 +19,8 @@ func NewInventory(inventoryRepo repo.Inventory) inventory {
 	return inventory{inventoryRepo: inventoryRepo, mapper: mapper.Inventory{}}
 }
 
-func (s inventory) GetAllNotCanceled(ctx context.Context) ([]response.Inventory, error) {
-	eq, err := s.inventoryRepo.GetAllNotCanceled(ctx)
+func (s inventory) GetAll(ctx context.Context) ([]response.Inventory, error) {
+	eq, err := s.inventoryRepo.GetAll(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("getting inventory: %w", err)
 	}

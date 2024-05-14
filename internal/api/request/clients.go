@@ -107,7 +107,6 @@ type EditUser struct {
 	Patronymic string
 	Login      string
 	Email      string
-	Status     string
 	Role       string
 }
 
@@ -131,7 +130,6 @@ func (r *EditUser) Bind(req *http.Request) error {
 	r.Login = strings.TrimSpace(req.Form.Get("login"))
 	r.Email = strings.TrimSpace(req.Form.Get("email"))
 	r.Role = strings.TrimSpace(req.Form.Get("role"))
-	r.Status = strings.TrimSpace(req.Form.Get("status"))
 
 	return r.validate()
 }
@@ -143,11 +141,6 @@ func (r *EditUser) validate() error {
 		validation.Field(&r.Patronymic, validation.Required),
 		validation.Field(&r.Login, validation.Required),
 		validation.Field(&r.Email, validation.Required),
-		validation.Field(&r.Status, validation.Required, validation.In(
-			constant.StatusReady,
-			constant.StatusWaitApprove,
-			constant.StatusCancel,
-		)),
 		validation.Field(&r.Role, validation.Required, validation.In(
 			constant.EngineerRole,
 			constant.ScientistRole,
@@ -161,6 +154,21 @@ type GetUser struct {
 }
 
 func (r *GetUser) Bind(req *http.Request) error {
+	uid, err := request.ParseUIDFromPath(req, true)
+	if err != nil {
+		return fmt.Errorf("parsing uid from path: %w", err)
+	}
+
+	r.UID = uid
+
+	return nil
+}
+
+type ApproveUser struct {
+	UID string
+}
+
+func (r *ApproveUser) Bind(req *http.Request) error {
 	uid, err := request.ParseUIDFromPath(req, true)
 	if err != nil {
 		return fmt.Errorf("parsing uid from path: %w", err)

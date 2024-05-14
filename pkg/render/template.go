@@ -24,7 +24,7 @@ func NewTemplate(
 
 func (t *Template) Render(w http.ResponseWriter, p *page) {
 	if p.toast != nil {
-		w.Header().Set("HX-Trigger", p.toast.toJSON())
+		w.Header().Set("HX-Trigger", p.toast.ToJSON())
 
 		if p.toast.Level != "success" {
 			w.Header().Set("HX-Reswap", "none")
@@ -60,7 +60,7 @@ func (t *Template) Render(w http.ResponseWriter, p *page) {
 
 func (t *Template) RenderData(w http.ResponseWriter, p *page) {
 	if p.toast != nil {
-		w.Header().Set("HX-Trigger", p.toast.toJSON())
+		w.Header().Set("HX-Trigger", p.toast.ToJSON())
 
 		if p.toast.Level != "success" {
 			w.Header().Set("HX-Reswap", "none")

@@ -8,14 +8,13 @@ import (
 
 func (h admin) GetInventory(w http.ResponseWriter, r *http.Request) {
 	p := render.NewPage()
-	eq, err := h.inventoryService.GetAllNotCanceled(r.Context())
+	eq, err := h.inventoryService.GetAll(r.Context())
 	if err != nil {
 		h.log.WithError(err).Errorf("getting all")
 
 		p.SetTemplate("admin.gohtml").
 			SetPath(r.URL.Path).
-			SetError(err.Error()).
-			SetCode(422)
+			SetError(err.Error())
 
 		h.t.Render(w, p)
 		return
@@ -36,8 +35,7 @@ func (h admin) DeleteInventory(w http.ResponseWriter, r *http.Request) {
 
 	if err := req.Bind(r); err != nil {
 		h.log.WithError(err).Errorf("binding request")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
 		return
@@ -45,15 +43,14 @@ func (h admin) DeleteInventory(w http.ResponseWriter, r *http.Request) {
 
 	if err := h.inventoryService.DeleteByUID(r.Context(), req.UID); err != nil {
 		h.log.WithError(err).Errorf("deleting")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
 
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(200)
 }
 
 func (h admin) GetInventoryEditByUID(w http.ResponseWriter, r *http.Request) {
@@ -64,8 +61,7 @@ func (h admin) GetInventoryEditByUID(w http.ResponseWriter, r *http.Request) {
 
 	if err := req.Bind(r); err != nil {
 		h.log.WithError(err).Errorf("binding request")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
 		return
@@ -74,8 +70,7 @@ func (h admin) GetInventoryEditByUID(w http.ResponseWriter, r *http.Request) {
 	resp, err := h.inventoryService.GetByUID(r.Context(), req.UID)
 	if err != nil {
 		h.log.WithError(err).Errorf("getting")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
 		return
@@ -96,8 +91,7 @@ func (h admin) GetInventoryByUID(w http.ResponseWriter, r *http.Request) {
 
 	if err := req.Bind(r); err != nil {
 		h.log.WithError(err).Errorf("binding request")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
 		return
@@ -106,8 +100,7 @@ func (h admin) GetInventoryByUID(w http.ResponseWriter, r *http.Request) {
 	resp, err := h.inventoryService.GetByUID(r.Context(), req.UID)
 	if err != nil {
 		h.log.WithError(err).Errorf("getting")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
 		return
@@ -126,11 +119,9 @@ func (h admin) EditInventory(w http.ResponseWriter, r *http.Request) {
 		req request.EditInventory
 	)
 
-	//defer h.t.Render(w, p)
-
 	if err := req.Bind(r); err != nil {
-		p.SetCode(422).
-			SetError(err.Error())
+		h.log.WithError(err).Errorf("binding request")
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
 
@@ -139,10 +130,11 @@ func (h admin) EditInventory(w http.ResponseWriter, r *http.Request) {
 
 	resp, err := h.inventoryService.Edit(r.Context(), req)
 	if err != nil {
-		p.SetCode(422).
-			SetError(err.Error())
+		h.log.WithError(err).Errorf("editing")
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
+
 		return
 	}
 
@@ -169,10 +161,13 @@ func (h admin) AddInventory(w http.ResponseWriter, r *http.Request) {
 	)
 
 	if err := req.Bind(r); err != nil {
-		p.SetCode(422).
-			SetError(err.Error())
+		h.log.WithError(err).Errorf("binding request")
+		p.SetError(err.Error())
 
-		h.t.Render(w, p)
+		w.Header().Set("HX-Trigger", p.Toast().ToJSON())
+		w.WriteHeader(200)
+
+		//h.t.Render(w, p)
 		return
 	}
 

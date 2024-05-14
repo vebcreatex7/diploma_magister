@@ -35,9 +35,9 @@ func NewAccessGroup(
 	}
 }
 
-func (s accessGroup) GetAllNotCanceled(ctx context.Context) ([]response.AccessGroup, error) {
+func (s accessGroup) GetAll(ctx context.Context) ([]response.AccessGroup, error) {
 	var res []entities.AccessGroupExt
-	groups, err := s.accessGroupRepo.GetAllNotCanceled(ctx)
+	groups, err := s.accessGroupRepo.GetAll(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("getting access_groups: %w", err)
 	}

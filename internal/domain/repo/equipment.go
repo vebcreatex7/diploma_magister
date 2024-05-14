@@ -6,7 +6,7 @@ import (
 )
 
 type Equipment interface {
-	GetAllNotCanceled(ctx context.Context) (res []entities.Equipment, err error)
+	GetAll(ctx context.Context) (res []entities.Equipment, err error)
 	DeleteByUID(ctx context.Context, uid string) error
 	GetByUID(ctx context.Context, uid string) (entities.Equipment, bool, error)
 	Edit(ctx context.Context, e entities.Equipment) (entities.Equipment, bool, error)

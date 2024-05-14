@@ -26,10 +26,10 @@ func (r accessGroups) Create(ctx context.Context, e entities.AccessGroup) (entit
 	return res, err
 }
 
-func (r accessGroups) GetAllNotCanceled(ctx context.Context) (res []entities.AccessGroup, err error) {
+func (r accessGroups) GetAll(ctx context.Context) (res []entities.AccessGroup, err error) {
 	return res, r.db.From(schema.AccessGroup).
 		Select(entities.AccessGroup{}).
-		Order(goqu.C("uid").Desc()).
+		Order(goqu.C("name").Asc()).
 		Prepared(true).Executor().
 		ScanStructsContext(ctx, &res)
 }

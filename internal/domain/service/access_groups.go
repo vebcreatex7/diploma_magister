@@ -7,7 +7,7 @@ import (
 )
 
 type AccessGroup interface {
-	GetAllNotCanceled(ctx context.Context) ([]response.AccessGroup, error)
+	GetAll(ctx context.Context) ([]response.AccessGroup, error)
 	Create(ctx context.Context, r request.CreateAccessGroup) (response.AccessGroup, error)
 	Edit(ctx context.Context, r request.EditAccessGroup) (response.AccessGroup, error)
 	GetByUID(ctx context.Context, uid string) (response.AccessGroup, error)

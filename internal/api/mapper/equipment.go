@@ -3,7 +3,6 @@ package mapper
 import (
 	"github.com/vebcreatex7/diploma_magister/internal/api/request"
 	"github.com/vebcreatex7/diploma_magister/internal/api/response"
-	"github.com/vebcreatex7/diploma_magister/internal/domain/constant"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/entities"
 )
 
@@ -18,7 +17,6 @@ func (m Equipment) MakeResponse(e entities.Equipment) response.Equipment {
 		Type:         e.Type,
 		Manufacturer: e.Manufacturer,
 		Model:        e.Model,
-		Status:       e.Status,
 		Room:         e.Room,
 	}
 }
@@ -42,7 +40,6 @@ func (m Equipment) MakeEditEntity(r request.EditEquipment) entities.Equipment {
 		Manufacturer: r.Manufacturer,
 		Model:        r.Model,
 		Room:         r.Room,
-		Status:       r.Status,
 	}
 }
 
@@ -54,6 +51,5 @@ func (m Equipment) MakeCreateEntity(r request.CreateEquipment) entities.Equipmen
 		Manufacturer: r.Manufacturer,
 		Model:        r.Model,
 		Room:         r.Room,
-		Status:       constant.StatusWaitApprove,
 	}
 }

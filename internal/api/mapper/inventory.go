@@ -4,7 +4,6 @@ import (
 	"github.com/shopspring/decimal"
 	"github.com/vebcreatex7/diploma_magister/internal/api/request"
 	"github.com/vebcreatex7/diploma_magister/internal/api/response"
-	"github.com/vebcreatex7/diploma_magister/internal/domain/constant"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/entities"
 )
 
@@ -20,7 +19,6 @@ func (m Inventory) MakeResponse(e entities.Inventory) response.Inventory {
 		Manufacturer: e.Manufacturer,
 		Quantity:     e.Quantity.String(),
 		Unit:         e.Unit,
-		Status:       e.Status,
 	}
 }
 
@@ -43,7 +41,6 @@ func (m Inventory) MakeEditEntity(r request.EditInventory) entities.Inventory {
 		Manufacturer: r.Manufacturer,
 		Quantity:     decimal.RequireFromString(r.Quantity),
 		Unit:         r.Unit,
-		Status:       r.Status,
 	}
 }
 
@@ -55,6 +52,5 @@ func (m Inventory) MakeCreateEntity(r request.CreateInventory) entities.Inventor
 		Manufacturer: r.Manufacturer,
 		Quantity:     decimal.RequireFromString(r.Quantity),
 		Unit:         r.Unit,
-		Status:       constant.StatusWaitApprove,
 	}
 }

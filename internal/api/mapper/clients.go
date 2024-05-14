@@ -35,7 +35,7 @@ func (m Clients) MakeResponse(
 		Login:      e.Login,
 		Email:      e.Email,
 		Role:       e.Role,
-		Status:     e.Status,
+		Approved:   e.Approved,
 	}
 }
 
@@ -59,6 +59,5 @@ func (m Clients) MakeEditEntity(r request.EditUser) entities.Client {
 		Login:      r.Login,
 		Email:      r.Email,
 		Role:       r.Role,
-		Status:     r.Status,
 	}
 }

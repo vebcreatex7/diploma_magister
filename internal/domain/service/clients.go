@@ -9,8 +9,9 @@ import (
 type Clients interface {
 	Create(ctx context.Context, req request.CreateUser) error
 	Login(ctx context.Context, req request.LoginUser) (string, error)
-	GetAllNotCanceled(ctx context.Context) ([]response.User, error)
+	GetAll(ctx context.Context) ([]response.User, error)
 	DeleteByUID(ctx context.Context, uid string) error
 	GetByUID(ctx context.Context, uid string) (response.User, error)
 	Edit(ctx context.Context, req request.EditUser) (response.User, error)
+	Approve(ctx context.Context, uid string) ([]response.User, error)
 }

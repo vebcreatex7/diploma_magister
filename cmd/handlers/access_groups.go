@@ -9,14 +9,13 @@ import (
 func (h admin) GetAccessGroups(w http.ResponseWriter, r *http.Request) {
 	p := render.NewPage()
 
-	grs, err := h.accessGroupsService.GetAllNotCanceled(r.Context())
+	grs, err := h.accessGroupsService.GetAll(r.Context())
 	if err != nil {
 		h.log.WithError(err).Errorf("getting all")
 
 		p.SetTemplate("admin.gohtml").
 			SetPath(r.URL.Path).
-			SetError(err.Error()).
-			SetCode(422)
+			SetError(err.Error())
 
 		h.t.Render(w, p)
 		return
@@ -54,11 +53,9 @@ func (h admin) AddAccessGroup(w http.ResponseWriter, r *http.Request) {
 	resp, err := h.accessGroupsService.Create(r.Context(), req)
 	if err != nil {
 		h.log.WithError(err).Errorf("creating")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
-
 		return
 	}
 
@@ -78,8 +75,7 @@ func (h admin) GetAccessGroupEditByUID(w http.ResponseWriter, r *http.Request) {
 
 	if err := req.Bind(r); err != nil {
 		h.log.WithError(err).Errorf("binding request")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
 		return
@@ -88,8 +84,7 @@ func (h admin) GetAccessGroupEditByUID(w http.ResponseWriter, r *http.Request) {
 	resp, err := h.accessGroupsService.GetByUID(r.Context(), req.UID)
 	if err != nil {
 		h.log.WithError(err).Errorf("getting")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
 		return
@@ -108,23 +103,20 @@ func (h admin) EditAccessGroup(w http.ResponseWriter, r *http.Request) {
 		req request.EditAccessGroup
 	)
 
-	//defer h.t.Render(w, p)
-
 	if err := req.Bind(r); err != nil {
-		p.SetCode(422).
-			SetError(err.Error())
+		h.log.WithError(err).Errorf("binding request")
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
-
 		return
 	}
 
 	resp, err := h.accessGroupsService.Edit(r.Context(), req)
 	if err != nil {
-		p.SetCode(422).
-			SetError(err.Error())
-
+		h.log.WithError(err).Errorf("editing")
+		p.SetError(err.Error())
 		h.t.Render(w, p)
+
 		return
 	}
 
@@ -154,10 +146,9 @@ func (h admin) GetAccessGroupByUID(w http.ResponseWriter, r *http.Request) {
 	resp, err := h.accessGroupsService.GetByUID(r.Context(), req.UID)
 	if err != nil {
 		h.log.WithError(err).Errorf("getting")
-		p.SetCode(422).
-			SetError(err.Error())
-
+		p.SetError(err.Error())
 		h.t.Render(w, p)
+
 		return
 	}
 
@@ -176,18 +167,15 @@ func (h admin) DeleteAccessGroup(w http.ResponseWriter, r *http.Request) {
 
 	if err := req.Bind(r); err != nil {
 		h.log.WithError(err).Errorf("binding request")
-		p.SetCode(422).
-			SetError(err.Error())
-
+		p.SetError(err.Error())
 		h.t.Render(w, p)
+
 		return
 	}
 
 	if err := h.accessGroupsService.DeleteByUID(r.Context(), req.UID); err != nil {
 		h.log.WithError(err).Errorf("deleting")
-		p.SetCode(422).
-			SetError(err.Error())
-
+		p.SetError(err.Error())
 		h.t.Render(w, p)
 
 		return

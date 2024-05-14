@@ -53,7 +53,6 @@ type EditInventory struct {
 	Manufacturer string
 	Quantity     string
 	Unit         string
-	Status       string
 }
 
 func (r *EditInventory) Bind(req *http.Request) error {
@@ -74,7 +73,6 @@ func (r *EditInventory) Bind(req *http.Request) error {
 	r.Manufacturer = strings.TrimSpace(req.Form.Get("manufacturer"))
 	r.Quantity = strings.TrimSpace(req.Form.Get("quantity"))
 	r.Unit = strings.TrimSpace(req.Form.Get("unit"))
-	r.Status = req.Form.Get("status")
 
 	return nil
 }

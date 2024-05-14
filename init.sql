@@ -13,7 +13,8 @@ create table client (
     password_hash text not null,
     role_uid uuid not null,
     status text not null default 'wait_approve',
-    role text not null
+    role text not null,
+    approved bool not null default false
 );
 
 create table access_group (
@@ -167,3 +168,4 @@ create unique index on access_group(name);
 
 
 commit;
+

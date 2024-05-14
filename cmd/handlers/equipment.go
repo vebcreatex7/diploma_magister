@@ -8,14 +8,14 @@ import (
 
 func (h admin) GetEquipment(w http.ResponseWriter, r *http.Request) {
 	p := render.NewPage()
-	eq, err := h.equipmentService.GetAllNotCanceled(r.Context())
+	eq, err := h.equipmentService.GetAll(r.Context())
 	if err != nil {
 		h.log.WithError(err).Errorf("getting all")
 
 		p.SetTemplate("admin.gohtml").
 			SetPath(r.URL.Path).
 			SetError(err.Error()).
-			SetCode(200)
+			SetCode(422)
 
 		h.t.Render(w, p)
 		return
@@ -36,8 +36,7 @@ func (h admin) DeleteEquipment(w http.ResponseWriter, r *http.Request) {
 
 	if err := req.Bind(r); err != nil {
 		h.log.WithError(err).Errorf("binding request")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
 		return
@@ -45,15 +44,13 @@ func (h admin) DeleteEquipment(w http.ResponseWriter, r *http.Request) {
 
 	if err := h.equipmentService.DeleteByUID(r.Context(), req.UID); err != nil {
 		h.log.WithError(err).Errorf("deleting")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
-
 		return
 	}
 
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(200)
 }
 
 func (h admin) GetEquipmentEditByUID(w http.ResponseWriter, r *http.Request) {
@@ -64,22 +61,18 @@ func (h admin) GetEquipmentEditByUID(w http.ResponseWriter, r *http.Request) {
 
 	if err := req.Bind(r); err != nil {
 		h.log.WithError(err).Errorf("binding request")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
-
 		return
 	}
 
 	resp, err := h.equipmentService.GetByUID(r.Context(), req.UID)
 	if err != nil {
 		h.log.WithError(err).Errorf("getting")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
-
 		return
 	}
 
@@ -98,22 +91,18 @@ func (h admin) GetEquipmentByUID(w http.ResponseWriter, r *http.Request) {
 
 	if err := req.Bind(r); err != nil {
 		h.log.WithError(err).Errorf("binding request")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
-
 		return
 	}
 
 	resp, err := h.equipmentService.GetByUID(r.Context(), req.UID)
 	if err != nil {
 		h.log.WithError(err).Errorf("getting")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
-
 		return
 	}
 
@@ -132,22 +121,18 @@ func (h admin) EditEquipment(w http.ResponseWriter, r *http.Request) {
 
 	if err := req.Bind(r); err != nil {
 		h.log.WithError(err).Errorf("binding request")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
-
 		return
 	}
 
 	resp, err := h.equipmentService.Edit(r.Context(), req)
 	if err != nil {
-		h.log.WithError(err).Errorf("editting")
-		p.SetCode(422).
-			SetError(err.Error())
+		h.log.WithError(err).Errorf("editing")
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
-
 		return
 	}
 
@@ -159,26 +144,11 @@ func (h admin) EditEquipment(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h admin) AddEquipmentPage(w http.ResponseWriter, r *http.Request) {
-	var (
-		p = render.NewPage()
-	)
+	var p = render.NewPage()
 
-	resp, err := h.equipmentService.GetAllNotCanceled(r.Context())
-	if err != nil {
-		h.log.WithError(err).Errorf("getting")
-		p.SetCode(422).
-			SetError(err.Error())
+	p.SetTemplate("components/equipment/row_add.gohtml").SetCode(200)
 
-		h.t.Render(w, p)
-
-		return
-	}
-
-	p.SetTemplate("components/equipment/add.gohtml").
-		SetData(resp).
-		SetCode(200)
-
-	h.t.RenderData(w, p)
+	h.t.Render(w, p)
 }
 
 func (h admin) AddEquipment(w http.ResponseWriter, r *http.Request) {
@@ -189,22 +159,18 @@ func (h admin) AddEquipment(w http.ResponseWriter, r *http.Request) {
 
 	if err := req.Bind(r); err != nil {
 		h.log.WithError(err).Errorf("binding request")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
-
 		return
 	}
 
 	resp, err := h.equipmentService.Create(r.Context(), req)
 	if err != nil {
 		h.log.WithError(err).Errorf("creating")
-		p.SetCode(422).
-			SetError(err.Error())
+		p.SetError(err.Error())
 
 		h.t.Render(w, p)
-
 		return
 	}
 

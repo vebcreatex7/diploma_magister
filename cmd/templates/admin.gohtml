@@ -14,7 +14,7 @@
 {{if eq .Path "/admin/home"}}
     {{template "pages/home.gohtml" .}}
 {{else if eq .Path "/admin/users"}}
-    {{template "pages/users.gohtml" .}}
+    {{template "pages/admin/users.gohtml" .}}
 {{else if eq .Path "/admin/equipment"}}
     {{template "pages/equipment.gohtml" .}}
 {{else if eq .Path "/admin/inventory"}}
@@ -22,5 +22,7 @@
     {{else if eq .Path "/admin/access-groups"}}
     {{template "pages/access_groups.gohtml" .}}
 {{end}}
+
+<div id="content"></div>
 
 </body>

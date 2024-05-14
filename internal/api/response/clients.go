@@ -8,5 +8,5 @@ type User struct {
 	Login      string
 	Email      string
 	Role       string
-	Status     string
+	Approved   bool
 }

@@ -51,7 +51,6 @@ type EditEquipment struct {
 	Manufacturer string
 	Model        string
 	Room         string
-	Status       string
 }
 
 func (r *EditEquipment) Bind(req *http.Request) error {
@@ -72,7 +71,6 @@ func (r *EditEquipment) Bind(req *http.Request) error {
 	r.Manufacturer = strings.TrimSpace(req.Form.Get("manufacturer"))
 	r.Model = strings.TrimSpace(req.Form.Get("model"))
 	r.Room = strings.TrimSpace(req.Form.Get("room"))
-	r.Status = req.Form.Get("status")
 
 	return nil
 }
@@ -85,7 +83,6 @@ func (r *EditEquipment) validate() error {
 		validation.Field(&r.Manufacturer, validation.Required),
 		validation.Field(&r.Model, validation.Required),
 		validation.Field(&r.Room, validation.Required),
-		validation.Field(&r.Status, validation.Required),
 	)
 }
 

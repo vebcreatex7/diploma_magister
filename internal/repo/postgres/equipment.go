@@ -15,20 +15,15 @@ func NewEquipment(db *goqu.Database) equipment {
 	return equipment{db: db}
 }
 
-func (r equipment) GetAllNotCanceled(ctx context.Context) (res []entities.Equipment, err error) {
+func (r equipment) GetAll(ctx context.Context) (res []entities.Equipment, err error) {
 	return res, r.db.From(schema.Equipment).
 		Select(entities.Equipment{}).
-		Where(goqu.I("status").Neq("cancel")).
-		Order(goqu.C("uid").Desc()).
-		Prepared(true).Executor().ScanStructsContext(ctx, &res)
+		Order(goqu.C("name").Asc()).
+		Prepared(true).Executor().
+		ScanStructsContext(ctx, &res)
 }
 
 func (r equipment) DeleteByUID(ctx context.Context, uid string) error {
-	//_, err := r.db.Update(schema.Equipment).
-	//	Set(goqu.Record{"status": "cancel"}).
-	//	Where(goqu.I("uid").Eq(uid)).
-	//	Prepared(true).Executor().ExecContext(ctx)
-
 	_, err := r.db.Delete(schema.Equipment).
 		Where(goqu.I("uid").Eq(uid)).
 		Prepared(true).Executor().

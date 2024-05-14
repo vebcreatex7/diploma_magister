@@ -10,5 +10,4 @@ type Inventory struct {
 	Manufacturer string          `db:"manufacturer"`
 	Quantity     decimal.Decimal `db:"quantity"`
 	Unit         string          `db:"unit"`
-	Status       string          `db:"status"`
 }

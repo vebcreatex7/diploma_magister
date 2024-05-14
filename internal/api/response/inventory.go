@@ -8,5 +8,4 @@ type Inventory struct {
 	Manufacturer string
 	Quantity     string
 	Unit         string
-	Status       string
 }

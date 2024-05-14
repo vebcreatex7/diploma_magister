@@ -50,6 +50,7 @@ func (h admin) Routes() chi.Router {
 	r.Get("/users-edit/{uid}", h.GetUserEditByUID)
 	r.Delete("/users/{uid}", h.DeleteUser)
 	r.Put("/users/{uid}", h.EditUser)
+	r.Put("/users-approve/{uid}", h.ApproveUser)
 
 	r.Get("/equipment", h.GetEquipment)
 	r.Get("/equipment/{uid}", h.GetEquipmentByUID)
