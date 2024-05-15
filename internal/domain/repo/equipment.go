@@ -3,6 +3,7 @@ package repo
 import (
 	"context"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/entities"
+	"time"
 )
 
 type Equipment interface {
@@ -14,4 +15,5 @@ type Equipment interface {
 	GetNamesByGroupUID(ctx context.Context, uid string) (res []string, err error)
 	GetByName(ctx context.Context, name string) (entities.Equipment, bool, error)
 	DeleteEquipmentInAccessGroupByUID(ctx context.Context, uid string) error
+	SelectScheduleByName(ctx context.Context, name string, lower, upper time.Time) (res []entities.EquipmentSchedule, err error)
 }

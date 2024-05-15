@@ -10,6 +10,7 @@ import (
 	"github.com/vebcreatex7/diploma_magister/internal/domain/constant"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/entities"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/repo"
+	"strings"
 )
 
 type accessGroup struct {
@@ -33,6 +34,41 @@ func NewAccessGroup(
 		inventoryRepo:   inventoryRepo,
 		mapper:          mapper.AccessGroup{},
 	}
+}
+
+func (s accessGroup) GetAllForGivenUser(ctx context.Context, userUID string) ([]response.AccessGroup, error) {
+	all, err := s.GetAll(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("getting access_groups: %w", err)
+	}
+
+	u, found, err := s.clientsRepo.GetByUID(ctx, userUID)
+	if err != nil {
+		return nil, fmt.Errorf("getting user by uid: %w", err)
+	}
+
+	if !found {
+		return nil, fmt.Errorf("getting user by uid: %w", constant.ErrNotFound)
+	}
+
+	for i := 0; i < len(all); i++ {
+		userFound := false
+
+		for _, login := range strings.Split(all[i].Users, ",") {
+			if u.Login == login {
+				userFound = true
+
+				break
+			}
+		}
+
+		if !userFound {
+			all = append(all[:i], all[i+1:]...)
+			i--
+		}
+	}
+
+	return all, nil
 }
 
 func (s accessGroup) GetAll(ctx context.Context) ([]response.AccessGroup, error) {

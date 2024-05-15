@@ -8,7 +8,7 @@ import (
 
 type Clients interface {
 	Create(ctx context.Context, req request.CreateUser) error
-	Login(ctx context.Context, req request.LoginUser) (string, error)
+	Login(ctx context.Context, req request.LoginUser) (response.User, error)
 	GetAll(ctx context.Context) ([]response.User, error)
 	DeleteByUID(ctx context.Context, uid string) error
 	GetByUID(ctx context.Context, uid string) (response.User, error)

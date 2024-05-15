@@ -6,6 +6,7 @@ import (
 	"github.com/vebcreatex7/diploma_magister/pkg/request"
 	"net/http"
 	"strings"
+	"time"
 )
 
 type CreateEquipment struct {
@@ -112,6 +113,47 @@ func (r *GetEquipment) Bind(req *http.Request) error {
 	}
 
 	r.UID = uid
+
+	return nil
+}
+
+type GetEquipmentSchedule struct {
+	Name  string
+	Lower time.Time
+	Upper time.Time
+}
+
+func (r *GetEquipmentSchedule) Bind(req *http.Request) error {
+	name, err := request.ParseStringFromQuery(req, "name", true)
+	if err != nil {
+		return fmt.Errorf("geting name for query: %w", err)
+	}
+
+	lower, err := request.ParseTimeFromQuery(req, "lower", true)
+	if err != nil {
+		return fmt.Errorf("geting lower for query: %w", err)
+	}
+
+	upper, err := request.ParseTimeFromQuery(req, "upper", true)
+	if err != nil {
+		return fmt.Errorf("geting upper for query: %w", err)
+	}
+
+	r.Name = name
+	r.Lower = lower
+	r.Upper = upper.Add(time.Hour * 24)
+
+	return r.validate()
+}
+
+func (r *GetEquipmentSchedule) validate() error {
+	if !r.Upper.After(r.Lower) {
+		return fmt.Errorf("wrong interval order")
+	}
+
+	if r.Upper.Sub(r.Lower) > time.Hour*24*15 {
+		return fmt.Errorf("duartion bigger than 15 days")
+	}
 
 	return nil
 }

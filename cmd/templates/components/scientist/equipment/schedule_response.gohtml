@@ -1,0 +1,25 @@
+<div id="equipment-schedule-response">
+    <a hx-get="/scientists/equipment/schedule/empty"
+       hx-target="#equipment-schedule-response"
+       hx-swap="innerHTML"
+       href=""
+    >Скрыть</a>
+    <table id="resp">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Забронировано</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            {{range .}}
+                <tr>
+                    <td>{{.Date}}</td>
+                    <td>{{.Intervals}}</td>
+                </tr>
+            {{end}}
+        </tbody>
+    </table>
+
+</div>

@@ -15,4 +15,5 @@ type Clients interface {
 	GetLoginsByGroupUID(ctx context.Context, uid string) (res []string, err error)
 	DeleteClientsInAccessGroupByUID(ctx context.Context, uid string) error
 	Approve(ctx context.Context, uid string) error
+	IsEquipmentAvailable(ctx context.Context, uid string, eqName string) (bool, error)
 }

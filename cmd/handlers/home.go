@@ -5,6 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/vebcreatex7/diploma_magister/internal/api/request"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/service"
+	"github.com/vebcreatex7/diploma_magister/pkg"
 	"github.com/vebcreatex7/diploma_magister/pkg/render"
 	"html/template"
 	"net/http"
@@ -79,7 +80,7 @@ func (h home) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := h.clientsService.Login(r.Context(), req)
+	u, err := h.clientsService.Login(r.Context(), req)
 	if err != nil {
 		h.log.WithError(err).Errorf("logining")
 		p.SetError(err.Error())
@@ -88,8 +89,24 @@ func (h home) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	token, err := pkg.GenerateJWT(u)
+	if err != nil {
+		h.log.WithError(err).Errorf("generating token")
+		p.SetError(err.Error())
+		h.zxc.Render(w, p)
+
+		return
+	}
+
 	render.SetCookie(w, "jwt", token)
-	p.SetHeader("HX-Redirect", "http://localhost:3000/admin/home")
+
+	switch u.Role {
+	case "admin":
+		p.SetHeader("HX-Redirect", "http://localhost:3000/admin/home")
+	case "scientist":
+		p.SetHeader("HX-Redirect", "http://localhost:3000/scientists/home")
+	}
+
 	p.SetSuccess("user registered")
 
 	h.zxc.Render(w, p)

@@ -7,22 +7,28 @@
 
 <body>
 
-{{template "components/admin_nav.gohtml" .}}
+<nav>
+    <ul>
+        <li><a href="/admin/home">Домашняя страница</a> </li>
+        <li><a href="/admin/users">Пользователи</a></li>
+        <li><a href="/admin/equipment">Оборудование</a></li>
+        <li><a href="/admin/inventory">Инвентарь</a></li>
+        <li><a href="/admin/access-groups">Группы доступа</a></li>
+    </ul>
+</nav>
 
 
 
 {{if eq .Path "/admin/home"}}
-    {{template "pages/home.gohtml" .}}
+    {{template "pages/admin/home.gohtml" .}}
 {{else if eq .Path "/admin/users"}}
-    {{template "pages/users.gohtml" .}}
+    {{template "pages/admin/users.gohtml" .}}
 {{else if eq .Path "/admin/equipment"}}
-    {{template "pages/equipment.gohtml" .}}
+    {{template "pages/admin/equipment.gohtml" .}}
 {{else if eq .Path "/admin/inventory"}}
-    {{template "pages/inventory.gohtml" .}}
+    {{template "pages/admin/inventory.gohtml" .}}
     {{else if eq .Path "/admin/access-groups"}}
-    {{template "pages/access_groups.gohtml" .}}
+    {{template "pages/admin/access_groups.gohtml" .}}
 {{end}}
-
-<div id="content"></div>
 
 </body>

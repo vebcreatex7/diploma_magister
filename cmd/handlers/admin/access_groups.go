@@ -1,4 +1,4 @@
-package handlers
+package admin
 
 import (
 	"github.com/vebcreatex7/diploma_magister/internal/api/request"

@@ -7,19 +7,26 @@
 
 <body>
 
-{{ template "home_nav" .}}
+<nav>
+    <ul>
+        <li><a href="/">Домашняя страница</a></li>
+        <li><a href="/docs">Документация</a></li>
+        <li><a href="/register">Зарегистрироваться</a></li>
+        <li><a href="/login">Войти</a></li>
+    </ul>
+</nav>
 
 
 <div id="admin-content"></div>
 
 {{if eq .Path "/home"}}
-    {{template "pages/home.gohtml" .}}
+    {{template "pages/home/home.gohtml" .}}
 {{ else if eq .Path "/docs"}}
-    {{template "pages/docs.gohtml" .}}
+    {{template "pages/home/docs.gohtml" .}}
 {{else if eq .Path "/register"}}
-    {{template "pages/register.gohtml" .}}
+    {{template "pages/home/register.gohtml" .}}
 {{else if eq .Path "/login"}}
-    {{template "pages/login.gohtml" .}}
+    {{template "pages/home/login.gohtml" .}}
 {{end}}
 
 

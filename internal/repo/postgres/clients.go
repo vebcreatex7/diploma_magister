@@ -117,3 +117,14 @@ func (r clients) Approve(ctx context.Context, uid string) error {
 
 	return err
 }
+
+func (r clients) IsEquipmentAvailable(ctx context.Context, uid string, eqName string) (bool, error) {
+	var tmp string
+
+	return r.db.ScanValContext(ctx, &tmp,
+		`select eq.uid from equipment eq
+join equipment_in_access_group eqag on eqag.equipment_uid = eq.uid
+join clients_in_access_group cag on cag.access_group_uid = eqag.access_group_uid
+join client c on c.uid = cag.client_uid
+where c.uid = $1 and eq.name = $2`, uid, eqName)
+}

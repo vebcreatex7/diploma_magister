@@ -9,3 +9,8 @@ type Equipment struct {
 	Model        string
 	Room         string
 }
+
+type EquipmentSchedule struct {
+	Date      string
+	Intervals string
+}

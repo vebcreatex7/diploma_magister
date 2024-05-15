@@ -1,0 +1,7 @@
+<tbody id="access-groups-table-body">
+    {{with .Data}}
+        {{range .}}
+            {{template "components/scientist/access_groups/row.gohtml" .}}
+        {{end}}
+    {{end}}
+</tbody>

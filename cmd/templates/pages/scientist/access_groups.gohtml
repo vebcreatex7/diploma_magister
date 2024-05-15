@@ -1,0 +1,32 @@
+<div id="access-groups">
+    <div id="processing" class="htmx-indicator">Processing...</div>
+    <h3>Мои группы</h3>
+    <b>
+        <label for="gfg">Поиск:</label><input id="gfg" type="text" placeholder="Search here">
+    </b>
+    <table>
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Пользователи</th>
+            <th>Оборудование</th>
+            <th>Инвентарь</th>
+        </tr>
+        </thead>
+        {{template "components/scientist/access_groups/table_body.gohtml" .}}
+    </table>
+
+    <section id="toast-container"></section>
+
+    <script>
+        $(document).ready(function () {
+            $("#gfg").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#access-groups-table-body tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+</div>

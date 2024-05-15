@@ -1,4 +1,4 @@
-package handlers
+package admin
 
 import (
 	"github.com/vebcreatex7/diploma_magister/internal/api/request"
@@ -6,16 +6,15 @@ import (
 	"net/http"
 )
 
-func (h admin) GetEquipment(w http.ResponseWriter, r *http.Request) {
+func (h admin) GetInventory(w http.ResponseWriter, r *http.Request) {
 	p := render.NewPage()
-	eq, err := h.equipmentService.GetAll(r.Context())
+	eq, err := h.inventoryService.GetAll(r.Context())
 	if err != nil {
 		h.log.WithError(err).Errorf("getting all")
 
 		p.SetTemplate("admin.gohtml").
 			SetPath(r.URL.Path).
-			SetError(err.Error()).
-			SetCode(422)
+			SetError(err.Error())
 
 		h.t.Render(w, p)
 		return
@@ -28,10 +27,10 @@ func (h admin) GetEquipment(w http.ResponseWriter, r *http.Request) {
 	h.t.Render(w, p)
 }
 
-func (h admin) DeleteEquipment(w http.ResponseWriter, r *http.Request) {
+func (h admin) DeleteInventory(w http.ResponseWriter, r *http.Request) {
 	var (
 		p   = render.NewPage()
-		req request.DeleteEquipment
+		req request.DeleteInventory
 	)
 
 	if err := req.Bind(r); err != nil {
@@ -42,21 +41,22 @@ func (h admin) DeleteEquipment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err := h.equipmentService.DeleteByUID(r.Context(), req.UID); err != nil {
+	if err := h.inventoryService.DeleteByUID(r.Context(), req.UID); err != nil {
 		h.log.WithError(err).Errorf("deleting")
 		p.SetError(err.Error())
 
 		h.t.Render(w, p)
+
 		return
 	}
 
 	w.WriteHeader(200)
 }
 
-func (h admin) GetEquipmentEditByUID(w http.ResponseWriter, r *http.Request) {
+func (h admin) GetInventoryEditByUID(w http.ResponseWriter, r *http.Request) {
 	var (
 		p   = render.NewPage()
-		req request.GetEquipment
+		req request.GetInventory
 	)
 
 	if err := req.Bind(r); err != nil {
@@ -67,7 +67,7 @@ func (h admin) GetEquipmentEditByUID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := h.equipmentService.GetByUID(r.Context(), req.UID)
+	resp, err := h.inventoryService.GetByUID(r.Context(), req.UID)
 	if err != nil {
 		h.log.WithError(err).Errorf("getting")
 		p.SetError(err.Error())
@@ -76,17 +76,17 @@ func (h admin) GetEquipmentEditByUID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p.SetTemplate("components/equipment/row_edit.gohtml").
+	p.SetTemplate("components/inventory/row_edit.gohtml").
 		SetData(resp).
 		SetCode(200)
 
 	h.t.RenderData(w, p)
 }
 
-func (h admin) GetEquipmentByUID(w http.ResponseWriter, r *http.Request) {
+func (h admin) GetInventoryByUID(w http.ResponseWriter, r *http.Request) {
 	var (
 		p   = render.NewPage()
-		req request.GetEquipment
+		req request.GetInventory
 	)
 
 	if err := req.Bind(r); err != nil {
@@ -97,7 +97,7 @@ func (h admin) GetEquipmentByUID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := h.equipmentService.GetByUID(r.Context(), req.UID)
+	resp, err := h.inventoryService.GetByUID(r.Context(), req.UID)
 	if err != nil {
 		h.log.WithError(err).Errorf("getting")
 		p.SetError(err.Error())
@@ -106,17 +106,17 @@ func (h admin) GetEquipmentByUID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p.SetTemplate("components/equipment/row.gohtml").
+	p.SetTemplate("components/inventory/row.gohtml").
 		SetData(resp).
 		SetCode(200)
 
 	h.t.RenderData(w, p)
 }
 
-func (h admin) EditEquipment(w http.ResponseWriter, r *http.Request) {
+func (h admin) EditInventory(w http.ResponseWriter, r *http.Request) {
 	var (
 		p   = render.NewPage()
-		req request.EditEquipment
+		req request.EditInventory
 	)
 
 	if err := req.Bind(r); err != nil {
@@ -124,37 +124,40 @@ func (h admin) EditEquipment(w http.ResponseWriter, r *http.Request) {
 		p.SetError(err.Error())
 
 		h.t.Render(w, p)
+
 		return
 	}
 
-	resp, err := h.equipmentService.Edit(r.Context(), req)
+	resp, err := h.inventoryService.Edit(r.Context(), req)
 	if err != nil {
 		h.log.WithError(err).Errorf("editing")
 		p.SetError(err.Error())
 
 		h.t.Render(w, p)
+
 		return
 	}
 
-	p.SetTemplate("components/equipment/row.gohtml").
+	p.SetTemplate("components/inventory/row.gohtml").
 		SetData(resp).
+		SetSuccess("inventory edited").
 		SetCode(200)
 
 	h.t.RenderData(w, p)
 }
 
-func (h admin) AddEquipmentPage(w http.ResponseWriter, r *http.Request) {
+func (h admin) AddInventoryPage(w http.ResponseWriter, r *http.Request) {
 	var p = render.NewPage()
 
-	p.SetTemplate("components/equipment/row_add.gohtml").SetCode(200)
+	p.SetTemplate("components/inventory/row_add.gohtml").SetCode(200)
 
 	h.t.Render(w, p)
 }
 
-func (h admin) AddEquipment(w http.ResponseWriter, r *http.Request) {
+func (h admin) AddInventory(w http.ResponseWriter, r *http.Request) {
 	var (
 		p   = render.NewPage()
-		req request.CreateEquipment
+		req request.CreateInventory
 	)
 
 	if err := req.Bind(r); err != nil {
@@ -165,17 +168,20 @@ func (h admin) AddEquipment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	resp, err := h.equipmentService.Create(r.Context(), req)
+	resp, err := h.inventoryService.Create(r.Context(), req)
 	if err != nil {
 		h.log.WithError(err).Errorf("creating")
-		p.SetError(err.Error())
+		p.SetCode(422).
+			SetError(err.Error())
 
 		h.t.Render(w, p)
+
 		return
 	}
 
-	p.SetTemplate("components/equipment/row.gohtml").
+	p.SetTemplate("components/inventory/row.gohtml").
 		SetData(resp).
+		SetSuccess("inventory added").
 		SetCode(200)
 
 	h.t.RenderData(w, p)

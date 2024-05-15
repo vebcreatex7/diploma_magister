@@ -3,20 +3,28 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/doug-martin/goqu/v9"
 	"github.com/vebcreatex7/diploma_magister/internal/api/mapper"
 	"github.com/vebcreatex7/diploma_magister/internal/api/request"
 	"github.com/vebcreatex7/diploma_magister/internal/api/response"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/constant"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/repo"
+	"sort"
+	"time"
 )
 
 type equipment struct {
 	equipmentRepo repo.Equipment
+	clientsRepo   repo.Clients
 	mapper        mapper.Equipment
+	db            *goqu.Database
 }
 
-func NewEquipment(equipmentRepo repo.Equipment) equipment {
-	return equipment{equipmentRepo: equipmentRepo, mapper: mapper.Equipment{}}
+func NewEquipment(
+	equipmentRepo repo.Equipment,
+	clientsRepo repo.Clients,
+) equipment {
+	return equipment{equipmentRepo: equipmentRepo, clientsRepo: clientsRepo, mapper: mapper.Equipment{}}
 }
 
 func (s equipment) GetAll(ctx context.Context) ([]response.Equipment, error) {
@@ -73,4 +81,48 @@ func (s equipment) Create(ctx context.Context, req request.CreateEquipment) (res
 	}
 
 	return s.mapper.MakeResponse(res), nil
+}
+
+func (s equipment) GetEquipmentScheduleInRange(ctx context.Context, req request.GetEquipmentSchedule, userUID string) ([]response.EquipmentSchedule, error) {
+	avail, err := s.clientsRepo.IsEquipmentAvailable(ctx, userUID, req.Name)
+	if err != nil {
+		return nil, fmt.Errorf("checking availble eq: %w", err)
+	}
+
+	if !avail {
+		return nil, fmt.Errorf("checking availble eq: '%s' not available", req.Name)
+	}
+
+	es, err := s.equipmentRepo.SelectScheduleByName(ctx, req.Name, req.Lower, req.Upper)
+	if err != nil {
+		return nil, fmt.Errorf("getting equipment_schedule: %w", err)
+	}
+
+	sort.SliceStable(es, func(i, j int) bool {
+		return es[i].TimeInterval.Lower.Time.Before(es[j].TimeInterval.Lower.Time)
+	})
+
+	var resp []response.EquipmentSchedule
+
+	for d := req.Lower; d.Before(req.Upper); d = d.Add(time.Hour * 24) {
+		var intervals string
+
+		for i := 0; i < len(es); i++ {
+			if es[i].TimeInterval.Lower.Time.After(d) &&
+				es[i].TimeInterval.Lower.Time.Before(d.Add(time.Hour*24)) {
+
+				intervals += fmt.Sprintf("[%s, %s]",
+					es[i].TimeInterval.Lower.Time.Format(time.TimeOnly),
+					es[i].TimeInterval.Upper.Time.Format(time.TimeOnly),
+				)
+			}
+		}
+
+		resp = append(resp, response.EquipmentSchedule{
+			Date:      d.Format(time.DateOnly),
+			Intervals: intervals,
+		})
+	}
+
+	return resp, nil
 }

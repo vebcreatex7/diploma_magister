@@ -12,4 +12,5 @@ type AccessGroup interface {
 	Edit(ctx context.Context, r request.EditAccessGroup) (response.AccessGroup, error)
 	GetByUID(ctx context.Context, uid string) (response.AccessGroup, error)
 	DeleteByUID(ctx context.Context, uid string) error
+	GetAllForGivenUser(ctx context.Context, userUID string) ([]response.AccessGroup, error)
 }

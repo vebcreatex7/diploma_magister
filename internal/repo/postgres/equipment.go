@@ -5,6 +5,7 @@ import (
 	"github.com/doug-martin/goqu/v9"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/entities"
 	"github.com/vebcreatex7/diploma_magister/internal/repo/postgres/schema"
+	"time"
 )
 
 type equipment struct {
@@ -104,4 +105,18 @@ func (r equipment) DeleteEquipmentInAccessGroupByUID(ctx context.Context, uid st
 		Prepared(true).Executor().ExecContext(ctx)
 
 	return err
+}
+
+func (r equipment) SelectScheduleByName(ctx context.Context, name string, lower, upper time.Time) (res []entities.EquipmentSchedule, err error) {
+	return res, r.db.ScanStructsContext(
+		ctx,
+		&res,
+		`select equipment_schedule.* from equipment_schedule
+join equipment eq on equipment_schedule.equipment_uid = eq.uid
+where eq.name = $1 and
+      lower(time_interval) > $2 and upper(time_interval) < $3`,
+		name,
+		lower,
+		upper,
+	)
 }

@@ -6,6 +6,8 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/sirupsen/logrus"
 	"github.com/vebcreatex7/diploma_magister/cmd/handlers"
+	"github.com/vebcreatex7/diploma_magister/cmd/handlers/admin"
+	"github.com/vebcreatex7/diploma_magister/cmd/handlers/scientist"
 	"github.com/vebcreatex7/diploma_magister/internal/api/service"
 	"github.com/vebcreatex7/diploma_magister/internal/repo/postgres"
 	"github.com/vebcreatex7/diploma_magister/pkg/render"
@@ -55,7 +57,7 @@ func main() {
 	clientsService := service.NewClients(clientsRepo)
 
 	equipmentRepo := postgres.NewEquipment(db)
-	equipmentService := service.NewEquipment(equipmentRepo)
+	equipmentService := service.NewEquipment(equipmentRepo, clientsRepo)
 
 	inventoryRepo := postgres.NewInventory(db)
 	inventoryService := service.NewInventory(inventoryRepo)
@@ -68,9 +70,11 @@ func main() {
 		inventoryRepo,
 	)
 
+	experimentService := service.NewExperiment(db)
+
 	indexHandler := handlers.NewHome(templ, log, t, clientsService)
 
-	adminHandler := handlers.NewAdmin(
+	adminHandler := admin.NewAdmin(
 		t,
 		log,
 		clientsService,
@@ -79,8 +83,19 @@ func main() {
 		accessGroupService,
 	)
 
+	scientistHandler := scientist.NewScientist(
+		t,
+		log,
+		clientsService,
+		equipmentService,
+		inventoryService,
+		accessGroupService,
+		experimentService,
+	)
+
 	r.Mount(indexHandler.BasePrefix(), indexHandler.Routes())
 	r.Mount(adminHandler.BasePrefix(), adminHandler.Routes())
+	r.Mount(scientistHandler.BasePrefix(), scientistHandler.Routes())
 
 	s := start2.Server(cfg.Server, r)
 

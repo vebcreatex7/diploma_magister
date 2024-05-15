@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/vebcreatex7/diploma_magister/internal/domain/entities"
+	"github.com/vebcreatex7/diploma_magister/internal/api/response"
 	"net/http"
 	"os"
 	"strconv"
@@ -14,7 +14,7 @@ import (
 var privateKey = []byte(os.Getenv("JWT_PRIVATE_KEY"))
 
 // generate JWT token
-func GenerateJWT(user entities.Client) (string, error) {
+func GenerateJWT(user response.User) (string, error) {
 	tokenTTL, _ := strconv.Atoi(os.Getenv("TOKEN_TTL"))
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"uid":  user.UID,
@@ -102,4 +102,37 @@ func ValidateAdminJWTCookies(next http.Handler) http.Handler {
 		}
 		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
 	})
+}
+
+func ValidateScientistJWTCookies(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		token, err := getToken(r)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		claims, ok := token.Claims.(jwt.MapClaims)
+		userRole := claims["role"].(string)
+		if ok && token.Valid && userRole == "scientist" {
+			next.ServeHTTP(w, r)
+			return
+		}
+		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+	})
+}
+
+func GetUIDFromJWT(r *http.Request) (string, error) {
+	token, err := getToken(r)
+	if err != nil {
+		return "", fmt.Errorf("getting token: %w", err)
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	uid := claims["uid"].(string)
+
+	if !ok || uid == "" {
+		return "", fmt.Errorf("uid not found")
+	}
+
+	return uid, nil
 }

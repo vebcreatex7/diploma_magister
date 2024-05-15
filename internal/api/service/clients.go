@@ -3,7 +3,6 @@ package service
 import (
 	"github.com/vebcreatex7/diploma_magister/internal/api/response"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/constant"
-	"github.com/vebcreatex7/diploma_magister/pkg"
 	"golang.org/x/crypto/bcrypt"
 
 	"context"
@@ -38,30 +37,25 @@ func (s clients) Create(ctx context.Context, req request.CreateUser) error {
 	return nil
 }
 
-func (s clients) Login(ctx context.Context, req request.LoginUser) (string, error) {
+func (s clients) Login(ctx context.Context, req request.LoginUser) (response.User, error) {
 	c, found, err := s.clientsRepo.GetByLogin(ctx, req.Login)
 	if err != nil {
-		return "", fmt.Errorf("getting client by user: %w", err)
+		return response.User{}, fmt.Errorf("getting client by user: %w", err)
 	}
 
 	if !found {
-		return "", fmt.Errorf("getting client by user: %w", constant.ErrNotFound)
+		return response.User{}, fmt.Errorf("getting client by user: %w", constant.ErrNotFound)
 	}
 
 	if err := bcrypt.CompareHashAndPassword([]byte(c.PasswordHash), []byte(req.Password)); err != nil {
-		return "", fmt.Errorf("comparing password: %w", err)
+		return response.User{}, fmt.Errorf("comparing password: %w", err)
 	}
 
 	if !c.Approved {
-		return "", fmt.Errorf("user is waiting for approve")
+		return response.User{}, fmt.Errorf("user is waiting for approve")
 	}
 
-	jwt, err := pkg.GenerateJWT(c)
-	if err != nil {
-		return "", fmt.Errorf("generating gwt token: %w", err)
-	}
-
-	return jwt, nil
+	return s.mapper.MakeResponse(c), nil
 }
 
 func (s clients) GetAll(ctx context.Context) ([]response.User, error) {
@@ -122,4 +116,17 @@ func (s clients) Approve(ctx context.Context, uid string) ([]response.User, erro
 	}
 
 	return s.mapper.MakeListResponse(res), nil
+}
+
+func (s clients) GetEqSchedules(ctx context.Context, uid string, eqName string) error {
+	avail, err := s.clientsRepo.IsEquipmentAvailable(ctx, uid, eqName)
+	if err != nil {
+		return fmt.Errorf("checking availble eq: %w", err)
+	}
+
+	if !avail {
+		return fmt.Errorf("checking availble eq: '%s' not available", eqName)
+	}
+
+	return nil
 }

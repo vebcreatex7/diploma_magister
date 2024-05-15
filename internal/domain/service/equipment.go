@@ -12,4 +12,5 @@ type Equipment interface {
 	Edit(ctx context.Context, req request.EditEquipment) (response.Equipment, error)
 	GetByUID(ctx context.Context, uid string) (response.Equipment, error)
 	Create(ctx context.Context, req request.CreateEquipment) (response.Equipment, error)
+	GetEquipmentScheduleInRange(ctx context.Context, req request.GetEquipmentSchedule, userUID string) ([]response.EquipmentSchedule, error)
 }
