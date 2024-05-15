@@ -81,7 +81,6 @@ func (r inventory) GetNamesByGroupUID(ctx context.Context, uid string) (res []st
 		).
 		Where(
 			goqu.I(schema.InventoryInAccessGroup+".access_group_uid").Eq(uid),
-			goqu.I(schema.Inventory+".status").Neq("cancel"),
 		).
 		Prepared(true).Executor().
 		ScanValsContext(ctx, &res)

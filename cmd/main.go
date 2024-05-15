@@ -68,7 +68,7 @@ func main() {
 		inventoryRepo,
 	)
 
-	indexHandler := handlers.NewHome(templ, log, clientsService)
+	indexHandler := handlers.NewHome(templ, log, t, clientsService)
 
 	adminHandler := handlers.NewAdmin(
 		t,

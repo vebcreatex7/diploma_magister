@@ -168,7 +168,7 @@ func (h admin) ApproveUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p.SetTemplate("admin.gohtml").
+	p.SetTemplate("components/user/table_body.gohtml").
 		SetPath(r.URL.Path).
 		SetData(resp).
 		SetCode(200)

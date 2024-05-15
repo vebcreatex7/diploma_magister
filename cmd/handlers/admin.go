@@ -4,6 +4,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/sirupsen/logrus"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/service"
+	"github.com/vebcreatex7/diploma_magister/pkg"
 	"github.com/vebcreatex7/diploma_magister/pkg/render"
 	"net/http"
 )
@@ -39,7 +40,7 @@ func (h admin) Routes() chi.Router {
 
 	r := chi.NewRouter()
 
-	//r.Use(pkg.ValidateAdminJWTCookies)
+	r.Use(pkg.ValidateAdminJWTCookies)
 
 	r.Get("/", h.Home)
 	r.Get("/home", h.Home)

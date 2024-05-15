@@ -9,6 +9,10 @@
     >
         Добавить
     </button>
+    <br>
+    <b>
+        <label for="gfg">Поиск:</label><input id="gfg" type="text" placeholder="Search here">
+    </b>
     <table>
         <thead>
             <tr>
@@ -29,4 +33,15 @@
     </table>
 
     <section id="toast-container"></section>
+
+    <script>
+        $(document).ready(function () {
+            $("#gfg").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#access-groups-table-body tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
 </div>

@@ -81,7 +81,6 @@ func (r equipment) GetNamesByGroupUID(ctx context.Context, uid string) (res []st
 		).
 		Where(
 			goqu.I(schema.EquipmentInAccessGroup+".access_group_uid").Eq(uid),
-			goqu.I(schema.Equipment+".status").Neq("cancel"),
 		).
 		Prepared(true).Executor().
 		ScanValsContext(ctx, &res)

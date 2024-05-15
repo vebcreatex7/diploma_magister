@@ -25,23 +25,13 @@ func NewTemplate(
 func (t *Template) Render(w http.ResponseWriter, p *page) {
 	if p.toast != nil {
 		w.Header().Set("HX-Trigger", p.toast.ToJSON())
-
-		if p.toast.Level != "success" {
-			w.Header().Set("HX-Reswap", "none")
-			if p.code == 200 {
-				t.log.Warnf("Unsuccess with code 200")
-			}
-
-			w.WriteHeader(p.code)
-			return
-		}
 	}
 
 	for k, v := range p.headers {
 		w.Header().Set(k, v)
 	}
 
-	if p.code == 200 {
+	if p.code == 200 && p.tmpl != "" {
 		var buf bytes.Buffer
 
 		if err := t.t.ExecuteTemplate(&buf, p.tmpl, p); err != nil {
@@ -53,6 +43,8 @@ func (t *Template) Render(w http.ResponseWriter, p *page) {
 
 		w.Header().Set("content-type", "text/html")
 		w.Write(buf.Bytes())
+	} else {
+		w.Header().Set("HX-Reswap", "none")
 	}
 
 	w.WriteHeader(p.code)
@@ -91,5 +83,23 @@ func (t *Template) RenderData(w http.ResponseWriter, p *page) {
 		w.Write(buf.Bytes())
 	}
 
+	w.WriteHeader(p.code)
+}
+
+func (t *Template) RenderEmpty(w http.ResponseWriter, p *page) {
+	if p.toast != nil {
+		w.Header().Set("HX-Trigger", p.toast.ToJSON())
+
+		if p.toast.Level != "success" {
+
+			if p.code == 200 {
+				t.log.Warnf("Unsuccess with code 200")
+			}
+
+			w.WriteHeader(p.code)
+			return
+		}
+	}
+	w.Header().Set("HX-Reswap", "none")
 	w.WriteHeader(p.code)
 }

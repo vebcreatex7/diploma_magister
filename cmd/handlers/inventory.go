@@ -164,10 +164,7 @@ func (h admin) AddInventory(w http.ResponseWriter, r *http.Request) {
 		h.log.WithError(err).Errorf("binding request")
 		p.SetError(err.Error())
 
-		w.Header().Set("HX-Trigger", p.Toast().ToJSON())
-		w.WriteHeader(200)
-
-		//h.t.Render(w, p)
+		h.t.Render(w, p)
 		return
 	}
 

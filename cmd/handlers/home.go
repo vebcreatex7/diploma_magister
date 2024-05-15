@@ -21,15 +21,18 @@ type home struct {
 	t              *template.Template
 	log            *logrus.Logger
 	clientsService service.Clients
+	zxc            *render.Template
 }
 
 func NewHome(
 	t *template.Template,
 	log *logrus.Logger,
+	zxc *render.Template,
 	clientsService service.Clients,
 ) home {
 	return home{
 		t:              t,
+		zxc:            zxc,
 		log:            log,
 		clientsService: clientsService,
 	}
@@ -54,73 +57,67 @@ func (h home) Routes() chi.Router {
 }
 
 func (h home) Home(w http.ResponseWriter, r *http.Request) {
-	render.HTMLResponse(w, h.t, "home.gohtml", Message{URL: r.URL}, nil, http.StatusOK)
+	p := render.NewPage().
+		SetTemplate("home.gohtml").
+		SetPath(r.URL.Path).
+		SetCode(200)
+
+	h.zxc.Render(w, p)
 }
 
 func (h home) Login(w http.ResponseWriter, r *http.Request) {
-	var req request.LoginUser
+	var (
+		p   = render.NewPage()
+		req request.LoginUser
+	)
 
 	if err := req.Bind(r); err != nil {
 		h.log.WithError(err).Errorf("binding request")
+		p.SetError(err.Error())
+		h.zxc.Render(w, p)
 
-		render.HTMLResponse(w, h.t, "home.gohtml", Message{
-			URL:  r.URL,
-			Type: "error",
-			Text: err.Error(),
-		}, nil, http.StatusBadRequest)
 		return
 	}
 
 	token, err := h.clientsService.Login(r.Context(), req)
 	if err != nil {
 		h.log.WithError(err).Errorf("logining")
+		p.SetError(err.Error())
+		h.zxc.Render(w, p)
 
-		render.HTMLResponse(w, h.t, "home.gohtml", Message{
-			URL:  r.URL,
-			Type: "error",
-			Text: err.Error(),
-		}, nil, http.StatusBadRequest)
 		return
 	}
 
 	render.SetCookie(w, "jwt", token)
+	p.SetHeader("HX-Redirect", "http://localhost:3000/admin/home")
+	p.SetSuccess("user registered")
 
-	render.HTMLResponse(w, h.t, "home.gohtml", Message{
-		URL:  r.URL,
-		Type: "success",
-		Text: token,
-	}, nil, http.StatusOK)
+	h.zxc.Render(w, p)
 }
 
 func (h home) Register(w http.ResponseWriter, r *http.Request) {
-	var req request.CreateUser
+	var (
+		p   = render.NewPage()
+		req request.CreateUser
+	)
 
 	if err := req.Bind(r); err != nil {
 		h.log.WithError(err).Errorf("binding request")
+		p.SetError(err.Error())
+		h.zxc.Render(w, p)
 
-		render.HTMLResponse(w, h.t, "home.gohtml", Message{
-			URL:  r.URL,
-			Type: "error",
-			Text: err.Error(),
-		}, nil, http.StatusBadRequest)
 		return
 	}
 
 	if err := h.clientsService.Create(r.Context(), req); err != nil {
 		h.log.WithError(err).Errorf("creating user")
+		p.SetError(err.Error())
+		h.zxc.Render(w, p)
 
-		render.HTMLResponse(w, h.t, "home.gohtml", Message{
-			URL:  r.URL,
-			Type: "error",
-			Text: err.Error(),
-		}, nil, http.StatusBadRequest)
 		return
 	}
 
-	render.HTMLResponse(w, h.t, "home.gohtml", Message{
-		URL:  r.URL,
-		Type: "success",
-		Text: "Регистрация пройдена, ожидайте подтверждения аккаунта",
-	}, nil, http.StatusOK)
-	return
+	p.SetSuccess("user registered")
+
+	h.zxc.RenderEmpty(w, p)
 }

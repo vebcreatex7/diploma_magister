@@ -95,7 +95,6 @@ func (r clients) GetLoginsByGroupUID(ctx context.Context, uid string) (res []str
 		).
 		Where(
 			goqu.I(schema.ClientsInAccessGroup+".access_group_uid").Eq(uid),
-			goqu.I(schema.Client+".status").Neq("cancel"),
 		).
 		Prepared(true).Executor().
 		ScanValsContext(ctx, &res)
@@ -112,6 +111,7 @@ func (r clients) DeleteClientsInAccessGroupByUID(ctx context.Context, uid string
 func (r clients) Approve(ctx context.Context, uid string) error {
 	_, err := r.db.Update(schema.Client).
 		Set(goqu.Record{"approved": true}).
+		Where(goqu.I("uid").Eq(uid)).
 		Prepared(true).Executor().
 		ExecContext(ctx)
 

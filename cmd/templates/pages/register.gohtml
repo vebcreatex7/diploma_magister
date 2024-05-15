@@ -1,5 +1,5 @@
 <div id="register">
-    <form target="/register" method="post">
+    <form hx-post="/register">
         <label for="surname">Фамилия</label> <input id="surname" name="surname"> <br>
         <label for="name">Имя</label> <input id="name" name="name"> <br>
         <label for="patronymic">Отчество</label> <input id="patronymic" name="patronymic"> <br>
@@ -8,11 +8,11 @@
         <label for="password">Пароль</label> <input id="password" type="password" name="password"> <br>
         <label for="role"></label>Роль<select id="role" name="role">
             <option value="engineer" name="engineer">Инженер</option>
-            <option value="laboratory">Лаборант</option>
+            <option value="laboratorian">Лаборант</option>
             <option value="scientist" selected>Ученый</option>
         </select>
         <input type="submit" name="register" value="Зарегистрироваться">
     </form>
 
-    {{template "components/response.gohtml" .}}
+    <section id="toast-container"></section>
 </div>
