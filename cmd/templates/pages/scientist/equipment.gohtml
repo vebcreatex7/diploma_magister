@@ -1,20 +1,38 @@
-<div>
-    <div id="processing" class="htmx-indicator">Processing...</div>
+<div id="equipment">
     <br>
     <b>
         <label for="gfg">Поиск:</label><input id="gfg" type="text" placeholder="Search here">
     </b>
     <table>
         <thead>
-            <tr>
-                <th>Название</th>
-                <th>Описание</th>
-                <th>Тип</th>
-                <th>Производитель</th>
-                <th>Модель</th>
-                <th>Номер комнаты</th>
-            </tr>
+        <tr>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Тип</th>
+            <th>Производитель</th>
+            <th>Модель</th>
+            <th>Номер комнаты</th>
+        </tr>
         </thead>
-        {{template "components/scientist/equipment/table_body.gohtml"}}
+        <tbody id="equipment-table-body">
+        {{with .Data}}
+            {{range .}}
+                {{template "components/scientist/equipment/row.gohtml" .}}
+            {{end}}
+        {{end}}
+        </tbody>
     </table>
+
+    <section id="toast-container"></section>
+
+    <script>
+        $(document).ready(function () {
+            $("#gfg").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#equipment-table-body tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
 </div>

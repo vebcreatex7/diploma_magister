@@ -14,4 +14,5 @@ type Clients interface {
 	GetByUID(ctx context.Context, uid string) (response.User, error)
 	Edit(ctx context.Context, req request.EditUser) (response.User, error)
 	Approve(ctx context.Context, uid string) ([]response.User, error)
+	GetByLogin(ctx context.Context, login string) (response.User, error)
 }

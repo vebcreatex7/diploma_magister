@@ -11,3 +11,9 @@ type Inventory struct {
 	Quantity     decimal.Decimal `db:"quantity"`
 	Unit         string          `db:"unit"`
 }
+
+type InventoryInExperiment struct {
+	ExperimentUID string          `db:"experiment_uid"`
+	InventoryUID  string          `db:"inventory_uid"`
+	Quantity      decimal.Decimal `db:"quantity"`
+}

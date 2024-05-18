@@ -1,8 +1,9 @@
-<div>
+<div id="inv-in">
     <label>
         Название: <input name="inventory-name"  list="inventory-suggestions" data-include-edit="exp-add">
     </label>
     <label>
         Количество: <input name="quantity" type="number" data-include-edit="exp-add">
     </label>
+    <a hx-get="/scientists/empty" hx-swap="outerHTML" hx-target="closest #inv-in" href="">Удалить</a>
 </div>

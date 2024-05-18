@@ -7,6 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/vebcreatex7/diploma_magister/cmd/handlers"
 	"github.com/vebcreatex7/diploma_magister/cmd/handlers/admin"
+	"github.com/vebcreatex7/diploma_magister/cmd/handlers/engineer"
 	"github.com/vebcreatex7/diploma_magister/cmd/handlers/scientist"
 	"github.com/vebcreatex7/diploma_magister/internal/api/service"
 	"github.com/vebcreatex7/diploma_magister/internal/repo/postgres"
@@ -54,13 +55,10 @@ func main() {
 	r := start2.Router()
 
 	clientsRepo := postgres.NewClients(db)
-	clientsService := service.NewClients(clientsRepo)
-
+	clientsService := service.NewClients(clientsRepo, db)
 	equipmentRepo := postgres.NewEquipment(db)
-	equipmentService := service.NewEquipment(equipmentRepo, clientsRepo)
 
 	inventoryRepo := postgres.NewInventory(db)
-	inventoryService := service.NewInventory(inventoryRepo)
 
 	accessGroupRepo := postgres.NewAccessGroups(db)
 	accessGroupService := service.NewAccessGroup(
@@ -69,8 +67,19 @@ func main() {
 		equipmentRepo,
 		inventoryRepo,
 	)
+	equipmentService := service.NewEquipment(equipmentRepo, clientsRepo, accessGroupService)
+	inventoryService := service.NewInventory(inventoryRepo, accessGroupService)
 
-	experimentService := service.NewExperiment(db)
+	experimentService := service.NewExperiment(
+		db,
+		clientsRepo,
+		equipmentService,
+	)
+	maintainceService := service.NewMaintaince(
+		db,
+		clientsRepo,
+		equipmentService,
+	)
 
 	indexHandler := handlers.NewHome(templ, log, t, clientsService)
 
@@ -81,6 +90,8 @@ func main() {
 		equipmentService,
 		inventoryService,
 		accessGroupService,
+		experimentService,
+		maintainceService,
 	)
 
 	scientistHandler := scientist.NewScientist(
@@ -93,9 +104,21 @@ func main() {
 		experimentService,
 	)
 
+	engineerHandler := engineer.NewEngineer(
+		t,
+		log,
+		clientsService,
+		equipmentService,
+		inventoryService,
+		accessGroupService,
+		experimentService,
+		maintainceService,
+	)
+
 	r.Mount(indexHandler.BasePrefix(), indexHandler.Routes())
 	r.Mount(adminHandler.BasePrefix(), adminHandler.Routes())
 	r.Mount(scientistHandler.BasePrefix(), scientistHandler.Routes())
+	r.Mount(engineerHandler.BasePrefix(), engineerHandler.Routes())
 
 	s := start2.Server(cfg.Server, r)
 

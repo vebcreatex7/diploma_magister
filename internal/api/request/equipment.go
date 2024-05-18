@@ -151,8 +151,8 @@ func (r *GetEquipmentSchedule) validate() error {
 		return fmt.Errorf("wrong interval order")
 	}
 
-	if r.Upper.Sub(r.Lower) > time.Hour*24*15 {
-		return fmt.Errorf("duartion bigger than 15 days")
+	if r.Upper.Sub(r.Lower) > time.Hour*24*30 {
+		return fmt.Errorf("duartion bigger than 30 days")
 	}
 
 	return nil

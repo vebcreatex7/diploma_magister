@@ -16,6 +16,8 @@ type admin struct {
 	equipmentService    service.Equipment
 	inventoryService    service.Inventory
 	accessGroupsService service.AccessGroup
+	experimentService   service.Experiment
+	maintainceService   service.Maintaince
 }
 
 func NewAdmin(
@@ -25,6 +27,8 @@ func NewAdmin(
 	equipmentService service.Equipment,
 	inventoryService service.Inventory,
 	accessGroupsService service.AccessGroup,
+	experimentService service.Experiment,
+	maintainceService service.Maintaince,
 ) admin {
 	return admin{
 		t:                   t,
@@ -33,6 +37,8 @@ func NewAdmin(
 		equipmentService:    equipmentService,
 		inventoryService:    inventoryService,
 		accessGroupsService: accessGroupsService,
+		experimentService:   experimentService,
+		maintainceService:   maintainceService,
 	}
 }
 
@@ -60,6 +66,8 @@ func (h admin) Routes() chi.Router {
 	r.Put("/equipment/{uid}", h.EditEquipment)
 	r.Get("/equipment-add", h.AddEquipmentPage)
 	r.Post("/equipment", h.AddEquipment)
+	r.Get("/equipment/schedule", h.GetEquipmentSchedule)
+	r.Get("/equipment/schedule/empty", h.GetEquipmentScheduleEmpty)
 
 	r.Get("/inventory", h.GetInventory)
 	r.Get("/inventory/{uid}", h.GetInventoryByUID)
@@ -76,6 +84,19 @@ func (h admin) Routes() chi.Router {
 	r.Put("/access-groups/{uid}", h.EditAccessGroup)
 	r.Get("/access-groups/{uid}", h.GetAccessGroupByUID)
 	r.Delete("/access-groups/{uid}", h.DeleteAccessGroup)
+
+	r.Get("/experiments", h.GetExperiment)
+	r.Delete("/experiments/{uid}", h.DeleteExperimentByUID)
+	r.Get("/experiments/add", h.AddExperimentPage)
+	r.Get("/experiments/equipment/add", h.ExperimentEquipmentFormAdd)
+	r.Get("/experiments/inventory/add", h.ExperimentInventoryFormAdd)
+	r.Post("/experiments/add", h.AddExperiment)
+
+	r.Get("/maintaince", h.GetMaintaince)
+	r.Delete("/maintaince/{uid}", h.DeleteMaintainceByUID)
+	r.Get("/maintaince/add", h.AddMaintaincePage)
+	r.Post("/maintaince/add", h.AddMaintaince)
+	r.Get("/maintaince/equipment/add", h.MaintainceEquipmentFormAdd)
 
 	return r
 }

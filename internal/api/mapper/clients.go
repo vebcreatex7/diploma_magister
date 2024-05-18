@@ -16,7 +16,7 @@ func (m Clients) MakeCreateEntity(
 	return entities.Client{
 		Surname:      req.Surname,
 		Name:         req.Name,
-		Patronymic:   req.Password,
+		Patronymic:   req.Patronymic,
 		Login:        req.Login,
 		PasswordHash: passwordHash,
 		Email:        req.Email,

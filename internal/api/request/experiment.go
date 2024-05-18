@@ -4,18 +4,37 @@ import (
 	"fmt"
 	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/shopspring/decimal"
+	"github.com/vebcreatex7/diploma_magister/internal/domain/constant"
+	"github.com/vebcreatex7/diploma_magister/pkg/request"
 	"net/http"
+	"strings"
 	"time"
 )
 
 var (
-	layout      = "2006-01-02T15:04"
 	maxDuration = time.Hour * 24 * 2
 )
+
+type AddExperimentAdmin struct {
+	User string
+	AddExperiment
+}
+
+func (r *AddExperimentAdmin) Bind(req *http.Request) error {
+	if err := req.ParseForm(); err != nil {
+		return err
+	}
+
+	r.User = strings.TrimSpace(req.Form.Get("experiment-scientist"))
+
+	return r.AddExperiment.Bind(req)
+}
 
 type AddExperiment struct {
 	Name        string
 	Description string
+	StartTs     time.Time
+	EndTs       time.Time
 	Equipment   []equipmentInExperiment
 	Inventory   []inventoryInExperiment
 }
@@ -39,6 +58,19 @@ func (r *AddExperiment) Bind(req *http.Request) error {
 	r.Name = req.Form.Get("experiment-name")
 	r.Description = req.Form.Get("experiment-description")
 
+	start, err := time.Parse(constant.Layout, req.Form.Get("start-ts"))
+	if err != nil {
+		return fmt.Errorf("parsing start-ts: %w", err)
+	}
+
+	end, err := time.Parse(constant.Layout, req.Form.Get("end-ts"))
+	if err != nil {
+		return fmt.Errorf("parsing end-ts: %w", err)
+	}
+
+	r.StartTs = start
+	r.EndTs = end
+
 	equipment := req.Form["equipment-name"]
 	lower := req.Form["lower"]
 	upper := req.Form["upper"]
@@ -49,11 +81,11 @@ func (r *AddExperiment) Bind(req *http.Request) error {
 
 	var eq []equipmentInExperiment
 	for i := range equipment {
-		l, err := time.Parse(layout, lower[i])
+		l, err := time.Parse(constant.Layout, lower[i])
 		if err != nil {
 			return fmt.Errorf("parsing %d lower: %w", i, err)
 		}
-		u, err := time.Parse(layout, upper[i])
+		u, err := time.Parse(constant.Layout, upper[i])
 		if err != nil {
 			return fmt.Errorf("parsing %d upper: %w", i, err)
 		}
@@ -101,6 +133,16 @@ func (r *AddExperiment) validate() error {
 	}
 
 	for i := range r.Equipment {
+		if !r.Equipment[i].Lower.After(r.StartTs) {
+			return fmt.Errorf("validating equipment %d lower: should be after start-ts", i)
+		}
+
+		if !r.Equipment[i].Upper.Before(r.EndTs) {
+			return fmt.Errorf("validating equipment %d upper: should be before end-ts", i)
+		}
+	}
+
+	for i := range r.Equipment {
 		if err := validation.Validate(r.Equipment[i].Name, validation.Required); err != nil {
 			return fmt.Errorf("validating equipment %d name: %w", i, err)
 		}
@@ -133,6 +175,21 @@ func (r *AddExperiment) validate() error {
 			return fmt.Errorf("validating inventory %d quantity: quantity less than 0", i)
 		}
 	}
+
+	return nil
+}
+
+type DeleteExperiment struct {
+	UID string
+}
+
+func (r *DeleteExperiment) Bind(req *http.Request) error {
+	uid, err := request.ParseUIDFromPath(req, true)
+	if err != nil {
+		return fmt.Errorf("getting uid from path: %w", err)
+	}
+
+	r.UID = uid
 
 	return nil
 }

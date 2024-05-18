@@ -1,8 +1,10 @@
 package service
 
 import (
+	"github.com/doug-martin/goqu/v9"
 	"github.com/vebcreatex7/diploma_magister/internal/api/response"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/constant"
+	"github.com/vebcreatex7/diploma_magister/internal/domain/entities"
 	"golang.org/x/crypto/bcrypt"
 
 	"context"
@@ -15,12 +17,14 @@ import (
 type clients struct {
 	clientsRepo repo.Clients
 	mapper      mapper.Clients
+	db          *goqu.Database
 }
 
-func NewClients(clientsRepo repo.Clients) clients {
+func NewClients(clientsRepo repo.Clients, db *goqu.Database) clients {
 	return clients{
 		clientsRepo: clientsRepo,
 		mapper:      mapper.Clients{},
+		db:          db,
 	}
 }
 
@@ -129,4 +133,24 @@ func (s clients) GetEqSchedules(ctx context.Context, uid string, eqName string) 
 	}
 
 	return nil
+}
+
+func (s clients) GetByLogin(ctx context.Context, login string) (response.User, error) {
+	var res entities.Client
+
+	f, err := s.db.ScanStructContext(
+		ctx,
+		&res,
+		`select * from client where login = $1`,
+		login,
+	)
+	if err != nil {
+		return response.User{}, fmt.Errorf("getting user: %w", err)
+	}
+
+	if !f {
+		return response.User{}, fmt.Errorf("getting user: %w", constant.ErrNotFound)
+	}
+
+	return s.mapper.MakeResponse(res), nil
 }

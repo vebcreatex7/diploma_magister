@@ -12,4 +12,5 @@ type Inventory interface {
 	Edit(ctx context.Context, req request.EditInventory) (response.Inventory, error)
 	GetByUID(ctx context.Context, uid string) (response.Inventory, error)
 	Create(ctx context.Context, req request.CreateInventory) (response.Inventory, error)
+	GetAllForUser(ctx context.Context, uid string) ([]response.Inventory, error)
 }

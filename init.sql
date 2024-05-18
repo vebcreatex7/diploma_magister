@@ -12,7 +12,6 @@ create table client (
     login text not null,
     password_hash text not null,
     role_uid uuid not null,
-    status text not null default 'wait_approve',
     role text not null,
     approved bool not null default false
 );
@@ -31,15 +30,13 @@ create table equipment (
 	type text not null,
 	manufacturer text,
 	model text,
-	room text not null,
-	status text not null default 'wait_approve'
+	room text not null
 );
 
 create table equipment_schedule(
 	uid uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
 	equipment_uid uuid not null,
 	time_interval tsrange not null,
-	status text not null,
 	maintaince_flag bool not null default false
 );
 
@@ -51,8 +48,7 @@ create table inventory (
 	type text not null,
 	manufacturer text,
 	quantity decimal not null,
-	unit text not null,
-	status text not null default 'wait_approve'
+	unit text not null
 );
 
 create table experiment (
@@ -60,7 +56,7 @@ create table experiment (
 	name text not null,
 	description text not null,
 	start_ts timestamp not null,
-	end_ts timestamp
+	end_ts timestamp not null
 );
 
 create table inventory_in_access_group(
@@ -95,6 +91,23 @@ create table equipment_schedule_in_experiment(
 	equipment_schedule_uid uuid not null
 );
 
+create table maintaince(
+    uid uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    name text not null,
+    description text not null,
+    start_ts timestamp not null,
+    end_ts timestamp not null
+);
+
+create table equipment_schedule_in_maintaince(
+    maintaince_uid uuid not null,
+    equipment_schedule_uid  uuid not null
+);
+
+create table clients_in_maintaince(
+  maintaince_uid uuid not null,
+  client_uid  uuid not null
+);
 
 
 
@@ -122,15 +135,14 @@ alter table inventory_in_access_group
 
 
 
-create unique index on client(login) where status != 'cancel';
-
+create unique index on client(login);
 
 
 alter table equipment_schedule
 	add constraint fk_equipment_schedule_equipment foreign key(equipment_uid) references equipment(uid);
 
 alter table equipment_schedule
-	add constraint unique_active_exp_interval exclude using gist  (maintaince_flag with =, equipment_uid WITH =, time_interval WITH &&) where (status != 'cancel');
+	add constraint unique_equipment_schedule_interval exclude using gist  (maintaince_flag with =, equipment_uid WITH =, time_interval WITH &&);
 
 
 
@@ -158,14 +170,34 @@ alter table equipment_schedule_in_experiment
 
 
 
-create unique index on equipment(name) where status != 'cancel';
+create unique index on equipment(name);
 
 
+create unique index on inventory(name);
+alter table inventory
+    add constraint positive_quantity check(quantity >= 0);
 
-create unique index on inventory(name) where status != 'cancel';
 
 create unique index on access_group(name);
 
 
+
+alter table equipment_schedule_in_maintaince
+    add constraint fk_equipment_schedule_in_maintaince_maintaince foreign key(maintaince_uid) references maintaince(uid);
+
+alter table equipment_schedule_in_maintaince
+    add constraint fk_equipment_schedule_in_maintaince_equipment_schedule foreign key(equipment_schedule_uid) references equipment_schedule(uid);
+
+
+
+alter table clients_in_maintaince
+    add constraint fk_clients_in_maintaince_maintaince foreign key(maintaince_uid) references maintaince(uid);
+
+alter table clients_in_maintaince
+    add constraint fk_clients_in_maintaince_clients foreign key(client_uid) references client(uid);
+
 commit;
+
+alter table maintaince
+    add column end_ts timestamp not null;
 

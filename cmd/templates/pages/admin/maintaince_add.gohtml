@@ -1,0 +1,47 @@
+<div id="maintaince-add">
+    <div id="processing" class="htmx-indicator">Processing...</div>
+    <h3>Запланировать обслуживание</h3>
+
+    <h4>Проверить расписание оборудования</h4>
+    <form hx-get="/admin/equipment/schedule" hx-target="#equipment-schedule-response" hx-swap="outerHTML">
+        <label for="equipment"></label><input id="equipment" name="name">
+        <label for="start">Начало</label><input type="date" id="start" name="lower" value="2024-07-22" />
+        <label for="end">Начало</label><input type="date" id="end" name="upper" value="2024-07-22" />
+        <input type="submit" name="submit" value="Показать">
+    </form>
+    <div id="equipment-schedule-response"></div>
+
+    <form hx-post="/admin/maintaince/add" hx-swap="none">
+        <h4>Обслуживание</h4>
+
+        <label>
+            Название: <input name="maintaince-name"  data-include-edit="exp-add">
+        </label>
+        <label>
+            Описание: <input name="maintaince-description"  data-include-edit="exp-add">
+        </label>
+        <label>
+            Начало: <input name="start-ts" type="datetime-local">
+        </label>
+        <label>
+            Окончание: <input name="end-ts" type="datetime-local">
+        </label>
+        <label>
+            Инженер: <input name="maintaince-engineer">
+        </label>
+
+        <h5>Оборудование</h5>
+        <a
+                hx-get="/admin/maintaince/equipment/add"
+                hx-swap="beforeend"
+                hx-target="#equipment-input"
+                href=""
+        >Добавить оборудование</a>
+
+        <div id="equipment-input"></div>
+
+        <input type="submit" name="plan" value="Запланировать">
+    </form>
+
+    <section id="toast-container"></section>
+</div>

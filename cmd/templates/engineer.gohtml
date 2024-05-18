@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {{ template "head" .}}
+    <title>Личный кабинет ученого</title>
+</head>
+
+<body>
+    <nav>
+        <ul>
+            <li><a href="/engineers/home">Домашняя страница</a></li>
+            <li><a href="/engineers/equipment">Оборудование</a></li>
+            <li><a href="/engineers/inventory">Инвентарь</a></li>
+            <li><a href="/engineers/maintaince/add">Запланировать обслуживание</a></li>
+            <li><a href="/engineers/maintaince">Мои обслуживания</a></li>
+        </ul>
+    </nav>
+
+{{if eq .Path "/engineers/home"}}
+    {{template "pages/engineer/home.gohtml" .}}
+{{else if eq .Path "/engineers/equipment"}}
+    {{template "pages/engineer/equipment.gohtml" .}}
+{{else if eq .Path "/engineers/inventory"}}
+    {{template "pages/engineer/inventory.gohtml" .}}
+{{else if eq .Path "/engineers/maintaince/add"}}
+    {{template "pages/engineer/maintaince_add.gohtml" .}}
+{{else if eq .Path "/engineers/maintaince"}}
+    {{template "pages/engineer/maintaince.gohtml" .}}
+{{end}}
+
+</body>

@@ -151,6 +151,39 @@ func (h admin) AddEquipmentPage(w http.ResponseWriter, r *http.Request) {
 	h.t.Render(w, p)
 }
 
+func (h admin) GetEquipmentSchedule(w http.ResponseWriter, r *http.Request) {
+	var (
+		p   = render.NewPage()
+		req request.GetEquipmentSchedule
+	)
+
+	if err := req.Bind(r); err != nil {
+		h.log.WithError(err).Errorf("binding request")
+		p.SetError(err.Error())
+		h.t.Render(w, p)
+		return
+	}
+
+	resp, err := h.equipmentService.GetEquipmentScheduleInRange(r.Context(), req)
+	if err != nil {
+		h.log.WithError(err).Errorf("getting equipment_schedule")
+		p.SetError(err.Error())
+		h.t.Render(w, p)
+		return
+	}
+
+	p.SetTemplate("components/equipment/schedule_response.gohtml").
+		SetData(resp).
+		SetCode(200)
+
+	h.t.RenderData(w, p)
+}
+
+func (h admin) GetEquipmentScheduleEmpty(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte(`<div id="equipment-schedule-response"><div>`))
+	return
+}
+
 func (h admin) AddEquipment(w http.ResponseWriter, r *http.Request) {
 	var (
 		p   = render.NewPage()

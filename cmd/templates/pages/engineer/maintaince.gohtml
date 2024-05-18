@@ -1,0 +1,23 @@
+<div id="maintaince">
+    <table>
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Начало</th>
+                <th>Окончание</th>
+                <th>Пользователи</th>
+                <th>Оборудование</th>
+            </tr>
+        </thead>
+        <tbody id="maintaince-table-body">
+        {{with .Data}}
+            {{range .}}
+                {{template "components/engineer/maintaince/row.gohtml" .}}
+            {{end}}
+        {{end}}
+        </tbody>
+    </table>
+
+    <section id="toast-container"></section>
+</div>

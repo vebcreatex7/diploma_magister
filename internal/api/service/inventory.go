@@ -8,15 +8,22 @@ import (
 	"github.com/vebcreatex7/diploma_magister/internal/api/response"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/constant"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/repo"
+	"github.com/vebcreatex7/diploma_magister/internal/domain/service"
+	"strings"
 )
 
 type inventory struct {
-	inventoryRepo repo.Inventory
-	mapper        mapper.Inventory
+	inventoryRepo      repo.Inventory
+	mapper             mapper.Inventory
+	accessGroupService service.AccessGroup
 }
 
-func NewInventory(inventoryRepo repo.Inventory) inventory {
-	return inventory{inventoryRepo: inventoryRepo, mapper: mapper.Inventory{}}
+func NewInventory(inventoryRepo repo.Inventory, accessGroupService service.AccessGroup) inventory {
+	return inventory{
+		inventoryRepo:      inventoryRepo,
+		accessGroupService: accessGroupService,
+		mapper:             mapper.Inventory{},
+	}
 }
 
 func (s inventory) GetAll(ctx context.Context) ([]response.Inventory, error) {
@@ -26,6 +33,42 @@ func (s inventory) GetAll(ctx context.Context) ([]response.Inventory, error) {
 	}
 
 	return s.mapper.MakeListResponse(eq), nil
+}
+
+func (s inventory) GetAllForUser(ctx context.Context, uid string) ([]response.Inventory, error) {
+	all, err := s.GetAll(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("getting all inventory: %w", err)
+	}
+
+	ags, err := s.accessGroupService.GetAllForGivenUser(ctx, uid)
+	if err != nil {
+		return nil, fmt.Errorf("getting acess_groups for user: %w", err)
+	}
+
+	var inventory []string
+
+	for i := range ags {
+		inventory = append(inventory, strings.Split(ags[i].Inventory, ",")...)
+	}
+
+	for i := 0; i < len(all); i++ {
+		inventoryFound := false
+
+		for j := range inventory {
+			if all[i].Name == inventory[j] {
+				inventoryFound = true
+				break
+			}
+		}
+
+		if !inventoryFound {
+			all = append(all[:i], all[i+1:]...)
+			i--
+		}
+	}
+
+	return all, nil
 }
 
 func (s inventory) DeleteByUID(ctx context.Context, uid string) error {

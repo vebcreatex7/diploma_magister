@@ -1,0 +1,54 @@
+<tr id="experiment-row-{{.UID}}">
+    <td>{{.Name}}</td>
+    <td>{{.Description}}</td>
+    <td>{{.StartTs}}</td>
+    <td>{{.EndTs}}</td>
+    <td>
+        <table id="experiment-users">
+            {{range .Users}}
+                <tr>
+                    <td>{{.}}</td>
+                </tr>
+            {{end}}
+        </table>
+    </td>
+    <td>
+        <table id="experiment-equipment">
+            {{range .Equipment}}
+                <tr>
+                    <td>
+                        {{.Name}}
+                    </td>
+                    <td>
+                        <table>
+                            {{range .Intervals}}
+                                <tr>
+                                    <td>{{.}}</td>
+                                </tr>
+                            {{end}}
+                        </table>
+                    </td>
+                </tr>
+            {{end}}
+        </table>
+    </td>
+    <td>
+        <table id="experiment-inventory">
+            {{range .Inventory}}
+                <tr>
+                    <td>{{.Name}}</td>
+                    <td>{{.Quantity}}</td>
+                </tr>
+            {{end}}
+        </table>
+    </td>
+    <td>
+        <a
+                hx-delete="/scientists/experiments/{{.UID}}"
+                hx-target="#experiment-row-{{.UID}}"
+                hx-swap="outerHTML"
+                hx-confirm="Подтвердите удаление эксперимента '{{.Name}}'"
+                hx-indicator="#processing"
+                href="">Удалить</a>
+    </td>
+</tr>

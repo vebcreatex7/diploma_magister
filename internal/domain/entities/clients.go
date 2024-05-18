@@ -11,3 +11,13 @@ type Client struct {
 	Role         string `db:"role"`
 	Approved     bool   `db:"approved"`
 }
+
+type ClientsInExperiment struct {
+	ExperimentUID string `db:"experiment_uid"`
+	ClientUID     string `db:"client_uid"`
+}
+
+type ClientsInMaintaince struct {
+	MaintainceUID string `db:"maintaince_uid"`
+	ClientUID     string `db:"client_uid"`
+}

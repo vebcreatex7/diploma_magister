@@ -1,0 +1,58 @@
+<div id="experiment-add">
+    <div id="processing" class="htmx-indicator">Processing...</div>
+    <h3>Запланировать эксперимент</h3>
+
+    <h4>Проверить расписание оборудования</h4>
+    <form hx-get="/admin/equipment/schedule" hx-target="#equipment-schedule-response" hx-swap="outerHTML">
+        <label for="equipment"></label><input id="equipment" name="name" list="equipment-suggestions">
+        <label for="start">Начало</label><input type="date" id="start" name="lower" value="2024-07-22" />
+        <label for="end">Начало</label><input type="date" id="end" name="upper" value="2024-07-22" />
+        <input type="submit" name="submit" value="Показать">
+    </form>
+    <div id="equipment-schedule-response"></div>
+
+
+
+    <form hx-post="/admin/experiments/add" hx-swap="none">
+        <h4>"Эксперимент</h4>
+
+        <label>
+           Название: <input name="experiment-name"  data-include-edit="exp-add">
+        </label>
+        <label>
+            Описание: <input name="experiment-description"  data-include-edit="exp-add">
+        </label>
+        <label>
+            Начало: <input name="start-ts" type="datetime-local">
+        </label>
+        <label>
+            Окончание: <input name="end-ts" type="datetime-local">
+        </label>
+        <label>
+            Сотрудник: <input name="experiment-scientist">
+        </label>
+
+        <h5>Оборудование</h5>
+        <a
+                hx-get="/admin/experiments/equipment/add"
+                hx-swap="beforeend"
+                hx-target="#equipment-input"
+                href=""
+        >Добавить оборудование</a>
+        <div id="equipment-input"></div>
+
+        <h5>Инвентарь</h5>
+        <a
+                hx-get="/admin/experiments/inventory/add"
+                hx-swap="beforeend"
+                hx-target="#inventory-input"
+                href=""
+        >Добавить инвентарь</a>
+        <div id="inventory-input"></div>
+
+        <input type="submit" name="plan" value="Запланировать">
+
+    </form>
+
+    <section id="toast-container"></section>
+</div>

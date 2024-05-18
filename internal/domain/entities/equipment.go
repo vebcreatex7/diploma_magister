@@ -13,9 +13,18 @@ type Equipment struct {
 }
 
 type EquipmentSchedule struct {
-	UID            string         `db:"uid" goqu:"skipinsert,skipupdate"`
+	UID            string         `db:"uid" goqu:"skipupdate"`
 	EquipmentUID   string         `db:"equipment_uid"`
 	TimeInterval   pgtype.Tsrange `db:"time_interval"`
-	Status         string         // remove me
 	MaintainceFlag bool           `db:"maintaince_flag"`
+}
+
+type EquipmentScheduleInExperiment struct {
+	ExperimentUID        string `db:"experiment_uid"`
+	EquipmentScheduleUID string `db:"equipment_schedule_uid"`
+}
+
+type EquipmentScheduleInMaintaince struct {
+	MaintainceUID        string `db:"maintaince_uid"`
+	EquipmentScheduleUID string `db:"equipment_schedule_uid"`
 }

@@ -49,13 +49,21 @@ func (h scientist) Routes() chi.Router {
 	r.Get("/", h.Home)
 	r.Get("/home", h.Home)
 	r.Get("/empty", h.Empty)
-	r.Get("/my-access-groups", h.GetMyAccessGroups)
-	r.Get("/experiment/add", h.AddExperimentPage)
+
+	r.Get("/access-groups", h.GetMyAccessGroups)
+
+	r.Get("/equipment", h.GetAllMyEquipment)
 	r.Get("/equipment/schedule", h.GetEquipmentSchedule)
 	r.Get("/equipment/schedule/empty", h.GetEquipmentScheduleEmpty)
-	r.Get("/experiment/equipment/add", h.ExperimentEquipmentAdd)
-	r.Get("/experiment/inventory/add", h.ExperimentInventoryAdd)
-	r.Post("/experiment/add", h.AddExperiment)
+
+	r.Get("/inventory", h.GetAllMyInventory)
+
+	r.Get("/experiments/add", h.AddExperimentPage)
+	r.Get("/experiments/equipment/add", h.ExperimentEquipmentFormAdd)
+	r.Get("/experiments/inventory/add", h.ExperimentInventoryFormAdd)
+	r.Post("/experiments/add", h.AddExperiment)
+	r.Get("/experiments", h.GetMyExperiments)
+	r.Delete("/experiments/{uid}", h.DeleteExperimentByUID)
 
 	return r
 }

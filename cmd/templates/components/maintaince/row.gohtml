@@ -1,0 +1,44 @@
+<tr id="maintaince-row-{{.UID}}">
+    <td>{{.Name}}</td>
+    <td>{{.Description}}</td>
+    <td>{{.StartTs}}</td>
+    <td>{{.EndTs}}</td>
+    <td>
+        <table id="maintaince-users">
+            {{range .Users}}
+                <tr>
+                    <td>{{.}}</td>
+                </tr>
+            {{end}}
+        </table>
+    </td>
+    <td>
+        <table id="maintaince-equipment">
+            {{range .Equipment}}
+                <tr>
+                    <td>
+                        {{.Name}}
+                    </td>
+                    <td>
+                        <table>
+                            {{range .Intervals}}
+                                <tr>
+                                    <td>{{.}}</td>
+                                </tr>
+                            {{end}}
+                        </table>
+                    </td>
+                </tr>
+            {{end}}
+        </table>
+    </td>
+    <td>
+        <a
+                hx-delete="/admin/maintaince/{{.UID}}"
+                hx-target="#maintaince-row-{{.UID}}"
+                hx-swap="outerHTML"
+                hx-confirm="Подтвердите удаление обслуживания '{{.Name}}'"
+                hx-indicator="#processing"
+                href="">Удалить</a>
+    </td>
+</tr>

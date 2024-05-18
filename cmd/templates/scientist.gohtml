@@ -9,11 +9,11 @@
 <nav>
     <ul>
         <li><a href="/scientists/home">Домашняя страница</a> </li>
-        <li><a href="/scientists/my-access-groups">Группы доступа</a></li>
-        <!--<li><a href="/scientists/inventory">Инвентарь</a></li>
+        <li><a href="/scientists/access-groups">Группы доступа</a></li>
+        <li><a href="/scientists/experiments/add">Запланировать эксперимент</a></li>
         <li><a href="/scientists/experiments">Мои эксперименты</a></li>
-        -->
-        <li><a href="/scientists/experiment/add">Запланировать эксперимент</a></li>
+        <li><a href="/scientists/equipment">Мое оборудование</a></li>
+        <li><a href="/scientists/inventory">Мой инвентарь</a></li>
 
     </ul>
 </nav>
@@ -23,9 +23,15 @@
 {{else if eq .Path "/scientists/docs"}}
     {{template "pages/scientist/docs.gohtml" .}}
 {{else if eq .Path "/scientists/my-access-groups"}}
-    {{template "pages/scientist/access_groups.gohtml" .}}
-{{else if eq .Path "/scientists/experiment/add"}}
+    {{template "pages/scientist/access-groups.gohtml" .}}
+{{else if eq .Path "/scientists/experiments/add"}}
     {{template "pages/scientist/experiment_add.gohtml" .}}
+{{else if eq .Path "/scientists/experiments"}}
+    {{template "pages/scientist/experiment.gohtml" .}}
+{{else if eq .Path "/scientists/equipment"}}
+    {{template "pages/scientist/equipment.gohtml" .}}
+{{else if eq .Path "/scientists/inventory"}}
+    {{template "pages/scientist/inventory.gohtml" .}}
 {{end}}
 
 </body>

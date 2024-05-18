@@ -14,6 +14,10 @@
         <li><a href="/admin/equipment">Оборудование</a></li>
         <li><a href="/admin/inventory">Инвентарь</a></li>
         <li><a href="/admin/access-groups">Группы доступа</a></li>
+        <li><a href="/admin/experiments">Эксперименты</a></li>
+        <li><a href="/admin/experiments/add">Запланировать эксперимент</a></li>
+        <li><a href="/admin/maintaince">Обслуживание</a></li>
+        <li><a href="/admin/maintaince/add">Запланировать обслуживание</a> </li>
     </ul>
 </nav>
 
@@ -27,8 +31,16 @@
     {{template "pages/admin/equipment.gohtml" .}}
 {{else if eq .Path "/admin/inventory"}}
     {{template "pages/admin/inventory.gohtml" .}}
-    {{else if eq .Path "/admin/access-groups"}}
+{{else if eq .Path "/admin/access-groups"}}
     {{template "pages/admin/access_groups.gohtml" .}}
+{{else if eq .Path "/admin/experiments"}}
+    {{template "pages/admin/experiment.gohtml" .}}
+{{else if eq .Path "/admin/experiments/add"}}
+    {{template "pages/admin/experiment_add.gohtml" .}}
+{{else if eq .Path "/admin/maintaince"}}
+    {{template "pages/admin/maintaince.gohtml" .}}
+{{else if eq .Path "/admin/maintaince/add"}}
+    {{template "pages/admin/maintaince_add.gohtml" .}}
 {{end}}
 
 </body>

@@ -5,10 +5,5 @@ const (
 	EngineerRole     = "engineer"
 	ScientistRole    = "scientist"
 	LaboratorianRole = "laboratorian"
-)
-
-const (
-	StatusReady       = "ready"
-	StatusWaitApprove = "wait_approve"
-	StatusCancel      = "cancel"
+	Layout           = "2006-01-02T15:04"
 )

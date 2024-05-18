@@ -105,9 +105,11 @@ func (h home) Login(w http.ResponseWriter, r *http.Request) {
 		p.SetHeader("HX-Redirect", "http://localhost:3000/admin/home")
 	case "scientist":
 		p.SetHeader("HX-Redirect", "http://localhost:3000/scientists/home")
+	case "engineer":
+		p.SetHeader("HX-Redirect", "http://localhost:3000/engineers/home")
 	}
 
-	p.SetSuccess("user registered")
+	p.SetSuccess("user sign in")
 
 	h.zxc.Render(w, p)
 }
