@@ -1,10 +1,18 @@
-<div id="users">
+<div id="users" class="container">
     <div id="processing" class="htmx-indicator">Processing...</div>
-    <br>
-    <b>
-        <label for="gfg">Поиск:</label><input id="gfg" type="text" placeholder="Search here">
-    </b>
-    <table>
+    <h2>Пользователи</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-9"></div>
+            <div class="col-3">
+                <div class="d-flex justify-content-end">
+                    <label for="gfg"></label><input id="gfg" type="text" class="form-control" placeholder="Поиск">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table class="table table-striped text-center">
         <thead>
         <tr>
             <th>Фамилия</th>

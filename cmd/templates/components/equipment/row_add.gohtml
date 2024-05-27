@@ -1,24 +1,21 @@
-<tr id="equipment-row-add">
+<tr id="equipment-row-add" class="container">
     <td>
-        <input type="text" name="name">
+        <input type="text" name="name" class="form-control">
     </td>
     <td>
-        <input type="text" name="description">
+        <input type="text" name="description" class="form-control">
     </td>
     <td>
-        <input type="text" name="type">
+        <input type="text" name="type" class="form-control">
     </td>
     <td>
-        <input type="text" name="manufacturer">
+        <input type="text" name="manufacturer" class="form-control">
     </td>
     <td>
-        <input type="text" name="model">
+        <input type="text" name="model" class="form-control">
     </td>
     <td>
-        <input type="text" name="room">
-    </td>
-    <td>
-
+        <input type="text" name="room" class="form-control">
     </td>
     <td>
         <a
@@ -27,6 +24,7 @@
             hx-swap="outerHTML"
             hx-indicator="#processing"
             hx-include="input,select"
+            class="btn btn-success"
             href="">Добавить</a>
     </td>
     <td>
@@ -35,6 +33,7 @@
             hx-target="#equipment-row-add"
             hx-swap="outerHTML"
             hx-indicator="#processing"
+            class="btn btn-secondary"
             href="">Отмена</a>
     </td>
 </tr>

@@ -76,7 +76,7 @@ func (h admin) GetMaintaince(w http.ResponseWriter, r *http.Request) {
 
 	res, err := h.maintainceService.GetAll(r.Context())
 	if err != nil {
-		h.log.WithError(err).Errorf("creating")
+		h.log.WithError(err).Errorf("getting")
 		p.SetError(err.Error())
 		h.t.Render(w, p)
 		return

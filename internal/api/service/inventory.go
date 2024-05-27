@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/doug-martin/goqu/v9"
 	"github.com/vebcreatex7/diploma_magister/internal/api/mapper"
 	"github.com/vebcreatex7/diploma_magister/internal/api/request"
 	"github.com/vebcreatex7/diploma_magister/internal/api/response"
@@ -16,13 +17,19 @@ type inventory struct {
 	inventoryRepo      repo.Inventory
 	mapper             mapper.Inventory
 	accessGroupService service.AccessGroup
+	db                 *goqu.Database
 }
 
-func NewInventory(inventoryRepo repo.Inventory, accessGroupService service.AccessGroup) inventory {
+func NewInventory(
+	inventoryRepo repo.Inventory,
+	accessGroupService service.AccessGroup,
+	db *goqu.Database,
+) inventory {
 	return inventory{
 		inventoryRepo:      inventoryRepo,
 		accessGroupService: accessGroupService,
 		mapper:             mapper.Inventory{},
+		db:                 db,
 	}
 }
 
@@ -52,6 +59,10 @@ func (s inventory) GetAllForUser(ctx context.Context, uid string) ([]response.In
 		inventory = append(inventory, strings.Split(ags[i].Inventory, ",")...)
 	}
 
+	for i := range inventory {
+		inventory[i] = strings.Trim(inventory[i], "\n")
+	}
+
 	for i := 0; i < len(all); i++ {
 		inventoryFound := false
 
@@ -74,6 +85,15 @@ func (s inventory) GetAllForUser(ctx context.Context, uid string) ([]response.In
 func (s inventory) DeleteByUID(ctx context.Context, uid string) error {
 	if err := s.inventoryRepo.DeleteInventoryInAccessGroupByUID(ctx, uid); err != nil {
 		return fmt.Errorf("deleting inventory_in_access_group by uid: %w", err)
+	}
+
+	if _, err := s.db.ExecContext(
+		ctx,
+		`delete from inventory_in_experiment
+where inventory_uid = $1`,
+		uid,
+	); err != nil {
+		return fmt.Errorf("deleting from inventory_in_experiment by uid: %w", err)
 	}
 
 	if err := s.inventoryRepo.DeleteByUID(ctx, uid); err != nil {

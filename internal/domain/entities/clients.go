@@ -9,7 +9,7 @@ type Client struct {
 	PasswordHash string `db:"password_hash" goqu:"skipupdate"`
 	Email        string `db:"email"`
 	Role         string `db:"role"`
-	Approved     bool   `db:"approved"`
+	Approved     bool   `db:"approved" goqu:"skipupdate"`
 }
 
 type ClientsInExperiment struct {

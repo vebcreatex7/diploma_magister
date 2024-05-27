@@ -1,4 +1,4 @@
-<tr id="inventory-row-{{.UID}}">
+<tr id="inventory-row-{{.UID}}" class="container">
     <td>{{.Name}}</td>
     <td>{{.Description}}</td>
     <td>{{.Type}}</td>
@@ -11,6 +11,7 @@
             hx-target="#inventory-row-{{.UID}}"
             hx-swap="outerHTML"
             hx-indicator="#processing"
+            class="btn btn-primary"
             href="">Изменить</a>
     </td>
     <td><a
@@ -19,6 +20,7 @@
             hx-swap="outerHTML"
             hx-confirm="Подтвердите удаление инвентаря '{{.Name}}'"
             hx-indicator="#processing"
+            class="btn btn-danger"
             href="">Удалить</a>
     </td>
 </tr>

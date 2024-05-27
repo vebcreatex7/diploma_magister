@@ -6,13 +6,24 @@
 </head>
 
 <body>
-    <nav>
-        <ul>
-            <li><a href="/engineers/home">Домашняя страница</a></li>
-            <li><a href="/engineers/equipment">Оборудование</a></li>
-            <li><a href="/engineers/inventory">Инвентарь</a></li>
-            <li><a href="/engineers/maintaince/add">Запланировать обслуживание</a></li>
-            <li><a href="/engineers/maintaince">Мои обслуживания</a></li>
+    <nav class="navbar nav-tabs navbar-expand-lg navbar-light bg-light">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="/engineers/home">Домашняя страница</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/engineers/equipment">Оборудование</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/engineers/inventory">Инвентарь</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Обслуживание</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/engineers/maintaince">Моё обслуживание</a>
+                    <a class="dropdown-item" href="/engineers/maintaince/add">Запланировать обслуживание</a>
+                </div>
+            </li>
         </ul>
     </nav>
 

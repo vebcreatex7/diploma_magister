@@ -1,4 +1,4 @@
-<tr id="maintaince-row-{{.UID}}">
+<tr id="maintaince-row-{{.UID}}" class="container">
     <td>{{.Name}}</td>
     <td>{{.Description}}</td>
     <td>{{.StartTs}}</td>
@@ -13,7 +13,7 @@
         </table>
     </td>
     <td>
-        <table id="maintaince-equipment">
+        <table id="maintaince-equipment" class="table table-striped">
             {{range .Equipment}}
                 <tr>
                     <td>
@@ -39,6 +39,7 @@
                 hx-swap="outerHTML"
                 hx-confirm="Подтвердите удаление обслуживания '{{.Name}}'"
                 hx-indicator="#processing"
+                class="btn btn-danger"
                 href="">Удалить</a>
     </td>
 </tr>

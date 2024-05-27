@@ -138,7 +138,7 @@ func (h admin) EditEquipment(w http.ResponseWriter, r *http.Request) {
 
 	p.SetTemplate("components/equipment/row.gohtml").
 		SetData(resp).
-		SetCode(200)
+		SetSuccess("equipment edited")
 
 	h.t.RenderData(w, p)
 }

@@ -2,18 +2,22 @@ package main
 
 import (
 	"embed"
+	"fmt"
 	_ "github.com/doug-martin/goqu/v9/dialect/postgres"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/sirupsen/logrus"
 	"github.com/vebcreatex7/diploma_magister/cmd/handlers"
 	"github.com/vebcreatex7/diploma_magister/cmd/handlers/admin"
 	"github.com/vebcreatex7/diploma_magister/cmd/handlers/engineer"
+	"github.com/vebcreatex7/diploma_magister/cmd/handlers/laboratorian"
 	"github.com/vebcreatex7/diploma_magister/cmd/handlers/scientist"
 	"github.com/vebcreatex7/diploma_magister/internal/api/service"
 	"github.com/vebcreatex7/diploma_magister/internal/repo/postgres"
+	"github.com/vebcreatex7/diploma_magister/pkg/mailer"
 	"github.com/vebcreatex7/diploma_magister/pkg/render"
 	start2 "github.com/vebcreatex7/diploma_magister/pkg/start"
 	"html/template"
+	"os"
 	"reflect"
 )
 
@@ -37,6 +41,11 @@ func hasField(v interface{}, name string) bool {
 func main() {
 	log := logrus.New()
 	log.SetLevel(logrus.DebugLevel)
+
+	mailPswd, exists := os.LookupEnv("MAIL_RU_PASSWORD")
+	fmt.Println(exists)
+
+	m := mailer.NewMailer("kirik.vahramyan@mail.ru", mailPswd, "smtp.mail.ru", 465)
 
 	cfg, err := initConfig("cmd/config/conf.yaml")
 	if err != nil {
@@ -67,8 +76,8 @@ func main() {
 		equipmentRepo,
 		inventoryRepo,
 	)
-	equipmentService := service.NewEquipment(equipmentRepo, clientsRepo, accessGroupService)
-	inventoryService := service.NewInventory(inventoryRepo, accessGroupService)
+	equipmentService := service.NewEquipment(equipmentRepo, clientsRepo, accessGroupService, db)
+	inventoryService := service.NewInventory(inventoryRepo, accessGroupService, db)
 
 	experimentService := service.NewExperiment(
 		db,
@@ -79,6 +88,7 @@ func main() {
 		db,
 		clientsRepo,
 		equipmentService,
+		m,
 	)
 
 	indexHandler := handlers.NewHome(templ, log, t, clientsService)
@@ -115,10 +125,21 @@ func main() {
 		maintainceService,
 	)
 
+	laboratorianHandler := laboratorian.NewLaboratorian(
+		t,
+		log,
+		clientsService,
+		equipmentService,
+		inventoryService,
+		accessGroupService,
+		experimentService,
+	)
+
 	r.Mount(indexHandler.BasePrefix(), indexHandler.Routes())
 	r.Mount(adminHandler.BasePrefix(), adminHandler.Routes())
 	r.Mount(scientistHandler.BasePrefix(), scientistHandler.Routes())
 	r.Mount(engineerHandler.BasePrefix(), engineerHandler.Routes())
+	r.Mount(laboratorianHandler.BasePrefix(), laboratorianHandler.Routes())
 
 	s := start2.Server(cfg.Server, r)
 

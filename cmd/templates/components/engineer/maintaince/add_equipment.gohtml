@@ -1,12 +1,26 @@
-<div id="eq-in">
-    <label>
-        Название: <input name="equipment-name" list="equipment-suggestions"  data-include-edit="exp-add">
-    </label>
-    <label>
-        Начало: <input name="lower" type="datetime-local" data-include-edit="exp-add">
-    </label>
-    <label>
-        Конец: <input name="upper" type="datetime-local" data-include-edit="exp-add">
-    </label>
-    <a hx-get="/engineers/empty" hx-swap="outerHTML" hx-target="closest #eq-in" href="">Удалить</a>
+<div id="eq-in" class="container">
+    <div class="row">
+        <div class="col-3">
+            <label class="form-label" for="equipment-name">Название</label>
+            <input class="form-control" name="equipment-name" list="equipment-suggestions" data-include-edit="exp-add" id="equipment-name">
+        </div>
+        <div class="col-3">
+            <label class="form-label" for="lower">Начало</label>
+            <input class="form-control" name="lower" type="datetime-local" data-include-edit="exp-add" id="lower">
+        </div>
+        <div class="col-3">
+            <label class="form-label" for="upper">Окончание</label>
+            <input class="form-control" name="upper" type="datetime-local" data-include-edit="exp-add" id="upper">
+        </div>
+        <div class="col-3">
+            <br>
+            <a hx-get="/engineers/empty" hx-swap="outerHTML" hx-target="closest #eq-in" href="" class="btn btn-secondary ">Удалить</a>
+
+        </div>
+    </div>
 </div>
+
+
+
+
+

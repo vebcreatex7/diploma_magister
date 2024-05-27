@@ -138,6 +138,23 @@ func ValidateEngineerJWTCookies(next http.Handler) http.Handler {
 	})
 }
 
+func ValidateLaboratorianJWTCookies(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		token, err := getToken(r)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		claims, ok := token.Claims.(jwt.MapClaims)
+		userRole := claims["role"].(string)
+		if ok && token.Valid && userRole == "laboratorian" {
+			next.ServeHTTP(w, r)
+			return
+		}
+		http.Error(w, http.StatusText(http.StatusForbidden), http.StatusForbidden)
+	})
+}
+
 func GetUIDFromJWT(r *http.Request) (string, error) {
 	token, err := getToken(r)
 	if err != nil {

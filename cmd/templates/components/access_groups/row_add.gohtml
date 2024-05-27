@@ -1,18 +1,18 @@
 <tr id="access-groups-row-add">
     <td>
-        <input type="text" name="name">
+        <input type="text" name="name" class="form-control">
     </td>
     <td>
-        <input type="text" name="description">
+        <input type="text" name="description" class="form-control">
     </td>
     <td>
-        <input type="text" name="users">
+        <input type="text" name="users" class="form-control">
     </td>
     <td>
-        <input type="text" name="equipment">
+        <input type="text" name="equipment" class="form-control">
     </td>
     <td>
-        <input type="text" name="inventory">
+        <input type="text" name="inventory" class="form-control">
     </td>
     <td>
         <a
@@ -21,6 +21,7 @@
            hx-swap="outerHTML"
            hx-indicator="processing"
            hx-include="input,select"
+           class="btn btn-success"
            href=""
         >Добавить</a>
     </td>
@@ -30,6 +31,7 @@
             hx-target="#access-groups-row-add"
             hx-swap="outerHTML"
             hx-indicator="#processing"
+            class="btn btn-secondary"
             href=""
         >Отмена</a>
     </td>

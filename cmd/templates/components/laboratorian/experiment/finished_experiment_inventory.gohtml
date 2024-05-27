@@ -1,0 +1,49 @@
+<tr id="finished-experiment-row-{{.UID}}">
+    <td>{{.Name}}</td>
+    <td>{{.Description}}</td>
+    <td>{{.StartTs}}</td>
+    <td>{{.EndTs}}</td>
+    <td>
+        <table id="finished-experiment-inventory-{{.UID}}">
+            {{range .Inventory}}
+                <tr>
+                    <td>
+                        <input
+                            type="text"
+                            data-include-edit="daa"
+                            name="name"
+                            value="{{.Name}}"
+                            class="form-control"
+                        >
+                    </td>
+                    <td>
+                        <input
+                            type="number"
+                            data-include-edit="daa"
+                            name="quantity"
+                            value="{{.Quantity}}"
+                            class="form-control"
+                        >
+                    </td>
+                </tr>
+            {{end}}
+        </table>
+    </td>
+    <td>
+        <a
+                hx-delete="/laboratorians/experiments/finish/{{.UID}}"
+                hx-target="#finished-experiment-row-{{.UID}}"
+                hx-swap="outerHTML"
+                hx-include="input[data-include-edit='daa']"
+                hx-confirm="Подтвердите завершение эксперимента '{{.Name}}'"
+                class="btn btn-success"
+                href="">Завершить</a>
+    </td>
+    <td>
+        <a
+                hx-get="/laboratorians/experiments/{{.UID}}"
+                hx-target="#finished-experiment-row-{{.UID}}"
+                hx-swap="outerHTML"
+                href="">Отменить</a>
+    </td>
+</tr>

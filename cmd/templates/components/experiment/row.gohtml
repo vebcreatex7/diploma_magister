@@ -1,10 +1,10 @@
-<tr id="experiment-row-{{.UID}}">
+<tr id="experiment-row-{{.UID}}" class="container">
     <td>{{.Name}}</td>
     <td>{{.Description}}</td>
     <td>{{.StartTs}}</td>
     <td>{{.EndTs}}</td>
     <td>
-        <table id="experiment-users">
+        <table id="experiment-users" class="table">
             {{range .Users}}
                 <tr>
                     <td>{{.}}</td>
@@ -13,7 +13,7 @@
         </table>
     </td>
     <td>
-        <table id="experiment-equipment">
+        <table id="experiment-equipment" class="table" >
             {{range .Equipment}}
                 <tr>
                     <td>
@@ -33,7 +33,7 @@
         </table>
     </td>
     <td>
-        <table id="experiment-inventory">
+        <table id="experiment-inventory" class="table">
             {{range .Inventory}}
                 <tr>
                     <td>{{.Name}}</td>
@@ -49,6 +49,7 @@
                 hx-swap="outerHTML"
                 hx-confirm="Подтвердите удаление эксперимента '{{.Name}}'"
                 hx-indicator="#processing"
+                class="btn btn-danger"
                 href="">Удалить</a>
     </td>
 </tr>

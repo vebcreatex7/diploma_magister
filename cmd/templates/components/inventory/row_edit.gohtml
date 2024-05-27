@@ -4,6 +4,7 @@
             type="text"
             data-include-edit="{{.UID}}"
             name="name"
+            class="form-control"
             value="{{.Name}}"/>
     </td>
     <td>
@@ -11,6 +12,7 @@
             type="text"
             data-include-edit="{{.UID}}"
             name="description"
+            class="form-control"
             value="{{.Description}}"/>
     </td>
     <td>
@@ -18,6 +20,7 @@
             type="text"
             data-include-edit="{{.UID}}"
             name="type"
+            class="form-control"
             value="{{.Type}}"/>
     </td>
     <td>
@@ -25,6 +28,7 @@
             type="text"
             data-include-edit="{{.UID}}"
             name="manufacturer"
+            class="form-control"
             value="{{.Manufacturer}}"/>
     </td>
     <td>
@@ -32,6 +36,7 @@
             type="number"
             data-include-edit="{{.UID}}"
             name="quantity"
+            class="form-control"
             value="{{.Quantity}}"/>
     </td>
     <td>
@@ -39,6 +44,7 @@
             type="text"
             data-include-edit="{{.UID}}"
             name="unit"
+            class="form-control"
             value="{{.Quantity}}"/>
     </td>
     <td>
@@ -49,6 +55,7 @@
                 hx-include="input[data-include-edit='{{.UID}}'], select[data-include-edit='{{.UID}}']"
                 hx-confirm="Подтвердите изменение инвентаря'{{.Name}}'"
                 hx-indicator="#processing"
+                class="btn btn-success"
                 href="">
             Изменить
         </a>
@@ -59,6 +66,7 @@
                 hx-target="#inventory-row-{{.UID}}"
                 hx-swap="outerHTML"
                 hx-indicator="#processing"
+                class="btn btn-secondary"
                 href="">
             Отменить
         </a>

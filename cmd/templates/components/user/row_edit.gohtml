@@ -5,6 +5,7 @@
             type="text"
             data-include-edit="{{.UID}}"
             name="surname"
+            class="form-control"
             value="{{.Surname}}"
         >
     </td>
@@ -13,6 +14,7 @@
                 type="text"
                 data-include-edit="{{.UID}}"
                 name="name"
+                class="form-control"
                 value="{{.Name}}"
         >
     </td>
@@ -21,6 +23,7 @@
                 type="text"
                 data-include-edit="{{.UID}}"
                 name="patronymic"
+                class="form-control"
                 value="{{.Patronymic}}"
         >
     </td>
@@ -29,6 +32,7 @@
                 type="text"
                 data-include-edit="{{.UID}}"
                 name="login"
+                class="form-control"
                 value="{{.Login}}"
         >
     </td>
@@ -37,14 +41,15 @@
                 type="text"
                 data-include-edit="{{.UID}}"
                 name="email"
+                class="form-control"
                 value="{{.Email}}"
         >
     </td>
     <td>
-        <select data-include-edit="{{.UID}}" name="role">
-            <option value="engineer" {{if eq .Role "engineer"}} selected {{end}}>Инженер</option>
-            <option value="laboratorian" {{if eq .Role "laboratorian"}} selected {{end}}>Лаборант</option>
-            <option value="scientist" {{if eq .Role "scientist"}} selected {{end}}>Ученый</option>
+        <select data-include-edit="{{.UID}}" name="role" class="form-select" >
+            <option value="engineer" {{if eq .Role "engineer"}} selected {{end}}>инженер</option>
+            <option value="laboratorian" {{if eq .Role "laboratorian"}} selected {{end}}>лаборант</option>
+            <option value="scientist" {{if eq .Role "scientist"}} selected {{end}}>ученый</option>
         </select>
     </td>
     <td>
@@ -54,6 +59,7 @@
             hx-swap="outerHTML"
             hx-include="input[data-include-edit='{{.UID}}'],select[data-include-edit='{{.UID}}']"
             hx-indicator="#processing"
+            class="btn btn-success"
             href="">
             Изменить
         </a>
@@ -64,6 +70,7 @@
             hx-target="#user-row-{{.UID}}"
             hx-swap="outerHTML"
             hx-indicator="#processing"
+            class="btn btn-secondary"
             href="">
             Отменить
         </a>

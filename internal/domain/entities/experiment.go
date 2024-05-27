@@ -10,4 +10,5 @@ type Experiment struct {
 	Description string    `db:"description"`
 	StartTs     time.Time `db:"start_ts"`
 	EndTs       time.Time `db:"end_ts"`
+	Finished    bool      `db:"finished"`
 }

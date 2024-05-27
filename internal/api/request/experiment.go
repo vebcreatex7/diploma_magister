@@ -133,11 +133,11 @@ func (r *AddExperiment) validate() error {
 	}
 
 	for i := range r.Equipment {
-		if !r.Equipment[i].Lower.After(r.StartTs) {
+		if r.Equipment[i].Lower.Before(r.StartTs) {
 			return fmt.Errorf("validating equipment %d lower: should be after start-ts", i)
 		}
 
-		if !r.Equipment[i].Upper.Before(r.EndTs) {
+		if r.Equipment[i].Upper.After(r.EndTs) {
 			return fmt.Errorf("validating equipment %d upper: should be before end-ts", i)
 		}
 	}
@@ -190,6 +190,60 @@ func (r *DeleteExperiment) Bind(req *http.Request) error {
 	}
 
 	r.UID = uid
+
+	return nil
+}
+
+type GetExperimentByUID struct {
+	UID string
+}
+
+func (r *GetExperimentByUID) Bind(req *http.Request) error {
+	uid, err := request.ParseUIDFromPath(req, true)
+	if err != nil {
+		return fmt.Errorf("getting uid from path: %w", err)
+	}
+
+	r.UID = uid
+
+	return nil
+}
+
+type FinishExperiment struct {
+	UID               string
+	InventoryName     []string
+	InventoryQuantity []decimal.Decimal
+}
+
+func (r *FinishExperiment) Bind(req *http.Request) error {
+	uid, err := request.ParseUIDFromPath(req, true)
+	if err != nil {
+		return fmt.Errorf("getting uid from path: %w", err)
+	}
+
+	r.UID = uid
+
+	if err := req.ParseForm(); err != nil {
+		return fmt.Errorf("parsing form: %w", err)
+	}
+
+	names := req.Form["name"]
+	quantities := req.Form["quantity"]
+
+	if len(names) != len(quantities) {
+		return fmt.Errorf("count of names and quantities divergence")
+	}
+
+	r.InventoryName = names
+
+	for i := range quantities {
+		d, err := decimal.NewFromString(quantities[i])
+		if err != nil {
+			return err
+		}
+
+		r.InventoryQuantity = append(r.InventoryQuantity, d)
+	}
 
 	return nil
 }

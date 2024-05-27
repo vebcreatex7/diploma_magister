@@ -12,6 +12,7 @@ import (
 	"github.com/vebcreatex7/diploma_magister/internal/domain/entities"
 	"github.com/vebcreatex7/diploma_magister/internal/domain/repo"
 	"github.com/vebcreatex7/diploma_magister/internal/repo/postgres/schema"
+	"github.com/vebcreatex7/diploma_magister/pkg/mailer"
 	"sort"
 )
 
@@ -19,17 +20,20 @@ type maintaince struct {
 	db               *goqu.Database
 	clientsRepo      repo.Clients
 	equipmentService equipment
+	m                *mailer.Mailer
 }
 
 func NewMaintaince(
 	db *goqu.Database,
 	clientsRepo repo.Clients,
 	equipmentService equipment,
+	m *mailer.Mailer,
 ) maintaince {
 	return maintaince{
 		db:               db,
 		clientsRepo:      clientsRepo,
 		equipmentService: equipmentService,
+		m:                m,
 	}
 }
 
@@ -60,7 +64,7 @@ func (s maintaince) GetAll(ctx context.Context) ([]response.Maintaince, error) {
 	var mts []entities.Maintaince
 
 	if err := tx.From(schema.Maintaince).
-		Select(entities.Experiment{}).
+		Select(entities.Maintaince{}).
 		Order(goqu.C("start_ts").Asc()).
 		Prepared(true).
 		Executor().ScanStructsContext(ctx, &mts); err != nil {
@@ -274,42 +278,18 @@ where equipment_uid = $1 and time_interval && $2`,
 			return fmt.Errorf("checking equipment_schedule intersections: %w", err)
 		}
 
-		for _, esIntersected := range essIntersected {
-			if _, err := s.db.ExecContext(
-				ctx,
-				`delete from equipment_schedule_in_experiment
-where equipment_schedule_uid = $1`,
-				esIntersected.UID,
-			); err != nil {
-				if err := tx.Rollback(); err != nil {
-					return err
-				}
-				return fmt.Errorf("deleting equipment_schedule_in_experiment intersections: %w", err)
+		if err := s.alertEquipmentScheduleChanges(ctx, tx, essIntersected); err != nil {
+			if err := tx.Rollback(); err != nil {
+				return err
 			}
+			return fmt.Errorf("alerting: %w", err)
+		}
 
-			if _, err := s.db.ExecContext(
-				ctx,
-				`delete from equipment_schedule_in_maintaince
-where equipment_schedule_uid = $1`,
-				esIntersected.UID,
-			); err != nil {
-				if err := tx.Rollback(); err != nil {
-					return err
-				}
-				return fmt.Errorf("deleting equipment_schedule_in_maintaince intersections: %w", err)
+		if err = s.deleteEquipmentSchedule(ctx, tx, essIntersected); err != nil {
+			if err := tx.Rollback(); err != nil {
+				return err
 			}
-
-			if _, err := s.db.ExecContext(
-				ctx,
-				`delete from equipment_schedule
-where uid = $1`,
-				esIntersected.UID,
-			); err != nil {
-				if err := tx.Rollback(); err != nil {
-					return err
-				}
-				return fmt.Errorf("deleting equipment_schedule intersections: %w", err)
-			}
+			return fmt.Errorf("deleting equipment_schedule: %w", err)
 		}
 	}
 
@@ -459,4 +439,132 @@ where maintaince_uid = $1 and client_uid = $2`,
 	}
 
 	return s.DeleteByUID(ctx, uid)
+}
+
+func (s maintaince) deleteEquipmentSchedule(ctx context.Context, tx *goqu.TxDatabase, essIntersected []entities.EquipmentSchedule) error {
+	for _, esIntersected := range essIntersected {
+		if _, err := s.db.ExecContext(
+			ctx,
+			`delete from equipment_schedule_in_experiment
+where equipment_schedule_uid = $1`,
+			esIntersected.UID,
+		); err != nil {
+			if err := tx.Rollback(); err != nil {
+				return err
+			}
+			return fmt.Errorf("deleting equipment_schedule_in_experiment intersections: %w", err)
+		}
+
+		if _, err := s.db.ExecContext(
+			ctx,
+			`delete from equipment_schedule_in_maintaince
+where equipment_schedule_uid = $1`,
+			esIntersected.UID,
+		); err != nil {
+			if err := tx.Rollback(); err != nil {
+				return err
+			}
+			return fmt.Errorf("deleting equipment_schedule_in_maintaince intersections: %w", err)
+		}
+
+		if _, err := s.db.ExecContext(
+			ctx,
+			`delete from equipment_schedule
+where uid = $1`,
+			esIntersected.UID,
+		); err != nil {
+			if err := tx.Rollback(); err != nil {
+				return err
+			}
+			return fmt.Errorf("deleting equipment_schedule intersections: %w", err)
+		}
+	}
+	return nil
+}
+
+func (s maintaince) alertEquipmentScheduleChanges(ctx context.Context, tx *goqu.TxDatabase, essIntersected []entities.EquipmentSchedule) error {
+	for _, esIntersected := range essIntersected {
+		var eqName string
+
+		if _, err := tx.ScanValContext(
+			ctx,
+			&eqName,
+			`select name from equipment where uid = $1`,
+			esIntersected.EquipmentUID,
+		); err != nil {
+			return fmt.Errorf("getting eq name: %w", err)
+		}
+
+		type emailWithProcessName struct {
+			Email string `db:"email"`
+			Name  string `db:"name"`
+		}
+
+		var en emailWithProcessName
+
+		enFound, err := tx.ScanStructContext(
+			ctx,
+			&en,
+			`select email, m.name from client
+join clients_in_maintaince cinmt on client.uid = cinmt.client_uid
+join equipment_schedule_in_maintaince esinmt on cinmt.maintaince_uid = esinmt.maintaince_uid
+join equipment_schedule es on esinmt.equipment_schedule_uid = es.uid
+join maintaince m on cinmt.maintaince_uid = m.uid
+where es.uid = $1`,
+			esIntersected.UID,
+		)
+		if err != nil {
+			return fmt.Errorf("getting engineers emails: %w", err)
+		}
+
+		var sc emailWithProcessName
+		scFound, err := tx.ScanStructContext(
+			ctx,
+			&sc,
+			`select email, ex.name from client
+join clients_in_experiment cinex on client.uid = cinex.client_uid
+join equipment_schedule_in_experiment esinex on cinex.experiment_uid = esinex.experiment_uid
+join equipment_schedule es on esinex.equipment_schedule_uid = es.uid
+join experiment ex on cinex.experiment_uid = ex.uid
+where es.uid = $1`,
+			esIntersected.UID,
+		)
+		if err != nil {
+			return fmt.Errorf("getting engineers emails: %w", err)
+		}
+
+		if enFound {
+			if err := s.sendMessageToEngineer(en.Email, en.Name, eqName, esIntersected); err != nil {
+				return fmt.Errorf("sending cancellation message to engineer: %w", err)
+			}
+		}
+
+		if scFound {
+			if err := s.sendMessageToScientist(sc.Email, sc.Name, eqName, esIntersected); err != nil {
+				return fmt.Errorf("sending cancellation message to scientist: %w", err)
+			}
+		}
+
+	}
+	return nil
+}
+
+func (s maintaince) sendMessageToScientist(email, expName, eqName string, es entities.EquipmentSchedule) error {
+	return s.m.Send(
+		email,
+		fmt.Sprintf("Отмена брони в эксперименте %s", expName),
+		fmt.Sprintf(`В эксперименте %s была отменена бронь оборудования %s в интервале (%s. %s) в связи с запланированными работами`,
+			expName, eqName, es.TimeInterval.Lower.Time.Format(constant.Layout), es.TimeInterval.Upper.Time.Format(constant.Layout),
+		),
+	)
+}
+
+func (s maintaince) sendMessageToEngineer(email, mtName, eqName string, es entities.EquipmentSchedule) error {
+	return s.m.Send(
+		email,
+		fmt.Sprintf("Отмена брони в обслуживание %s", mtName),
+		fmt.Sprintf(`В обслуживание %s была отменена бронь оборудования %s в интервале (%s. %s) в связи с запланированными работами`,
+			mtName, eqName, es.TimeInterval.Lower.Time.Format(constant.Layout), es.TimeInterval.Upper.Time.Format(constant.Layout),
+		),
+	)
 }

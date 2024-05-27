@@ -20,9 +20,9 @@ func (m AccessGroup) MakeResponse(e entities.AccessGroupExt) response.AccessGrou
 		UID:         e.UID,
 		Name:        e.Name,
 		Description: e.Description,
-		Users:       strings.Join(e.Users, ","),
-		Equipment:   strings.Join(e.Equipment, ","),
-		Inventory:   strings.Join(e.Inventory, ","),
+		Users:       strings.Join(e.Users, ",\n"),
+		Equipment:   strings.Join(e.Equipment, ",\n"),
+		Inventory:   strings.Join(e.Inventory, ",\n"),
 	}
 }
 

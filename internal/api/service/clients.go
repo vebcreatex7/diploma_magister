@@ -76,6 +76,24 @@ func (s clients) DeleteByUID(ctx context.Context, uid string) error {
 		return fmt.Errorf("deleting clients_in_access_group by uid: %w", err)
 	}
 
+	if _, err := s.db.ExecContext(
+		ctx,
+		`delete from clients_in_experiment where
+                                      client_uid = $1`,
+		uid,
+	); err != nil {
+		return fmt.Errorf("deleting clients_in_experiment by uid: %w", err)
+	}
+
+	if _, err := s.db.ExecContext(
+		ctx,
+		`delete from clients_in_maintaince where
+                                      client_uid = $1`,
+		uid,
+	); err != nil {
+		return fmt.Errorf("deleting clients_in_maintaince by uid: %w", err)
+	}
+
 	if err := s.clientsRepo.DeleteByUID(ctx, uid); err != nil {
 		return fmt.Errorf("deleting client by uid: %w", err)
 	}

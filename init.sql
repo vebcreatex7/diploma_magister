@@ -11,7 +11,6 @@ create table client (
     email text not null,
     login text not null,
     password_hash text not null,
-    role_uid uuid not null,
     role text not null,
     approved bool not null default false
 );
@@ -56,7 +55,8 @@ create table experiment (
 	name text not null,
 	description text not null,
 	start_ts timestamp not null,
-	end_ts timestamp not null
+	end_ts timestamp not null,
+	finished bool not null  default false
 );
 
 create table inventory_in_access_group(
@@ -179,6 +179,7 @@ alter table inventory
 
 
 create unique index on access_group(name);
+create unique index on maintaince(name);
 
 
 
@@ -190,6 +191,9 @@ alter table equipment_schedule_in_maintaince
 
 
 
+
+
+
 alter table clients_in_maintaince
     add constraint fk_clients_in_maintaince_maintaince foreign key(maintaince_uid) references maintaince(uid);
 
@@ -198,6 +202,4 @@ alter table clients_in_maintaince
 
 commit;
 
-alter table maintaince
-    add column end_ts timestamp not null;
 

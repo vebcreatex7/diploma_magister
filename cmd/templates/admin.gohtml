@@ -7,17 +7,37 @@
 
 <body>
 
-<nav>
-    <ul>
-        <li><a href="/admin/home">Домашняя страница</a> </li>
-        <li><a href="/admin/users">Пользователи</a></li>
-        <li><a href="/admin/equipment">Оборудование</a></li>
-        <li><a href="/admin/inventory">Инвентарь</a></li>
-        <li><a href="/admin/access-groups">Группы доступа</a></li>
-        <li><a href="/admin/experiments">Эксперименты</a></li>
-        <li><a href="/admin/experiments/add">Запланировать эксперимент</a></li>
-        <li><a href="/admin/maintaince">Обслуживание</a></li>
-        <li><a href="/admin/maintaince/add">Запланировать обслуживание</a> </li>
+<nav class="navbar nav-tabs navbar-expand-lg navbar-light bg-light">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link" href="/admin/home">Домашняя страница</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/admin/users">Пользователи</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/admin/equipment">Оборудование</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/admin/inventory">Инвентарь</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/admin/access-groups">Группы доступа</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Эксперименты</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="/admin/experiments">Все эксперименты</a>
+                <a class="dropdown-item" href="/admin/experiments/add">Запланировать эксперимент</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Обслуживание</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="/admin/maintaince">Всё обслуживание</a>
+                <a class="dropdown-item" href="/admin/maintaince/add">Запланировать обслуживание</a>
+            </div>
+        </li>
     </ul>
 </nav>
 

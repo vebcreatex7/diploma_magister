@@ -1,21 +1,28 @@
-<div id ="inventory">
-    <h2>Инвентарь</h2>
+<div id ="inventory" class="container">
     <div id="processing" class="htmx-indicator">Processing...</div>
-    <button
-            hx-get="/engineers/inventory-add"
-            hx-target="#inventory-table-body"
-            hx-swap="afterbegin"
-            hx-indicator="#processing"
-            class="inline-flex items-center h-8 px-4 m-2 text-sm text-blue-100 transition-colors duration-150 bg-blue-700 rounded-lg focus:shadow-outline hover:bg-blue-800"
-            href=""
-    >
-        Добавить
-    </button>
-    <br>
-    <b>
-        <label for="gfg">Поиск:</label><input id="gfg" type="text" placeholder="Search here">
-    </b>
-    <table>
+    <h2>Инвентарь</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-9">
+                <div class="d-flex justify-content-start">
+                    <button
+                            class="btn btn-primary"
+                            hx-get="/engineers/inventory-add"
+                            hx-target="#inventory-table-body"
+                            hx-swap="afterbegin"
+                            hx-indicator="#processing"
+                            href="">Добавить
+                    </button>
+                </div>
+            </div>
+            <div class="col-3">
+                <div class="d-flex justify-content-end">
+                    <label for="gfg"></label><input id="gfg" type="text" class="form-control" placeholder="Поиск">
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped text-center">
         <thead>
             <tr>
                 <th>Название</th>

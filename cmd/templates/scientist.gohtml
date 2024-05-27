@@ -6,15 +6,29 @@
 </head>
 
 <body>
-<nav>
-    <ul>
-        <li><a href="/scientists/home">Домашняя страница</a> </li>
-        <li><a href="/scientists/access-groups">Группы доступа</a></li>
-        <li><a href="/scientists/experiments/add">Запланировать эксперимент</a></li>
-        <li><a href="/scientists/experiments">Мои эксперименты</a></li>
-        <li><a href="/scientists/equipment">Мое оборудование</a></li>
-        <li><a href="/scientists/inventory">Мой инвентарь</a></li>
 
+
+<nav class="navbar nav-tabs navbar-expand-lg navbar-light bg-light">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link" href="/scientists/home">Домашняя страница</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/scientists/equipment">Оборудование</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/scientists/inventory">Инвентарь</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/scientists/access-groups">Группы доступа</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Эксперименты</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="/scientists/experiments">Эксперименты</a>
+                <a class="dropdown-item" href="/scientists/experiments/add">Запланировать эксперимент</a>
+            </div>
+        </li>
     </ul>
 </nav>
 
@@ -22,8 +36,8 @@
     {{template "pages/scientist/home.gohtml" .}}
 {{else if eq .Path "/scientists/docs"}}
     {{template "pages/scientist/docs.gohtml" .}}
-{{else if eq .Path "/scientists/my-access-groups"}}
-    {{template "pages/scientist/access-groups.gohtml" .}}
+{{else if eq .Path "/scientists/access-groups"}}
+    {{template "pages/scientist/access_groups.gohtml" .}}
 {{else if eq .Path "/scientists/experiments/add"}}
     {{template "pages/scientist/experiment_add.gohtml" .}}
 {{else if eq .Path "/scientists/experiments"}}

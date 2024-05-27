@@ -1,24 +1,21 @@
-<tr id="inventory-row-add">
+<tr id="inventory-row-add" class="container">
     <td>
-        <input type="text" name="name">
+        <input type="text" name="name" class="form-control">
     </td>
     <td>
-        <input type="text" name="description">
+        <input type="text" name="description" class="form-control">
     </td>
     <td>
-        <input type="text" name="type">
+        <input type="text" name="type" class="form-control">
     </td>
     <td>
-        <input type="text" name="manufacturer">
+        <input type="text" name="manufacturer" class="form-control">
     </td>
     <td>
-        <input type="number" name="quantity">
+        <input type="number" name="quantity" class="form-control">
     </td>
     <td>
-        <input type="text" name="unit">
-    </td>
-    <td>
-
+        <input type="text" name="unit" class="form-control">
     </td>
     <td>
         <a
@@ -27,6 +24,7 @@
                 hx-swap="outerHTML"
                 hx-indicator="#processing"
                 hx-include="input,select"
+                class="btn btn-success"
                 href=""
         >Добавить</a>
     </td>
@@ -36,6 +34,7 @@
                 hx-target="#inventory-row-add"
                 hx-swap="outerHTML"
                 hx-indicator="#processing"
+                class="btn btn-secondary"
                 href="">Отмена</a>
     </td>
 </tr>

@@ -14,6 +14,7 @@ import (
 	"github.com/vebcreatex7/diploma_magister/internal/domain/repo"
 	"github.com/vebcreatex7/diploma_magister/internal/repo/postgres/schema"
 	"sort"
+	"time"
 )
 
 type experiment struct {
@@ -270,6 +271,7 @@ func (s experiment) GetAll(ctx context.Context) ([]response.Experiment, error) {
 
 	if err := tx.From(schema.Experiment).
 		Select(entities.Experiment{}).
+		Where(goqu.I("finished").IsNotTrue()).
 		Order(goqu.C("start_ts").Asc()).
 		Prepared(true).
 		Executor().ScanStructsContext(ctx, &exps); err != nil {
@@ -569,6 +571,74 @@ where experiment_uid = $1 and client_uid = $2`,
 	}
 
 	return s.DeleteByUID(ctx, uid)
+}
+
+func (s experiment) GetAllFinishedNotMarked(ctx context.Context) ([]response.Experiment, error) {
+	all, err := s.GetAll(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("getting all exp: %w", err)
+	}
+
+	now := time.Now()
+
+	for i := 0; i < len(all); i++ {
+		endTs, err := time.Parse(constant.Layout, all[i].EndTs)
+		if err != nil {
+			return nil, fmt.Errorf("parsing end_ts: %w", err)
+		}
+
+		if endTs.After(now) {
+			all = append(all[:i], all[i+1:]...)
+			i--
+		}
+	}
+
+	return all, nil
+}
+
+func (s experiment) GetByUID(ctx context.Context, uid string) (response.Experiment, error) {
+	all, err := s.GetAll(ctx)
+	if err != nil {
+		return response.Experiment{}, fmt.Errorf("getting exp: %w", err)
+	}
+
+	for i := range all {
+		if all[i].UID == uid {
+			return all[i], nil
+		}
+	}
+
+	return response.Experiment{}, constant.ErrNotFound
+}
+
+func (s experiment) Finish(ctx context.Context, req request.FinishExperiment) error {
+	exp, err := s.GetByUID(ctx, req.UID)
+	if err != nil {
+		return fmt.Errorf("getting exp: %w", err)
+	}
+
+	for i := range req.InventoryName {
+		if _, err := s.db.ExecContext(
+			ctx,
+			`update inventory set quantity = quantity + $1 where
+                                                  name = $2`,
+			req.InventoryQuantity[i], req.InventoryName[i],
+		); err != nil {
+			return fmt.Errorf("updating inventory.quantity: %w", err)
+		}
+	}
+
+	if _, err := s.db.ExecContext(
+		ctx,
+		`update experiment set finished = true where
+                                          uid = $1`,
+		exp.UID,
+	); err != nil {
+		return fmt.Errorf("setting exp finished: %w", err)
+	}
+
+	return err
+
 }
 
 func (s experiment) isEquipmentAvailableForUser(ctx context.Context, tx *goqu.TxDatabase, eqName, userUID string) (bool, error) {

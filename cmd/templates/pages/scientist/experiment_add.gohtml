@@ -1,55 +1,94 @@
-<div id="experiment-add">
+<div id="experiment-add" class="container">
     <div id="processing" class="htmx-indicator">Processing...</div>
-    <h3>Запланировать эксперимент</h3>
-
-    <h4>Проверить расписание оборудования</h4>
-    <form hx-get="/scientists/equipment/schedule" hx-target="#equipment-schedule-response" hx-swap="outerHTML">
-        <label for="equipment"></label><input id="equipment" name="name" list="equipment-suggestions">
-        <label for="start">Начало</label><input type="date" id="start" name="lower" value="2024-07-22" />
-        <label for="end">Начало</label><input type="date" id="end" name="upper" value="2024-07-22" />
-        <input type="submit" name="submit" value="Показать">
-    </form>
-    <div id="equipment-schedule-response"></div>
 
 
+    <div class="container">
+        <div class="row">
+            <div class="col-8">
+                <h3>Запланировать эксперимент</h3>
+                <div class=" card card-body">
+                    <form hx-post="/scientists/experiments/add" hx-swap="none">
+                        <div class="row">
+                            <div class="col-3">
+                                <label class="form-label" for="experiment-name">Название</label>
+                                <input class="form-control" name="experiment-name" data-include-edit="exp-add" id="experiment-name">
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label" for="experiment-description">Описание</label>
+                                <input class="form-control" name="experiment-description" data-include-edit="exp-add" id="experiment-description">
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label" for="start-ts">Начало</label>
+                                <input class="form-control" name="start-ts" type="datetime-local" id="start-ts">
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label" for="end-ts">Окончание</label>
+                                <input class="form-control" name="end-ts" type="datetime-local" id="end-ts">
+                            </div>
+                        </div>
+                        <h5>Оборудование</h5>
+                        <a
+                                hx-get="/scientists/experiments/equipment/add"
+                                hx-swap="beforeend"
+                                hx-target="#equipment-input"
+                                href=""
+                        >Добавить оборудование</a>
+                        <div id="equipment-input"></div>
 
-    <form hx-post="/scientists/experiment/add" hx-swap="none">
-        <h4>"Эксперимент</h4>
+                        <h5>Инвентарь</h5>
+                        <a
+                                hx-get="/scientists/experiments/inventory/add"
+                                hx-swap="beforeend"
+                                hx-target="#inventory-input"
+                                href=""
+                        >Добавить инвентарь</a>
+                        <div id="inventory-input"></div>
 
-        <label>
-           Название: <input name="experiment-name"  data-include-edit="exp-add">
-        </label>
-        <label>
-            Описание: <input name="experiment-description"  data-include-edit="exp-add">
-        </label>
-        <label>
-            Начало: <input name="start-ts" type="datetime-local">
-        </label>
-        <label>
-            Окончание: <input name="end-ts" type="datetime-local">
-        </label>
+                        <input type="submit" name="plan" value="Запланировать" class="btn btn-success">
 
-        <h5>Оборудование</h5>
-        <a
-                hx-get="/scientists/experiments/equipment/add"
-                hx-swap="beforeend"
-                hx-target="#equipment-input"
-                href=""
-        >Добавить оборудование</a>
-        <div id="equipment-input"></div>
+                    </form>
+                </div>
+            </div>
 
-        <h5>Инвентарь</h5>
-        <a
-                hx-get="/scientists/experiments/inventory/add"
-                hx-swap="beforeend"
-                hx-target="#inventory-input"
-                href=""
-        >Добавить инвентарь</a>
-        <div id="inventory-input"></div>
+            <div class="col-4">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#equipment-schedule" aria-expanded="false" aria-controls="collapseExample">
+                    Проверить расписание
+                </button>
+                <div class="collapse" id="equipment-schedule">
+                    <div class="card card-body">
+                        <form hx-get="/scientists/equipment/schedule" hx-target="#equipment-schedule-response" hx-swap="outerHTML">
+                            <div class="mb-2">
+                                <label class="form-label" for="equipment">Оборудование</label>
+                                <input class="form-control" id="equipment" name="name" list="equipment-suggestions">
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <label class="form-label" for="lower">Начало</label>
+                                    <input class="form-control" type="date" id="lower" name="lower" value="2024-07-22" />
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" for="upper">Конец</label>
+                                    <input class="form-control" type="date" id="upper" name="upper" value="2024-07-22" />
+                                </div>
+                            </div>
 
-        <input type="submit" name="plan" value="Запланировать">
+                            <input type="submit" name="submit" value="Показать" class="form-control">
+                        </form>
 
-    </form>
+                        <div id="equipment-schedule-response"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
 
     {{template "components/scientist/experiment/equipment_suggestions.gohtml" .Data}}
 

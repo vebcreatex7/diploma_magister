@@ -29,12 +29,15 @@ func NewEquipment(
 	equipmentRepo repo.Equipment,
 	clientsRepo repo.Clients,
 	accessGroupService service.AccessGroup,
+	db *goqu.Database,
 ) equipment {
 	return equipment{
 		equipmentRepo:      equipmentRepo,
 		clientsRepo:        clientsRepo,
 		accessGroupService: accessGroupService,
-		mapper:             mapper.Equipment{}}
+		mapper:             mapper.Equipment{},
+		db:                 db,
+	}
 }
 
 func (s equipment) GetAll(ctx context.Context) ([]response.Equipment, error) {
@@ -63,6 +66,10 @@ func (s equipment) GetAllForUser(ctx context.Context, uid string) ([]response.Eq
 		equipment = append(equipment, strings.Split(ags[i].Equipment, ",")...)
 	}
 
+	for i := range equipment {
+		equipment[i] = strings.Trim(equipment[i], "\n")
+	}
+
 	for i := 0; i < len(all); i++ {
 		equipmentFound := false
 
@@ -86,6 +93,44 @@ func (s equipment) DeleteByUID(ctx context.Context, uid string) error {
 	if err := s.equipmentRepo.DeleteEquipmentInAccessGroupByUID(ctx, uid); err != nil {
 		return fmt.Errorf("deleting equipment_in_access_group by uid: %w", err)
 	}
+
+	var ess []entities.EquipmentSchedule
+
+	if err := s.db.ScanStructsContext(
+		ctx,
+		&ess,
+		`select * from equipment_schedule
+where equipment_uid = $1`,
+		uid,
+	); err != nil {
+		return fmt.Errorf("getting equipment_schedule by uid: %w", err)
+	}
+
+	for _, es := range ess {
+		if _, err := s.db.ExecContext(
+			ctx,
+			`delete from equipment_schedule_in_experiment where
+                                                 equipment_schedule_uid = $1`,
+			es.UID,
+		); err != nil {
+			return fmt.Errorf("deleting equipment_schedule_in_experiment by uid: %w", err)
+		}
+
+		if _, err := s.db.ExecContext(
+			ctx,
+			`delete from equipment_schedule_in_maintaince where
+                                                 equipment_schedule_uid = $1`,
+			es.UID,
+		); err != nil {
+			return fmt.Errorf("deleting equipment_schedule_in_maintaince by uid: %w", err)
+		}
+	}
+
+	s.db.ExecContext(
+		ctx,
+		`delete from equipment_schedule where equipment_uid = $1`,
+		uid,
+	)
 
 	if err := s.equipmentRepo.DeleteByUID(ctx, uid); err != nil {
 		return fmt.Errorf("deleting equipment by uid: %w", err)

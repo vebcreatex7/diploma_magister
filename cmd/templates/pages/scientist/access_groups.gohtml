@@ -1,10 +1,17 @@
-<div id="access-groups">
+<div id="access-groups" class="container">
     <div id="processing" class="htmx-indicator">Processing...</div>
-    <h3>Мои группы</h3>
-    <b>
-        <label for="gfg">Поиск:</label><input id="gfg" type="text" placeholder="Search here">
-    </b>
-    <table>
+    <h2>Мои группы доступа</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-9"></div>
+            <div class="col-3">
+                <div class="d-flex justify-content-end">
+                    <label for="gfg"></label><input id="gfg" type="text" class="form-control" placeholder="Поиск">
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped text-center">
         <thead>
         <tr>
             <th>Название</th>
