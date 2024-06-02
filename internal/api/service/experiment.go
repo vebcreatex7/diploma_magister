@@ -130,7 +130,6 @@ func (s experiment) AddExperiment(ctx context.Context, req request.AddExperiment
 				UpperType: pgtype.Exclusive,
 				Status:    pgtype.Present,
 			},
-			MaintainceFlag: false,
 		}
 
 		if err := tmp.TimeInterval.Upper.Set(req.Equipment[i].Upper); err != nil {

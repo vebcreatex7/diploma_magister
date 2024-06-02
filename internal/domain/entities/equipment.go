@@ -13,10 +13,9 @@ type Equipment struct {
 }
 
 type EquipmentSchedule struct {
-	UID            string         `db:"uid" goqu:"skipupdate"`
-	EquipmentUID   string         `db:"equipment_uid"`
-	TimeInterval   pgtype.Tsrange `db:"time_interval"`
-	MaintainceFlag bool           `db:"maintaince_flag"`
+	UID          string         `db:"uid" goqu:"skipupdate"`
+	EquipmentUID string         `db:"equipment_uid"`
+	TimeInterval pgtype.Tsrange `db:"time_interval"`
 }
 
 type EquipmentScheduleInExperiment struct {

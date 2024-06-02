@@ -35,8 +35,7 @@ create table equipment (
 create table equipment_schedule(
 	uid uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
 	equipment_uid uuid not null,
-	time_interval tsrange not null,
-	maintaince_flag bool not null default false
+	time_interval tsrange not null
 );
 
 
@@ -142,8 +141,7 @@ alter table equipment_schedule
 	add constraint fk_equipment_schedule_equipment foreign key(equipment_uid) references equipment(uid);
 
 alter table equipment_schedule
-	add constraint unique_equipment_schedule_interval exclude using gist  (maintaince_flag with =, equipment_uid WITH =, time_interval WITH &&);
-
+	add constraint unique_equipment_schedule_interval exclude using gist  (equipment_uid WITH =, time_interval WITH &&);
 
 
 alter table clients_in_experiment

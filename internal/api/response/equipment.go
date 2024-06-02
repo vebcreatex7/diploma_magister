@@ -8,6 +8,7 @@ type Equipment struct {
 	Manufacturer string
 	Model        string
 	Room         string
+	Status       string
 }
 
 type EquipmentSchedule struct {

@@ -41,12 +41,49 @@ func NewEquipment(
 }
 
 func (s equipment) GetAll(ctx context.Context) ([]response.Equipment, error) {
-	eq, err := s.equipmentRepo.GetAll(ctx)
+	eqs, err := s.equipmentRepo.GetAll(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("getting equipment: %w", err)
 	}
 
-	return s.mapper.MakeListResponse(eq), nil
+	eqsRes := s.mapper.MakeListResponse(eqs)
+
+	for i := range eqsRes {
+		var es entities.EquipmentSchedule
+
+		f, err := s.db.ScanStructContext(
+			ctx,
+			&es,
+			`select * from equipment_schedule where now()::timestamp <@ time_interval and equipment_uid = $1`,
+			eqsRes[i].UID,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if f {
+			var esinex entities.EquipmentScheduleInExperiment
+
+			inEx, err := s.db.From(schema.EquipmentScheduleInExperiment).
+				Select(entities.EquipmentScheduleInExperiment{}).
+				Where(goqu.C("equipment_schedule_uid").Eq(es.UID)).
+				Prepared(true).Executor().ScanStructContext(ctx, &esinex)
+			if err != nil {
+				return nil, err
+			}
+
+			if inEx {
+				eqsRes[i].Status = "busy"
+			} else {
+				eqsRes[i].Status = "mt"
+			}
+		} else {
+			eqsRes[i].Status = "free"
+		}
+	}
+
+	return eqsRes, nil
 }
 
 func (s equipment) GetAllForUser(ctx context.Context, uid string) ([]response.Equipment, error) {

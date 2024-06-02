@@ -237,7 +237,6 @@ func (s maintaince) AddMaintaince(ctx context.Context, req request.AddMaintaince
 				UpperType: pgtype.Exclusive,
 				Status:    pgtype.Present,
 			},
-			MaintainceFlag: false,
 		}
 
 		if err := tmp.TimeInterval.Upper.Set(req.Equipment[i].Upper); err != nil {
