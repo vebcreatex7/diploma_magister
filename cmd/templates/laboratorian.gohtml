@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {{ template "head" .}}
+    <title>Личный лаборанта</title>
+</head>
+
+<body>
+    <nav class="navbar nav-tabs navbar-expand-lg navbar-light bg-light">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="/laboratorians/home">Домашняя страница</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/laboratorians/experiments">Завершенные эксперименты</a>
+            </li>
+        </ul>
+    </nav>
+
+{{if eq .Path "/laboratorians/home"}}
+    {{template "pages/laboratorian/home.gohtml" .}}
+{{else if eq .Path "/laboratorians/experiments"}}
+    {{template "pages/laboratorian/experiment.gohtml" .}}
+{{end}}
+</body>

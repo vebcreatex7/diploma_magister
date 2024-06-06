@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {{ template "head" .}}
+    <title>Главная страница</title>
+</head>
+
+<body>
+
+<nav class="navbar nav-tabs navbar-expand-lg navbar-light bg-light">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link" href="/">Домашняя страница</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/docs">Документация</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/register">Зарегистрироваться</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/login">Войти</a>
+        </li>
+    </ul>
+</nav>
+
+
+<div id="admin-content"></div>
+
+{{if eq .Path "/home"}}
+    {{template "pages/home/home.gohtml" .}}
+{{ else if eq .Path "/docs"}}
+    {{template "pages/home/docs.gohtml" .}}
+{{else if eq .Path "/register"}}
+    {{template "pages/home/register.gohtml" .}}
+{{else if eq .Path "/login"}}
+    {{template "pages/home/login.gohtml" .}}
+{{end}}
+
+
+
+
+</body>

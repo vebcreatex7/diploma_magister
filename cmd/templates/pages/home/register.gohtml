@@ -1,0 +1,55 @@
+<div id="register" class="container">
+    <form hx-post="/register">
+        <div class="row">
+            <div class="col-6">
+                <label class="form-label" for="surname">Фамилия</label>
+                <input class="form-control" id="surname" name="surname">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label class="form-label" for="name">Имя</label>
+                <input class="form-control" id="name" name="name">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label class="form-label" for="patronymic">Отчество</label>
+                 <input class="form-control" id="patronymic" name="patronymic">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label class="form-label" for="email">Почтовый адрес</label>
+                <input class="form-control" id="email" name="email">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label class="form-label" for="login">Логин</label>
+                <input class="form-control" id="login" name="login">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label class="form-label" for="password">Пароль</label>
+                <input class="form-control" id="password" type="password" name="password">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label class="form-label" for="role">Роль</label>
+                <select class="form-select" id="role" name="role">
+                    <option value="engineer" name="engineer">Инженер</option>
+                    <option value="laboratorian">Лаборант</option>
+                    <option value="scientist" selected>Ученый</option>
+                </select>
+            </div>
+        </div>
+
+
+        <input type="submit" name="register" value="Зарегистрироваться" class="btn btn-success">
+    </form>
+
+</div>
+<div id="toast-container" class="toast-container" ></div>

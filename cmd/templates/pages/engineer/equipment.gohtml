@@ -1,0 +1,47 @@
+<div id="equipment" class="container">
+    <div id="processing" class="htmx-indicator">Processing...</div>
+    <h2>Оборудование</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-9"></div>
+            <div class="col-3">
+                <div class="d-flex justify-content-end">
+                    <label for="gfg"></label><input id="gfg" type="text" class="form-control" placeholder="Поиск">
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped text-center">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Тип</th>
+                <th>Производитель</th>
+                <th>Модель</th>
+                <th>Номер комнаты</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody id="equipment-table-body">
+        {{with .Data}}
+            {{range .}}
+                {{template "components/engineer/equipment/row.gohtml" .}}
+            {{end}}
+        {{end}}
+        </tbody>
+    </table>
+
+    <section id="toast-container"></section>
+
+    <script>
+        $(document).ready(function () {
+            $("#gfg").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#equipment-table-body tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+</div>

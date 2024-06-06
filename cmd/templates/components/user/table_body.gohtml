@@ -1,0 +1,5 @@
+{{with .Data}}
+    {{range .}}
+        {{template "components/user/row.gohtml" .}}
+    {{end}}
+{{end}}

@@ -1,0 +1,24 @@
+<tr id="finished-experiment-row-{{.UID}}">
+    <td>{{.Name}}</td>
+    <td>{{.Description}}</td>
+    <td>{{.StartTs}}</td>
+    <td>{{.EndTs}}</td>
+    <td>
+        <table id="finished-experiment-inventory-{{.UID}}">
+            {{range .Inventory}}
+                <tr>
+                    <td>{{.Name}}</td>
+                    <td>{{.Quantity}}</td>
+                </tr>
+            {{end}}
+        </table>
+    </td>
+    <td>
+        <a
+                hx-get="/laboratorians/experiments/finish/{{.UID}}"
+                hx-target="#finished-experiment-row-{{.UID}}"
+                hx-swap="outerHTML"
+                class="btn btn-primary"
+                href="">Завершить</a>
+    </td>
+</tr>

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {{ template "head" .}}
+    <title>Личный кабинет ученого</title>
+</head>
+
+<body>
+    <nav class="navbar nav-tabs navbar-expand-lg navbar-light bg-light">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+                <a class="nav-link" href="/engineers/home">Домашняя страница</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/engineers/equipment">Оборудование</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/engineers/inventory">Инвентарь</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Обслуживание</a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="/engineers/maintaince">Моё обслуживание</a>
+                    <a class="dropdown-item" href="/engineers/maintaince/add">Запланировать обслуживание</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+
+{{if eq .Path "/engineers/home"}}
+    {{template "pages/engineer/home.gohtml" .}}
+{{else if eq .Path "/engineers/equipment"}}
+    {{template "pages/engineer/equipment.gohtml" .}}
+{{else if eq .Path "/engineers/inventory"}}
+    {{template "pages/engineer/inventory.gohtml" .}}
+{{else if eq .Path "/engineers/maintaince/add"}}
+    {{template "pages/engineer/maintaince_add.gohtml" .}}
+{{else if eq .Path "/engineers/maintaince"}}
+    {{template "pages/engineer/maintaince.gohtml" .}}
+{{end}}
+
+</body>

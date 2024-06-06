@@ -1,0 +1,46 @@
+<div id ="inventory" class="container">
+    <div id="processing" class="htmx-indicator">Processing...</div>
+    <h2>Доступный инвентарь</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-9"></div>
+            <div class="col-3">
+                <div class="d-flex justify-content-end">
+                    <label for="gfg"></label><input id="gfg" type="text" class="form-control" placeholder="Поиск">
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped text-center">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Тип</th>
+                <th>Производитель</th>
+                <th>Количество</th>
+                <th>Ед. измерения</th>
+            </tr>
+        </thead>
+        <tbody id="inventory-table-body">
+            {{with .Data}}
+                {{range .}}
+                    {{template "components/scientist/inventory/row.gohtml" .}}
+                {{end}}
+            {{end}}
+        </tbody>
+    </table>
+
+    <section id="toast-container" style="position: absolute; top: 0; right:0"></section>
+    <script>
+        $(document).ready(function () {
+            $("#gfg").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#equipment-table-body tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+
+</div>

@@ -1,0 +1,66 @@
+<tr id="access-groups-row-{{.UID}}">
+    <td>
+        <input
+            type="text"
+            data-include-edit="{{.UID}}"
+            name="name"
+            class="form-control"
+            value="{{.Name}}">
+    </td>
+    <td>
+        <input
+            type="text"
+            data-include-edit="{{.UID}}"
+            name="description"
+            class="form-control"
+            value="{{.Description}}">
+    </td>
+    <td>
+        <input
+            type="text"
+            data-include-edit="{{.UID}}"
+            name="users"
+            class="form-control"
+            value="{{.Users}}">
+    </td>
+    <td>
+        <input
+                type="text"
+                data-include-edit="{{.UID}}"
+                name="equipment"
+                class="form-control"
+                value="{{.Equipment}}">
+    </td>
+    <td>
+        <input
+                type="text"
+                data-include-edit="{{.UID}}"
+                name="inventory"
+                class="form-control"
+                value="{{.Inventory}}">
+    </td>
+    <td>
+        <a
+                hx-put="/admin/access-groups/{{.UID}}"
+                hx-target="#access-groups-row-{{.UID}}"
+                hx-swap="outerHTML"
+                hx-indicator="#processing"
+                hx-include="input[data-include-edit='{{.UID}}'], select[data-include-edit='{{.UID}}']"
+                hx-confirm="Подтвердите изменение группы'{{.Name}}'"
+                class="btn btn-success"
+                href="">
+            Изменить
+        </a>
+    </td>
+    <td>
+        <a
+            hx-get="/admin/access-groups/{{.UID}}"
+            hx-target="#access-groups-row-{{.UID}}"
+            hx-swap="outerHTML"
+            hx-indicator="#processing"
+            class="btn btn-secondary"
+            href="">
+            Отменить
+        </a>
+    </td>
+</tr>

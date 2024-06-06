@@ -1,0 +1,18 @@
+<div id="inv-in" class="container">
+    <div class="row">
+        <div class="col-3">
+            <label class="form-label" for="inventory-name">Название</label>
+            <input class="form-control" name="inventory-name" list="inventory-suggestions" data-include-edit="exp-add" id="inventory-name">
+        </div>
+        <div class="col-3">
+            <label class="form-label" for="quantity">Количество</label>
+            <input class="form-control" name="quantity" type="number" data-include-edit="exp-add" id="quantity">
+        </div>
+        <div class="col-3">
+            <br>
+            <a hx-get="/scientists/empty" hx-swap="outerHTML" hx-target="closest #inv-in" href="" class="btn btn-secondary ">Удалить</a>
+
+        </div>
+    </div>
+
+</div>

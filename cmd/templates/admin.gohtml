@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+    {{ template "head" .}}
+    <title>Админка</title>
+</head>
+
+<body>
+
+<nav class="navbar nav-tabs navbar-expand-lg navbar-light bg-light">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+            <a class="nav-link" href="/admin/home">Домашняя страница</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/admin/users">Пользователи</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/admin/equipment">Оборудование</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/admin/inventory">Инвентарь</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/admin/access-groups">Группы доступа</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Эксперименты</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="/admin/experiments">Все эксперименты</a>
+                <a class="dropdown-item" href="/admin/experiments/add">Запланировать эксперимент</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Обслуживание</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" href="/admin/maintaince">Всё обслуживание</a>
+                <a class="dropdown-item" href="/admin/maintaince/add">Запланировать обслуживание</a>
+            </div>
+        </li>
+    </ul>
+</nav>
+
+
+
+{{if eq .Path "/admin/home"}}
+    {{template "pages/admin/home.gohtml" .}}
+{{else if eq .Path "/admin/users"}}
+    {{template "pages/admin/users.gohtml" .}}
+{{else if eq .Path "/admin/equipment"}}
+    {{template "pages/admin/equipment.gohtml" .}}
+{{else if eq .Path "/admin/inventory"}}
+    {{template "pages/admin/inventory.gohtml" .}}
+{{else if eq .Path "/admin/access-groups"}}
+    {{template "pages/admin/access_groups.gohtml" .}}
+{{else if eq .Path "/admin/experiments"}}
+    {{template "pages/admin/experiment.gohtml" .}}
+{{else if eq .Path "/admin/experiments/add"}}
+    {{template "pages/admin/experiment_add.gohtml" .}}
+{{else if eq .Path "/admin/maintaince"}}
+    {{template "pages/admin/maintaince.gohtml" .}}
+{{else if eq .Path "/admin/maintaince/add"}}
+    {{template "pages/admin/maintaince_add.gohtml" .}}
+{{end}}
+
+</body>

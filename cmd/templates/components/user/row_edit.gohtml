@@ -1,0 +1,78 @@
+
+<tr id="user-row-{{.UID}}">
+    <td>
+        <input
+            type="text"
+            data-include-edit="{{.UID}}"
+            name="surname"
+            class="form-control"
+            value="{{.Surname}}"
+        >
+    </td>
+    <td>
+        <input
+                type="text"
+                data-include-edit="{{.UID}}"
+                name="name"
+                class="form-control"
+                value="{{.Name}}"
+        >
+    </td>
+    <td>
+        <input
+                type="text"
+                data-include-edit="{{.UID}}"
+                name="patronymic"
+                class="form-control"
+                value="{{.Patronymic}}"
+        >
+    </td>
+    <td>
+        <input
+                type="text"
+                data-include-edit="{{.UID}}"
+                name="login"
+                class="form-control"
+                value="{{.Login}}"
+        >
+    </td>
+    <td>
+        <input
+                type="text"
+                data-include-edit="{{.UID}}"
+                name="email"
+                class="form-control"
+                value="{{.Email}}"
+        >
+    </td>
+    <td>
+        <select data-include-edit="{{.UID}}" name="role" class="form-select" >
+            <option value="engineer" {{if eq .Role "engineer"}} selected {{end}}>инженер</option>
+            <option value="laboratorian" {{if eq .Role "laboratorian"}} selected {{end}}>лаборант</option>
+            <option value="scientist" {{if eq .Role "scientist"}} selected {{end}}>ученый</option>
+        </select>
+    </td>
+    <td>
+        <a
+            hx-put="/admin/users/{{.UID}}"
+            hx-target="#user-row-{{.UID}}"
+            hx-swap="outerHTML"
+            hx-include="input[data-include-edit='{{.UID}}'],select[data-include-edit='{{.UID}}']"
+            hx-indicator="#processing"
+            class="btn btn-success"
+            href="">
+            Изменить
+        </a>
+    </td>
+    <td>
+        <a
+            hx-get="/admin/users/{{.UID}}"
+            hx-target="#user-row-{{.UID}}"
+            hx-swap="outerHTML"
+            hx-indicator="#processing"
+            class="btn btn-secondary"
+            href="">
+            Отменить
+        </a>
+    </td>
+</tr>

@@ -1,0 +1,25 @@
+<div id="finished-experiments" class="container">
+    <div id="processing" class="htmx-indicator">Processing...</div>
+    <h2>Эксперименты</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Начало</th>
+                <th>Окончание</th>
+                <th>Инвентарь</th>
+            </tr>
+        </thead>
+        <tbody id="finished-experiment-table-body">
+        {{with .Data}}
+            {{range .}}
+                {{template "components/laboratorian/experiment/row.gohtml" .}}
+            {{end}}
+        {{end}}
+        </tbody>
+    </table>
+
+    <section id="toast-container"></section>
+    </table>
+</div>

@@ -1,0 +1,15 @@
+<tr id="equipment-row-{{.UID}}">
+    <td>{{.Name}}</td>
+    <td>{{.Description}}</td>
+    <td>{{.Type}}</td>
+    <td>{{.Manufacturer}}</td>
+    <td>{{.Model}}</td>
+    <td>{{.Room}}</td>
+    {{if eq .Status "free"}}
+        <td class="text-success">свободно</td>
+    {{else if eq .Status "busy"}}
+        <td class="text-danger">занято</td>
+    {{else if eq .Status "mt"}}
+        <td class="text-warning">обслуживание</td>
+    {{end}}
+</tr>

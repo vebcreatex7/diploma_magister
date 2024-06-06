@@ -1,0 +1,80 @@
+<div id="maintaince-add" class="container">
+    <div id="processing" class="htmx-indicator">Processing...</div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-8">
+                <h3>Запланировать обслуживание</h3>
+                <div class="card card-body">
+                    <form hx-post="/admin/maintaince/add" hx-swap="none">
+                        <div class="row">
+                            <div class="col-2">
+                                <label class="form-label" for="maintaince-name">Название</label>
+                                <input class="form-control" name="maintaince-name" data-include-edit="exp-add" id="maintaince-name">
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" for="maintaince-description">Описание</label>
+                                <input class="form-control" name="maintaince-description" data-include-edit="exp-add" id="maintaince-description">
+                            </div>
+                            <div class="col-2">
+                                <label class="form-label" for="maintaince-engineer">Инженер</label>
+                                <input class="form-control" name="maintaince-engineer" data-include-edit="exp-add" id="maintaince-engineer">
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label" for="start-ts">Начало</label>
+                                <input class="form-control" name="start-ts" type="datetime-local" id="start-ts">
+                            </div>
+                            <div class="col-3">
+                                <label class="form-label" for="end-ts">Окончание</label>
+                                <input class="form-control" name="end-ts" type="datetime-local" id="end-ts">
+                            </div>
+                        </div>
+                        <h5>Оборудование</h5>
+                        <a
+                                hx-get="/admin/maintaince/equipment/add"
+                                hx-swap="beforeend"
+                                hx-target="#equipment-input"
+                                href=""
+                        >Добавить оборудование</a>
+
+                        <div id="equipment-input"></div>
+
+                        <input type="submit" name="plan" value="Запланировать" class="btn btn-success">
+                    </form>
+                </div>
+            </div>
+            <div class="col-4">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#equipment-schedule" aria-expanded="false" aria-controls="collapseExample">
+                    Проверить расписание
+                </button>
+                <div class="collapse" id="equipment-schedule">
+                    <div class="card card-body">
+                        <form hx-get="/admin/equipment/schedule" hx-target="#equipment-schedule-response" hx-swap="outerHTML">
+                            <div class="mb-2">
+                                <label class="form-label" for="equipment">Оборудование</label>
+                                <input class="form-control" id="equipment" name="name" list="equipment-suggestions">
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <label class="form-label" for="lower">Начало</label>
+                                    <input class="form-control" type="date" id="lower" name="lower" value="2024-07-22" />
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label" for="upper">Конец</label>
+                                    <input class="form-control" type="date" id="upper" name="upper" value="2024-07-22" />
+                                </div>
+                            </div>
+
+                            <input type="submit" name="submit" value="Показать" class="form-control">
+                        </form>
+
+                        <div id="equipment-schedule-response"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <section id="toast-container"></section>
+</div>
